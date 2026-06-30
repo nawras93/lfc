@@ -39,4 +39,28 @@ class FilamentAdminAccessTest extends TestCase
         $this->assertTrue($authenticated);
         $this->assertAuthenticated();
     }
+
+    public function test_seeded_coach_can_access_the_filament_panel(): void
+    {
+        $this->seed();
+
+        $coach = User::factory()->create();
+        $coach->assignRole('Coach');
+
+        $this->actingAs($coach)
+            ->get('/admin')
+            ->assertOk();
+    }
+
+    public function test_seeded_management_can_access_the_filament_panel(): void
+    {
+        $this->seed();
+
+        $management = User::factory()->create();
+        $management->assignRole('Management');
+
+        $this->actingAs($management)
+            ->get('/admin')
+            ->assertOk();
+    }
 }
