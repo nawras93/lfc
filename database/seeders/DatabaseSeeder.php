@@ -32,5 +32,11 @@ class DatabaseSeeder extends Seeder
         );
 
         $admin->syncRoles(['Admin']);
+
+        $this->call([
+            SeasonSeeder::class,
+            TeamSeeder::class,
+            DocumentTypeSeeder::class,
+        ]);
     }
 }
