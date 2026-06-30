@@ -21,7 +21,7 @@
 | T5 | DONE | Points ledger (append-only) + earning-rules engine (fixed/percentage, scoped) |
 | T6 | DONE | Attendance scan: rotating signed QR (app) + staff scanner endpoint; validate signature/freshness/open-match; one-scan dedupe; credit linked player(s) on match team |
 | T7 | DONE | Redemption catalog (fees/events/merch) + redeem→voucher; VVIP flag + offers (all / VVIP-only) |
-| T7b | TODO | VVIP client accounts (non-parent): `account_type` (parent\|vvip_client) on accounts; admin "Create VVIP client" + "Grant points"; account-level points ledger owner + account-balance redemption. Keep the existing per-player path unchanged. |
+| T7b | IN PROGRESS | VVIP client accounts (non-parent): `account_type` (parent\|vvip_client) on accounts; admin "Create VVIP client" + "Grant points"; account-level points ledger owner + account-balance redemption. Keep the existing per-player path unchanged. |
 | T8 | TODO | Loyalty dashboard (Filament): issued/redeemed, attendance, fulfillment, outstanding-points liability |
 | T9 | TODO | Flutter app (iOS+Android, **AR+EN/RTL**): auth, players+balances, show QR, points history, redeem, offers (may split T9a wiring / T9b screens) |
 | T10 | TODO | Seed demo data + scripted end-to-end walkthrough (parent → scan → points → redeem → VVIP offer) |
