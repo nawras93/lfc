@@ -12,15 +12,8 @@ class FixtureSeeder extends Seeder
 {
     public function run(): void
     {
-        $season = Season::query()->firstOrCreate(
-            ['name' => '2026/27'],
-            ['is_active' => true],
-        );
-
-        $team = Team::query()->firstOrCreate(
-            ['name' => 'LFC U12'],
-            ['age_group' => 'U12', 'season_id' => $season->id],
-        );
+        $season = Season::where('is_active', true)->first() ?? Season::query()->first();
+        $team = Team::where('name', 'LFC U12')->first() ?? Team::query()->first();
 
         Fixture::query()->updateOrCreate(
             ['opponent' => 'Al Sadd SC'],

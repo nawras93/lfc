@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SeasonSeeder::class,
             TeamSeeder::class,
+            FixtureSeeder::class,
             DocumentTypeSeeder::class,
             ParentAccountSeeder::class,
         ]);
