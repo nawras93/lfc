@@ -17,8 +17,9 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -98,16 +99,18 @@ class PointRuleResource extends Resource
                     ->sortable(),
                 TextColumn::make('type')
                     ->badge(),
-                TextColumn::make('points_value')
-                    ->label('Points value')
-                    ->getStateUsing(fn (PointRule $rule): int => $rule->pointsValue()),
+                TextColumn::make('details')
+                    ->label('Value')
+                    ->getStateUsing(fn (PointRule $record): string => $record->type === PointRuleType::Percentage
+                        ? "{$record->percentage}% × {$record->base_amount} = {$record->pointsValue()} pts"
+                        : "{$record->pointsValue()} pts"),
                 TextColumn::make('team.name')
                     ->label('Scope (team)')
                     ->placeholder('All'),
                 TextColumn::make('season.name')
                     ->label('Scope (season)')
                     ->placeholder('All'),
-                TextColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),
                 TextColumn::make('starts_at')
