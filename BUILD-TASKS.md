@@ -18,7 +18,7 @@
 | T2 | DONE | Phase A core (demo): Candidate resource + teams + seasons; multi-dimension status + transition guards; private-disk documents + consent; mark accepted candidate as "player" |
 | T3 | DONE | Accounts/API slice: `parent_accounts`, parent↔player links, invitation; Sanctum API (auth + endpoints D needs) |
 | T4 | DONE | Matches/Fixtures module (Filament) with open-for-scanning window |
-| T5 | IN PROGRESS | Points ledger (append-only) + earning-rules engine (fixed/percentage, scoped) |
+| T5 | DONE | Points ledger (append-only) + earning-rules engine (fixed/percentage, scoped) |
 | T6 | TODO | Attendance scan: rotating signed QR (app) + staff scanner endpoint; validate signature/freshness/open-match; one-scan dedupe; credit linked player(s) on match team |
 | T7 | TODO | Redemption catalog (fees/events/merch) + redeem→voucher; VVIP flag + offers (all / VVIP-only) |
 | T8 | TODO | Loyalty dashboard (Filament): issued/redeemed, attendance, fulfillment, outstanding-points liability |
@@ -46,3 +46,6 @@ T1 → T2 → T3 → (T4–T8 partly parallel) → T9 → T10.
 - **T4 (2026-06-30):** recovered from a branch mishap that had frozen `main` at an old commit; `main` is now correct (T1–T4). Trivial nit left in `FixtureSeeder` (`$season` looked up but unused — uses `$team->season_id`).
 - **From T3 (review fix):** `LFC_DEMO_PARENT_EMAIL/PASSWORD` were in README but not `.env.example` — **added to `.env.example` and the local `.env`**. Seeder falls back to defaults `parent.demo@lfc.test` / `password`.
 - **Stack note:** running on Laravel 13 / PHP ^8.3 (latest stable — fine).
+- **T5 (2026-06-30) review:** APPROVED & merged (50 tests green; `migrate:fresh --seed` clean). Ledger append-only (model `updating`/`deleting` throw), balance = Σ txns (no stored column), rules fixed/percentage scoped+dated with deterministic resolution, percentage off admin-entered `base_amount`, Adjust-points action gated Admin/Management + audited.
+  - **Defect caught:** committed branch tip imported non-existent `Filament\Tables\Actions\{Edit,Delete}Action` (would fatal the Point Rules page); a fix was sitting **uncommitted** in the working tree — committed it as `73969b1` during review. *Process feedback for opencode: commit ALL working-tree changes before handing off; the broken tip passed tests because no test renders the Filament table.*
+  - **Open follow-ups (non-blocking):** Adjust action authorized via `->visible(hasRole)` only (consider `->authorize()`/policy); append-only guard is Eloquent-event level (raw query-builder `update()`/`delete()` would bypass — DB-level hardening deferred); `scopeActiveOn()` only filters `is_active` (date window lives in `resolveRule`) — naming nit. Manually click-through the Point Rules page during T10/verify to confirm render.
