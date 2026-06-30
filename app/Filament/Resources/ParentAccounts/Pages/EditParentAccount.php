@@ -4,7 +4,11 @@ namespace App\Filament\Resources\ParentAccounts\Pages;
 
 use App\Filament\Resources\ParentAccounts\ParentAccountResource;
 use App\Models\ParentAccount;
+use App\Services\PointsEngine;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditParentAccount extends EditRecord
@@ -17,6 +21,34 @@ class EditParentAccount extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('grantPoints')
+                ->label('Grant points')
+                ->icon('heroicon-o-currency-dollar')
+                ->visible(fn (ParentAccount $record): bool => $record->isVvipClient() && auth()->user()?->hasRole('Admin'))
+                ->form([
+                    TextInput::make('points')
+                        ->required()
+                        ->numeric()
+                        ->minValue(1)
+                        ->label('Points to grant'),
+                    TextInput::make('reason')
+                        ->required()
+                        ->maxLength(255)
+                        ->label('Reason'),
+                ])
+                ->action(function (array $data, ParentAccount $record, PointsEngine $engine): void {
+                    $engine->grantToAccount(
+                        $record,
+                        (int) $data['points'],
+                        $data['reason'],
+                        auth()->user(),
+                    );
+
+                    Notification::make()
+                        ->title('Points granted successfully')
+                        ->success()
+                        ->send();
+                }),
             DeleteAction::make(),
         ];
     }
