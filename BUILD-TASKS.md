@@ -13,7 +13,7 @@
 | ID | Status | Task |
 | --- | --- | --- |
 | T1 | DONE | Scaffold: Laravel + Filament v5, auth, Shield roles (Admin/Coach/Mgmt), `.env`/staging, seeder skeleton |
-| T2 | IN PROGRESS | Phase A core (demo): Candidate resource + teams + seasons; multi-dimension status + transition guards; private-disk documents + consent; mark accepted candidate as "player" |
+| T2 | DONE | Phase A core (demo): Candidate resource + teams + seasons; multi-dimension status + transition guards; private-disk documents + consent; mark accepted candidate as "player" |
 | T3 | TODO | Accounts/API slice: `parent_accounts`, parent↔player links, invitation; Sanctum API (auth + endpoints D needs) |
 | T4 | TODO | Matches/Fixtures module (Filament) with open-for-scanning window |
 | T5 | TODO | Points ledger (append-only) + earning-rules engine (fixed/percentage, scoped) |
@@ -38,5 +38,8 @@ T1 → T2 → T3 → (T4–T8 partly parallel) → T9 → T10.
 
 ## Carry-over follow-ups
 
-- **From T1 → do in T2:** widen `User::canAccessPanel()` from `hasRole('Admin')` to `hasAnyRole(['Admin','Coach','Management'])` (or a Shield permission) so Coach/Management can reach `/admin` once their features exist. Stack actually used: Laravel 13 / PHP ^8.3 (latest stable — fine).
-- **For T2 documents:** store on the `private` disk explicitly (already configured), not `local`/`public`.
+- ~~T1 → T2: widen `User::canAccessPanel()` beyond Admin~~ — **DONE in T2** (`hasAnyRole(['Admin','Coach','Management'])`).
+- ~~T1 → T2: documents on the `private` disk~~ — **DONE in T2** (private disk + authenticated streamed download).
+- **From T2 → fix soon:** `DocumentTypeSeeder` is missing **"Parent QID/passport"** (8 of 9 checklist items seeded). Add it.
+- **From T2 → optional polish:** don't expose `recruitment_stage` on the *create* form (let it default to New Application) so initial state can't skip the guard; browser smoke-test the private-document download (no automated test covers the actual HTTP stream).
+- **Stack note:** running on Laravel 13 / PHP ^8.3 (latest stable — fine).
