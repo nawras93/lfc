@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             SeasonSeeder::class,
             TeamSeeder::class,
             DocumentTypeSeeder::class,
+            ParentAccountSeeder::class,
         ]);
     }
 }

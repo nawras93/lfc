@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Enums\DocumentStatus;
 use App\Enums\FederationStatus;
 use App\Enums\JoiningStatus;
+use App\Enums\PlayingPosition;
 use App\Enums\RecruitmentStage;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -86,8 +88,36 @@ class Candidate extends Model
         return $this->hasMany(CandidateDocument::class);
     }
 
+    public function parentAccounts(): BelongsToMany
+    {
+        return $this->belongsToMany(ParentAccount::class, 'parent_player_links')
+            ->withTimestamps();
+    }
+
     public function canBeMarkedAsPlayer(): bool
     {
         return $this->recruitment_stage === RecruitmentStage::Accepted && ! $this->is_player;
+    }
+
+    public function publicProgressLabel(): string
+    {
+        if ($this->joining_status === JoiningStatus::JoinedTeam) {
+            return 'Joined';
+        }
+
+        if ($this->document_status !== DocumentStatus::Complete) {
+            return 'Documents Required';
+        }
+
+        if ($this->recruitment_stage === RecruitmentStage::Accepted) {
+            return 'Accepted';
+        }
+
+        return $this->recruitment_stage->getLabel() ?? 'In Progress';
+    }
+
+    public function playingPositionLabel(): string
+    {
+        return PlayingPosition::from($this->getAttribute('playing_position'))->getLabel() ?? (string) $this->getAttribute('playing_position');
     }
 }

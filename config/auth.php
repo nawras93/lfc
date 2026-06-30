@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ParentAccount;
 use App\Models\User;
 
 return [
@@ -42,6 +43,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'parents' => [
+            'driver' => 'session',
+            'provider' => 'parents',
+        ],
     ],
 
     /*
@@ -65,6 +70,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+        'parents' => [
+            'driver' => 'eloquent',
+            'model' => ParentAccount::class,
         ],
 
         // 'users' => [

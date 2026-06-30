@@ -25,6 +25,7 @@ class EditCandidate extends EditRecord
         return [
             CandidateResource::makeChangeRecruitmentStageAction(),
             CandidateResource::makeMarkAsPlayerAction(),
+            CandidateResource::makeInviteParentAction(),
             ViewAction::make(),
             DeleteAction::make(),
             ForceDeleteAction::make(),

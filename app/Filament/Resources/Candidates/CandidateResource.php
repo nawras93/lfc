@@ -13,6 +13,7 @@ use App\Filament\Resources\Candidates\Schemas\CandidateForm;
 use App\Filament\Resources\Candidates\Schemas\CandidateInfolist;
 use App\Filament\Resources\Candidates\Tables\CandidatesTable;
 use App\Models\Candidate;
+use App\Models\ParentAccount;
 use App\Models\Team;
 use App\Services\RecruitmentStageGuard;
 use BackedEnum;
@@ -27,6 +28,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class CandidateResource extends Resource
 {
@@ -159,6 +161,60 @@ class CandidateResource extends Resource
                     'team_id' => $data['team_id'],
                     'is_player' => true,
                 ])->save();
+            });
+    }
+
+    public static function makeInviteParentAction(): Action
+    {
+        return Action::make('inviteParent')
+            ->label('Invite parent')
+            ->icon(Heroicon::OutlinedEnvelope)
+            ->color('info')
+            ->disabled(fn (Candidate $record): bool => ! $record->is_player)
+            ->action(function (Candidate $record): void {
+                if (! $record->is_player) {
+                    Notification::make()
+                        ->danger()
+                        ->title('Only players can be linked to parent accounts')
+                        ->send();
+
+                    throw (new Halt)->rollBackDatabaseTransaction();
+                }
+
+                if (blank($record->email)) {
+                    Notification::make()
+                        ->danger()
+                        ->title('Parent email is required before sending an invitation')
+                        ->send();
+
+                    throw (new Halt)->rollBackDatabaseTransaction();
+                }
+
+                $parent = ParentAccount::query()->firstOrNew([
+                    'email' => $record->email,
+                ]);
+
+                $parent->fill([
+                    'name' => $record->parent_name,
+                    'phone' => $record->parent_phone,
+                    'whatsapp' => $record->parent_whatsapp,
+                ]);
+
+                if (! $parent->exists || ! $parent->accepted_at) {
+                    $parent->invitation_token = Str::random(64);
+                    $parent->invited_at = now();
+                    $parent->accepted_at = null;
+                    $parent->password = null;
+                }
+
+                $parent->save();
+                $parent->players()->syncWithoutDetaching([$record->id]);
+
+                Notification::make()
+                    ->success()
+                    ->title('Parent account linked')
+                    ->body('The parent account is ready for the mobile invite flow.')
+                    ->send();
             });
     }
 
