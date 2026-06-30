@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ParentAccounts;
 use App\Filament\Resources\ParentAccounts\Pages\CreateParentAccount;
 use App\Filament\Resources\ParentAccounts\Pages\EditParentAccount;
 use App\Filament\Resources\ParentAccounts\Pages\ListParentAccounts;
+use App\Enums\AccountType;
 use App\Models\Candidate;
 use App\Models\ParentAccount;
 use BackedEnum;
@@ -34,7 +35,7 @@ class ParentAccountResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('Parent account')
+                Section::make('Account')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
@@ -61,12 +62,23 @@ class ParentAccountResource extends Resource
                             ->multiple()
                             ->searchable()
                             ->preload()
-                            ->helperText('Only candidates already marked as players can be linked.'),
+                            ->helperText('Only candidates already marked as players can be linked.')
+                            ->visible(fn (?ParentAccount $record, $get): bool => $get('account_type') !== AccountType::VvipClient->value && ($record === null || ! $record->isVvipClient())),
                         Placeholder::make('account_status')
                             ->label('Status')
                             ->content(fn (?ParentAccount $record): string => $record?->accepted_at
                                 ? 'Accepted'
                                 : ($record?->invited_at ? 'Invited' : 'Draft')),
+                        Select::make('account_type')
+                            ->label('Account type')
+                            ->options(AccountType::class)
+                            ->default(AccountType::Parent->value)
+                            ->afterStateUpdated(function ($set, $state): void {
+                                if ($state === AccountType::VvipClient->value) {
+                                    $set('is_vvip', true);
+                                }
+                            })
+                            ->live(),
                         Toggle::make('is_vvip')
                             ->label('VVIP')
                             ->visible(fn (): bool => auth()->user()?->hasRole('Admin') ?? false),
@@ -74,6 +86,9 @@ class ParentAccountResource extends Resource
                             ->seconds(false),
                         DateTimePicker::make('accepted_at')
                             ->seconds(false),
+                        Placeholder::make('balance')
+                            ->label('Account balance')
+                            ->content(fn (?ParentAccount $record): string => $record ? (string) $record->pointsBalance() : '0'),
                     ]),
             ]);
     }
@@ -87,6 +102,9 @@ class ParentAccountResource extends Resource
                     ->sortable(),
                 TextColumn::make('email')
                     ->searchable()
+                    ->sortable(),
+                TextColumn::make('account_type')
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('players_count')
                     ->counts('players')

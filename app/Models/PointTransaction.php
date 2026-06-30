@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 #[Fillable([
     'candidate_id',
+    'parent_account_id',
     'type',
     'points',
     'point_rule_id',
@@ -37,11 +38,29 @@ class PointTransaction extends Model
         static::deleting(function (): never {
             throw new \LogicException('Point transactions are append-only. Use a reverse or adjust entry instead.');
         });
+
+        static::creating(function (self $txn): void {
+            $hasCandidate = $txn->candidate_id !== null;
+            $hasAccount = $txn->parent_account_id !== null;
+
+            if ($hasCandidate && $hasAccount) {
+                throw new \LogicException('A point transaction cannot belong to both a player and an account.');
+            }
+
+            if (! $hasCandidate && ! $hasAccount) {
+                throw new \LogicException('A point transaction must belong to either a player or an account.');
+            }
+        });
     }
 
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(Candidate::class);
+    }
+
+    public function parentAccount(): BelongsTo
+    {
+        return $this->belongsTo(ParentAccount::class, 'parent_account_id');
     }
 
     public function pointRule(): BelongsTo

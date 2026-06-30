@@ -21,6 +21,12 @@ class RedemptionController extends Controller
 
     public function items(Request $request): JsonResponse
     {
+        $parent = $request->user();
+
+        if (! $parent instanceof ParentAccount) {
+            abort(403, 'Only parent accounts can view redemption items.');
+        }
+
         $items = RedemptionItem::query()
             ->available()
             ->orderBy('name')
@@ -46,15 +52,22 @@ class RedemptionController extends Controller
         }
 
         $data = $request->validate([
-            'player_id' => ['required', 'integer', 'exists:candidates,id'],
+            'player_id' => ['sometimes', 'integer', 'exists:candidates,id'],
             'redemption_item_id' => ['required', 'integer', 'exists:redemption_items,id'],
         ]);
 
-        $player = Candidate::query()->findOrFail($data['player_id']);
         $item = RedemptionItem::query()->findOrFail($data['redemption_item_id']);
 
         try {
-            $redemption = $this->redemptionService->redeem($parent, $player, $item);
+            if (isset($data['player_id'])) {
+                $player = Candidate::query()->findOrFail($data['player_id']);
+                $redemption = $this->redemptionService->redeem($parent, $player, $item);
+            } else {
+                if (! $parent->isVvipClient()) {
+                    return response()->json(['message' => 'Account-level redemption requires a VVIP client account.'], 422);
+                }
+                $redemption = $this->redemptionService->redeemForAccount($parent, $item);
+            }
         } catch (PlayerNotLinkedException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         } catch (RedemptionItemNotAvailableException $e) {
@@ -75,7 +88,7 @@ class RedemptionController extends Controller
                     'name' => $redemption->item->name,
                     'type' => $redemption->item->type->value,
                 ],
-                'player_name' => $redemption->player->full_name,
+                'player_name' => $redemption->player?->full_name,
                 'created_at' => $redemption->created_at->toIso8601String(),
             ],
         ]);
@@ -102,7 +115,7 @@ class RedemptionController extends Controller
                     'name' => $r->item->name,
                     'type' => $r->item->type->value,
                 ],
-                'player_name' => $r->player->full_name,
+                'player_name' => $r->player?->full_name,
                 'fulfilled_at' => $r->fulfilled_at?->toIso8601String(),
                 'created_at' => $r->created_at->toIso8601String(),
             ]);

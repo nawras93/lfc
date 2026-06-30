@@ -10,6 +10,7 @@ use App\Models\Candidate;
 use App\Models\ParentAccount;
 use App\Models\Redemption;
 use App\Models\RedemptionItem;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -27,6 +28,9 @@ class RedemptionService
 
         return DB::transaction(function () use ($parent, $player, $item) {
             $item = RedemptionItem::query()->lockForUpdate()->findOrFail($item->id);
+
+            // Lock the parent row to serialize redemptions (double-spend guard)
+            ParentAccount::query()->lockForUpdate()->findOrFail($parent->id);
 
             if (! $item->is_active
                 || ($item->stock !== null && $item->stock <= 0)
@@ -55,6 +59,46 @@ class RedemptionService
             ]);
 
             $this->pointsEngine->redeem($player, $item->points_cost, $redemption);
+
+            return $redemption;
+        });
+    }
+
+    public function redeemForAccount(ParentAccount $account, RedemptionItem $item): Redemption
+    {
+        return DB::transaction(function () use ($account, $item) {
+            $item = RedemptionItem::query()->lockForUpdate()->findOrFail($item->id);
+
+            // Lock the account row to serialize redemptions (double-spend guard)
+            ParentAccount::query()->lockForUpdate()->findOrFail($account->id);
+
+            if (! $item->is_active
+                || ($item->stock !== null && $item->stock <= 0)
+                || ($item->valid_from !== null && $item->valid_from->isFuture())
+                || ($item->valid_until !== null && $item->valid_until->isPast())) {
+                throw new RedemptionItemNotAvailableException('This item is not available for redemption.');
+            }
+
+            if ($account->pointsBalance() < $item->points_cost) {
+                throw new InsufficientPointsException('Insufficient account balance for this redemption.');
+            }
+
+            if ($item->stock !== null) {
+                $item->decrement('stock');
+            }
+
+            $voucherCode = $this->generateUniqueVoucherCode();
+
+            $redemption = Redemption::query()->create([
+                'parent_account_id' => $account->id,
+                'candidate_id' => null,
+                'redemption_item_id' => $item->id,
+                'points_spent' => $item->points_cost,
+                'voucher_code' => $voucherCode,
+                'status' => RedemptionStatus::Issued,
+            ]);
+
+            $this->pointsEngine->redeemFromAccount($account, $item->points_cost, $redemption);
 
             return $redemption;
         });
