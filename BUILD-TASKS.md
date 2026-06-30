@@ -14,7 +14,7 @@
 | --- | --- | --- |
 | T1 | DONE | Scaffold: Laravel + Filament v5, auth, Shield roles (Admin/Coach/Mgmt), `.env`/staging, seeder skeleton |
 | T2 | DONE | Phase A core (demo): Candidate resource + teams + seasons; multi-dimension status + transition guards; private-disk documents + consent; mark accepted candidate as "player" |
-| T3 | IN PROGRESS | Accounts/API slice: `parent_accounts`, parent↔player links, invitation; Sanctum API (auth + endpoints D needs) |
+| T3 | DONE | Accounts/API slice: `parent_accounts`, parent↔player links, invitation; Sanctum API (auth + endpoints D needs) |
 | T4 | TODO | Matches/Fixtures module (Filament) with open-for-scanning window |
 | T5 | TODO | Points ledger (append-only) + earning-rules engine (fixed/percentage, scoped) |
 | T6 | TODO | Attendance scan: rotating signed QR (app) + staff scanner endpoint; validate signature/freshness/open-match; one-scan dedupe; credit linked player(s) on match team |
@@ -42,4 +42,6 @@ T1 → T2 → T3 → (T4–T8 partly parallel) → T9 → T10.
 - ~~T1 → T2: documents on the `private` disk~~ — **DONE in T2** (private disk + authenticated streamed download).
 - **From T2 → fix soon:** `DocumentTypeSeeder` is missing **"Parent QID/passport"** (8 of 9 checklist items seeded). Add it.
 - **From T2 → optional polish:** don't expose `recruitment_stage` on the *create* form (let it default to New Application) so initial state can't skip the guard; browser smoke-test the private-document download (no automated test covers the actual HTTP stream).
+- ~~T2 fold-ins (doc-type, hide recruitment_stage on create, download test)~~ — **DONE in T3** (download is now a signed+auth route).
+- **From T3 (review fix):** `LFC_DEMO_PARENT_EMAIL/PASSWORD` were in README but not `.env.example` — **added to `.env.example` and the local `.env`**. Seeder falls back to defaults `parent.demo@lfc.test` / `password`.
 - **Stack note:** running on Laravel 13 / PHP ^8.3 (latest stable — fine).
