@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             RedemptionItemSeeder::class,
             OfferSeeder::class,
             ParentAccountSeeder::class,
+            VvipClientSeeder::class,
         ]);
     }
 }
