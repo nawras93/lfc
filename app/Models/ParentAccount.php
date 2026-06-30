@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AccountType;
 use Database\Factories\ParentAccountFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -22,6 +23,7 @@ use Laravel\Sanctum\HasApiTokens;
     'invited_at',
     'accepted_at',
     'is_vvip',
+    'account_type',
 ])]
 #[Hidden([
     'password',
@@ -40,7 +42,13 @@ class ParentAccount extends Authenticatable
             'invited_at' => 'datetime',
             'accepted_at' => 'datetime',
             'is_vvip' => 'boolean',
+            'account_type' => AccountType::class,
         ];
+    }
+
+    public function isVvipClient(): bool
+    {
+        return $this->account_type === AccountType::VvipClient;
     }
 
     public function players(): BelongsToMany
@@ -52,6 +60,16 @@ class ParentAccount extends Authenticatable
     public function redemptions(): HasMany
     {
         return $this->hasMany(Redemption::class);
+    }
+
+    public function pointTransactions(): HasMany
+    {
+        return $this->hasMany(PointTransaction::class, 'parent_account_id');
+    }
+
+    public function pointsBalance(): int
+    {
+        return (int) $this->pointTransactions()->sum('points');
     }
 
     public function syncPlayers(array $candidateIds): void
