@@ -12,6 +12,7 @@ class DocumentTypeSeeder extends Seeder
         foreach ([
             ['name' => 'Passport copy', 'required' => true],
             ['name' => 'QID copy', 'required' => true],
+            ['name' => 'Parent QID/passport', 'required' => true],
             ['name' => 'Birth certificate', 'required' => true],
             ['name' => 'Player photo', 'required' => true],
             ['name' => 'Previous club release letter', 'required' => false],

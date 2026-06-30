@@ -16,6 +16,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -151,6 +152,57 @@ class CandidateResourceTest extends TestCase
         $this->assertFalse((bool) config('filesystems.disks.private.serve'));
     }
 
+    public function test_candidate_create_form_does_not_expose_recruitment_stage_field(): void
+    {
+        $this->actingAsAdmin();
+
+        Livewire::test(CreateCandidate::class)
+            ->assertFormFieldDoesNotExist('recruitment_stage');
+    }
+
+    public function test_document_type_seeder_includes_parent_qid_passport(): void
+    {
+        $this->seed();
+
+        $this->assertDatabaseCount('document_types', 9);
+        $this->assertDatabaseHas('document_types', [
+            'name' => 'Parent QID/passport',
+            'required' => true,
+        ]);
+    }
+
+    public function test_candidate_document_download_returns_exact_private_disk_bytes(): void
+    {
+        Storage::fake('private');
+
+        $admin = $this->actingAsAdmin();
+        $candidate = Candidate::factory()->create([
+            'season_id' => Season::query()->firstOrFail()->id,
+        ]);
+        $documentType = DocumentType::query()->firstOrFail();
+        $contents = 'exact-private-document-contents';
+        $path = "candidate-documents/{$candidate->id}/identity.pdf";
+
+        Storage::disk('private')->put($path, $contents);
+
+        $document = CandidateDocument::query()->create([
+            'candidate_id' => $candidate->id,
+            'document_type_id' => $documentType->id,
+            'file_path' => $path,
+            'status' => CandidateDocumentStatus::Received,
+            'uploaded_by' => $admin->id,
+        ]);
+
+        $url = URL::temporarySignedRoute('admin.candidate-documents.download', now()->addMinutes(10), [
+            'candidateDocument' => $document,
+        ]);
+
+        $response = $this->actingAs($admin)->get($url);
+
+        $response->assertOk();
+        $this->assertSame($contents, $response->streamedContent());
+    }
+
     private function actingAsAdmin(): User
     {
         $this->seed();
@@ -182,7 +234,6 @@ class CandidateResourceTest extends TestCase
             'parent_phone' => '555100001',
             'parent_whatsapp' => '555100002',
             'email' => 'parent@example.com',
-            'recruitment_stage' => RecruitmentStage::NewApplication->value,
             'document_status' => 'pending',
             'qfa_status' => 'not_started',
             'fifa_status' => 'not_started',

@@ -16,8 +16,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class CandidateDocumentsRelationManager extends RelationManager
 {
@@ -78,9 +77,10 @@ class CandidateDocumentsRelationManager extends RelationManager
             ->recordActions([
                 Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->action(fn ($record) => Response::streamDownload(
-                        fn () => print (Storage::disk('private')->get($record->file_path)),
-                        basename($record->file_path),
+                    ->url(fn ($record): string => URL::temporarySignedRoute(
+                        'admin.candidate-documents.download',
+                        now()->addMinutes(10),
+                        ['candidateDocument' => $record],
                     )),
                 EditAction::make()
                     ->mutateDataUsing(fn (array $data): array => [

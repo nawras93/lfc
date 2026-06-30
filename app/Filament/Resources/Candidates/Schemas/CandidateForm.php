@@ -93,9 +93,10 @@ class CandidateForm
                     ->schema([
                         Select::make('recruitment_stage')
                             ->options(EnumOptions::for(RecruitmentStage::class))
-                            ->required()
+                            ->required(fn (string $operation): bool => $operation !== 'create')
                             ->default(RecruitmentStage::NewApplication->value)
-                            ->native(false),
+                            ->native(false)
+                            ->visible(fn (string $operation): bool => $operation !== 'create'),
                         Select::make('document_status')
                             ->options(EnumOptions::for(DocumentStatus::class))
                             ->required()
