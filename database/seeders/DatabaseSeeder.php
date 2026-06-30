@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             FixtureSeeder::class,
             DocumentTypeSeeder::class,
             ParentAccountSeeder::class,
+            PointRuleSeeder::class,
         ]);
     }
 }

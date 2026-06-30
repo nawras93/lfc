@@ -16,6 +16,7 @@ class ViewCandidate extends ViewRecord
             CandidateResource::makeChangeRecruitmentStageAction(),
             CandidateResource::makeMarkAsPlayerAction(),
             CandidateResource::makeInviteParentAction(),
+            CandidateResource::makeAdjustPointsAction(),
             EditAction::make(),
         ];
     }

@@ -70,6 +70,13 @@ class CandidateInfolist
                         TextEntry::make('status_updated_at')
                             ->dateTime(),
                     ]),
+                Section::make('Points')
+                    ->columns(2)
+                    ->schema([
+                        TextEntry::make('points_balance')
+                            ->label('Points balance')
+                            ->state(fn ($record) => $record->pointsBalance()),
+                    ]),
                 Section::make('Consent')
                     ->columns(2)
                     ->schema([

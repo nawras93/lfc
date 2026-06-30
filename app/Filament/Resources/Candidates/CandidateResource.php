@@ -9,6 +9,7 @@ use App\Filament\Resources\Candidates\Pages\EditCandidate;
 use App\Filament\Resources\Candidates\Pages\ListCandidates;
 use App\Filament\Resources\Candidates\Pages\ViewCandidate;
 use App\Filament\Resources\Candidates\RelationManagers\CandidateDocumentsRelationManager;
+use App\Filament\Resources\Candidates\RelationManagers\PointTransactionsRelationManager;
 use App\Filament\Resources\Candidates\Schemas\CandidateForm;
 use App\Filament\Resources\Candidates\Schemas\CandidateInfolist;
 use App\Filament\Resources\Candidates\Tables\CandidatesTable;
@@ -16,9 +17,12 @@ use App\Models\Candidate;
 use App\Models\ParentAccount;
 use App\Models\Team;
 use App\Services\RecruitmentStageGuard;
+use App\Services\PointsEngine;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -57,6 +61,7 @@ class CandidateResource extends Resource
     {
         return [
             CandidateDocumentsRelationManager::class,
+            PointTransactionsRelationManager::class,
         ];
     }
 
@@ -161,6 +166,33 @@ class CandidateResource extends Resource
                     'team_id' => $data['team_id'],
                     'is_player' => true,
                 ])->save();
+            });
+    }
+
+    public static function makeAdjustPointsAction(): Action
+    {
+        return Action::make('adjustPoints')
+            ->label('Adjust points')
+            ->icon(Heroicon::OutlinedCurrencyDollar)
+            ->color('info')
+            ->visible(fn (): bool => auth()->user()?->hasRole(['Admin', 'Management']) ?? false)
+            ->schema([
+                TextInput::make('points')
+                    ->label('Points (signed)')
+                    ->numeric()
+                    ->required()
+                    ->helperText('Positive to credit, negative to debit.'),
+                Textarea::make('reason')
+                    ->required()
+                    ->maxLength(1000),
+            ])
+            ->action(function (Candidate $record, array $data): void {
+                app(PointsEngine::class)->adjust(
+                    $record,
+                    (int) $data['points'],
+                    $data['reason'],
+                    auth()->user(),
+                );
             });
     }
 
