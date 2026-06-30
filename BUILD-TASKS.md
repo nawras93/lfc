@@ -23,12 +23,13 @@
 | T7 | DONE | Redemption catalog (fees/events/merch) + redeem→voucher; VVIP flag + offers (all / VVIP-only) |
 | T7b | DONE | VVIP client accounts (non-parent): `account_type` (parent\|vvip_client) on accounts; admin "Create VVIP client" + "Grant points"; account-level points ledger owner + account-balance redemption. Keep the existing per-player path unchanged. |
 | T8 | DONE | Loyalty dashboard (Filament): issued/redeemed, attendance, fulfillment, outstanding-points liability |
-| T9 | TODO | Flutter app (iOS+Android, **AR+EN/RTL**): auth, players+balances, show QR, points history, redeem, offers (may split T9a wiring / T9b screens) |
+| T9a | IN PROGRESS | Flutter scaffold (`mobile/`, iOS+Android) + **AR+EN/RTL** localization + auth/API wiring (Dio client, secure-storage token, session/routing, login + accept-invite, `/me` shell). No feature screens. |
+| T9b | TODO | Flutter feature screens (**AR+EN/RTL**): players+balances, show rotating QR, points history, redeem (player or account), offers, staff scanner. Needs `points_balance` added to `PlayerResource`. |
 | T10 | TODO | Seed demo data + scripted end-to-end walkthrough (parent → scan → points → redeem → VVIP offer) |
 
 ## Dependencies
 
-T1 → T2 → T3 → (T4–T8 partly parallel) → T9 → T10. **T7b** (VVIP client accounts) depends on T5 (ledger) + T7 (VVIP/offers + redemption) and should land **before T8** so the dashboard counts account-level points/liability.
+T1 → T2 → T3 → (T4–T8 partly parallel) → T9a → T9b → T10. **T7b** (VVIP client accounts) depends on T5 (ledger) + T7 (VVIP/offers + redemption) and should land **before T8** so the dashboard counts account-level points/liability.
 
 ## PM review checklist
 
