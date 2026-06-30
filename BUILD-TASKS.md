@@ -14,7 +14,7 @@
 | --- | --- | --- |
 | T1 | DONE | Scaffold: Laravel + Filament v5, auth, Shield roles (Admin/Coach/Mgmt), `.env`/staging, seeder skeleton |
 | T2 | DONE | Phase A core (demo): Candidate resource + teams + seasons; multi-dimension status + transition guards; private-disk documents + consent; mark accepted candidate as "player" |
-| T3 | TODO | Accounts/API slice: `parent_accounts`, parent↔player links, invitation; Sanctum API (auth + endpoints D needs) |
+| T3 | IN PROGRESS | Accounts/API slice: `parent_accounts`, parent↔player links, invitation; Sanctum API (auth + endpoints D needs) |
 | T4 | TODO | Matches/Fixtures module (Filament) with open-for-scanning window |
 | T5 | TODO | Points ledger (append-only) + earning-rules engine (fixed/percentage, scoped) |
 | T6 | TODO | Attendance scan: rotating signed QR (app) + staff scanner endpoint; validate signature/freshness/open-match; one-scan dedupe; credit linked player(s) on match team |
