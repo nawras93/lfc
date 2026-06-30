@@ -21,6 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
     'invitation_token',
     'invited_at',
     'accepted_at',
+    'is_vvip',
 ])]
 #[Hidden([
     'password',
@@ -38,6 +39,7 @@ class ParentAccount extends Authenticatable
             'password' => 'hashed',
             'invited_at' => 'datetime',
             'accepted_at' => 'datetime',
+            'is_vvip' => 'boolean',
         ];
     }
 

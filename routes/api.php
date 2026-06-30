@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\OfferController;
 use App\Http\Controllers\Api\V1\PlayerController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RedemptionController;
@@ -26,5 +27,6 @@ Route::prefix('v1')
             Route::get('/redemption-items', [RedemptionController::class, 'items']);
             Route::post('/redemptions', [RedemptionController::class, 'redeem']);
             Route::get('/redemptions', [RedemptionController::class, 'history']);
+            Route::get('/offers', [OfferController::class, 'index']);
         });
     });
