@@ -38,8 +38,10 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             FixtureSeeder::class,
             DocumentTypeSeeder::class,
-            ParentAccountSeeder::class,
             PointRuleSeeder::class,
+            RedemptionItemSeeder::class,
+            OfferSeeder::class,
+            ParentAccountSeeder::class,
         ]);
     }
 }

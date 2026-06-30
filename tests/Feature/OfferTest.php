@@ -156,8 +156,13 @@ class OfferTest extends TestCase
             ->getJson('/api/v1/offers');
 
         $response->assertOk();
-        // Only published offers with correct audience should appear
-        $this->assertCount(1, $response->json('data'));
+        $titles = collect($response->json('data'))->pluck('title');
+        $this->assertContains('All Parents Offer', $titles);
+        $this->assertNotContains('VVIP Exclusive Offer', $titles);
+        // Ensure no VVIP-only offers leak through
+        foreach ($response->json('data') as $offer) {
+            $this->assertSame('all', $offer['audience']);
+        }
     }
 
     public function test_vvip_parent_model_flag(): void
