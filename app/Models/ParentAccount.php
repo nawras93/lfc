@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -20,6 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
     'invitation_token',
     'invited_at',
     'accepted_at',
+    'is_vvip',
 ])]
 #[Hidden([
     'password',
@@ -37,6 +39,7 @@ class ParentAccount extends Authenticatable
             'password' => 'hashed',
             'invited_at' => 'datetime',
             'accepted_at' => 'datetime',
+            'is_vvip' => 'boolean',
         ];
     }
 
@@ -44,6 +47,11 @@ class ParentAccount extends Authenticatable
     {
         return $this->belongsToMany(Candidate::class, 'parent_player_links')
             ->withTimestamps();
+    }
+
+    public function redemptions(): HasMany
+    {
+        return $this->hasMany(Redemption::class);
     }
 
     public function syncPlayers(array $candidateIds): void

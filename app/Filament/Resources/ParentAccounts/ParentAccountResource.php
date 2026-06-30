@@ -13,10 +13,12 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -65,6 +67,9 @@ class ParentAccountResource extends Resource
                             ->content(fn (?ParentAccount $record): string => $record?->accepted_at
                                 ? 'Accepted'
                                 : ($record?->invited_at ? 'Invited' : 'Draft')),
+                        Toggle::make('is_vvip')
+                            ->label('VVIP')
+                            ->visible(fn (): bool => auth()->user()?->hasRole('Admin') ?? false),
                         DateTimePicker::make('invited_at')
                             ->seconds(false),
                         DateTimePicker::make('accepted_at')
@@ -86,6 +91,10 @@ class ParentAccountResource extends Resource
                 TextColumn::make('players_count')
                     ->counts('players')
                     ->label('Players'),
+                IconColumn::make('is_vvip')
+                    ->boolean()
+                    ->label('VVIP')
+                    ->sortable(),
                 TextColumn::make('invited_at')
                     ->dateTime()
                     ->sortable(),

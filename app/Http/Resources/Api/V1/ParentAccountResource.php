@@ -17,6 +17,7 @@ class ParentAccountResource extends JsonResource
             'whatsapp' => $this->whatsapp,
             'invited_at' => $this->invited_at?->toIso8601String(),
             'accepted_at' => $this->accepted_at?->toIso8601String(),
+            'is_vvip' => $this->is_vvip,
         ];
     }
 }

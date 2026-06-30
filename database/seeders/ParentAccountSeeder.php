@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 use App\Enums\DocumentStatus;
 use App\Enums\JoiningStatus;
+use App\Enums\PointTransactionType;
 use App\Enums\RecruitmentStage;
 use App\Models\Candidate;
 use App\Models\ParentAccount;
+use App\Models\PointTransaction;
 use App\Models\Season;
 use App\Models\Team;
 use Illuminate\Database\Seeder;
@@ -65,5 +67,17 @@ class ParentAccountSeeder extends Seeder
         );
 
         $parent->players()->syncWithoutDetaching([$candidate->id]);
+
+        // Give the demo player starting points so they can redeem items
+        PointTransaction::query()->firstOrCreate(
+            [
+                'candidate_id' => $candidate->id,
+                'type' => PointTransactionType::Adjust,
+                'reason' => 'Demo account — starting points',
+            ],
+            [
+                'points' => 150,
+            ],
+        );
     }
 }

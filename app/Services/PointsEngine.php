@@ -63,4 +63,15 @@ class PointsEngine
             'created_by' => $by->id,
         ]);
     }
+
+    public function redeem(Candidate $player, int $points, Model $source): PointTransaction
+    {
+        return PointTransaction::query()->create([
+            'candidate_id' => $player->id,
+            'type' => PointTransactionType::Redeem,
+            'points' => -abs($points),
+            'source_type' => $source->getMorphClass(),
+            'source_id' => $source->getKey(),
+        ]);
+    }
 }

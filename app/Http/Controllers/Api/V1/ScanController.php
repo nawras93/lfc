@@ -9,9 +9,10 @@ use App\Models\ParentAccount;
 use App\Services\ScanTokenService;
 use App\Services\PointsEngine;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ScanController extends Controller
 {
@@ -68,49 +69,43 @@ class ScanController extends Controller
         $parent = ParentAccount::query()->findOrFail($parentId);
 
         $qualifyingPlayers = $parent->players()
-            ->where('team_id', $fixture->team_id)
+            ->where('candidates.team_id', $fixture->team_id)
+            ->where('candidates.is_player', true)
             ->get();
 
         if ($qualifyingPlayers->isEmpty()) {
             return response()->json(['message' => 'No linked player on this match\'s team.'], 422);
         }
 
-        $existingScan = AttendanceScan::query()
-            ->where('parent_account_id', $parent->id)
-            ->where('fixture_id', $fixture->id)
-            ->first();
+        try {
+            $result = DB::transaction(function () use ($parent, $fixture, $staff, $qualifyingPlayers) {
+                $scan = AttendanceScan::query()->create([
+                    'parent_account_id' => $parent->id,
+                    'fixture_id' => $fixture->id,
+                    'scanned_by' => $staff->id,
+                    'scanned_at' => Carbon::now(),
+                ]);
 
-        if ($existingScan) {
+                $credited = [];
+
+                foreach ($qualifyingPlayers as $player) {
+                    $txn = $this->pointsEngine->credit($player, $fixture, $scan);
+
+                    $credited[] = [
+                        'player_id' => $player->id,
+                        'player_name' => $player->full_name,
+                        'points' => $txn?->points ?? 0,
+                    ];
+                }
+
+                return ['scan' => $scan, 'credited' => $credited];
+            });
+        } catch (UniqueConstraintViolationException $e) {
             return response()->json(['message' => 'Already scanned for this match.'], 409);
         }
 
-        try {
-            $scan = AttendanceScan::query()->create([
-                'parent_account_id' => $parent->id,
-                'fixture_id' => $fixture->id,
-                'scanned_by' => $staff->id,
-                'scanned_at' => Carbon::now(),
-            ]);
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000' && str_contains($e->getMessage(), 'attendance_scans_parent_account_id_fixture_id_unique')) {
-                return response()->json(['message' => 'Already scanned for this match.'], 409);
-            }
-
-            throw $e;
-        }
-
-        $credited = [];
-
-        foreach ($qualifyingPlayers as $player) {
-            $txn = $this->pointsEngine->credit($player, $fixture, $scan);
-
-            $credited[] = [
-                'player_id' => $player->id,
-                'player_name' => $player->full_name,
-                'points' => $txn?->points ?? 0,
-            ];
-        }
-
+        $scan = $result['scan'];
+        $credited = $result['credited'];
         $total = array_sum(array_column($credited, 'points'));
 
         return response()->json([

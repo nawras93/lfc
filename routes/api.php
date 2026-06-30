@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\OfferController;
 use App\Http\Controllers\Api\V1\PlayerController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\RedemptionController;
 use App\Http\Controllers\Api\V1\ScanController;
 use App\Http\Controllers\Api\V1\StaffAuthController;
 use Illuminate\Support\Facades\Route;
@@ -21,5 +23,10 @@ Route::prefix('v1')
             Route::get('/players/{player}', [PlayerController::class, 'show']);
             Route::get('/scan-token', [ScanController::class, 'token']);
             Route::post('/scan', [ScanController::class, 'scan']);
+
+            Route::get('/redemption-items', [RedemptionController::class, 'items']);
+            Route::post('/redemptions', [RedemptionController::class, 'redeem']);
+            Route::get('/redemptions', [RedemptionController::class, 'history']);
+            Route::get('/offers', [OfferController::class, 'index']);
         });
     });
