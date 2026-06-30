@@ -88,6 +88,16 @@ class Candidate extends Model
         return $this->hasMany(CandidateDocument::class);
     }
 
+    public function pointTransactions(): HasMany
+    {
+        return $this->hasMany(PointTransaction::class, 'candidate_id');
+    }
+
+    public function pointsBalance(): int
+    {
+        return (int) $this->pointTransactions()->sum('points');
+    }
+
     public function parentAccounts(): BelongsToMany
     {
         return $this->belongsToMany(ParentAccount::class, 'parent_player_links')
