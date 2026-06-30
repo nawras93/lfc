@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\PointTransactionType;
 use App\Models\Candidate;
 use App\Models\Fixture;
+use App\Models\ParentAccount;
 use App\Models\PointRule;
 use App\Models\PointTransaction;
 use App\Models\User;
@@ -68,6 +69,28 @@ class PointsEngine
     {
         return PointTransaction::query()->create([
             'candidate_id' => $player->id,
+            'type' => PointTransactionType::Redeem,
+            'points' => -abs($points),
+            'source_type' => $source->getMorphClass(),
+            'source_id' => $source->getKey(),
+        ]);
+    }
+
+    public function grantToAccount(ParentAccount $account, int $points, string $reason, User $by): PointTransaction
+    {
+        return PointTransaction::query()->create([
+            'parent_account_id' => $account->id,
+            'type' => PointTransactionType::Adjust,
+            'points' => $points,
+            'reason' => $reason,
+            'created_by' => $by->id,
+        ]);
+    }
+
+    public function redeemFromAccount(ParentAccount $account, int $points, Model $source): PointTransaction
+    {
+        return PointTransaction::query()->create([
+            'parent_account_id' => $account->id,
             'type' => PointTransactionType::Redeem,
             'points' => -abs($points),
             'source_type' => $source->getMorphClass(),
