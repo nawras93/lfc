@@ -1,0 +1,41 @@
+{
+  "@@locale": "en",
+  "appTitle": "LFC",
+  "loginTitle": "Sign in",
+  "loginSubtitle": "Use your parent or VVIP account to continue.",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "inviteTokenLabel": "Invite token",
+  "signInButton": "Sign in",
+  "acceptInviteButton": "Accept invite",
+  "openAcceptInvite": "Set password from invite",
+  "backToLogin": "Back to sign in",
+  "logoutButton": "Log out",
+  "languageToggle": "AR",
+  "languageLabel": "Language",
+  "homeTitle": "Account",
+  "accountTypeLabel": "Account type",
+  "vvipStatusLabel": "VVIP",
+  "balanceLabel": "Account balance",
+  "yesText": "Yes",
+  "noText": "No",
+  "requiredField": "This field is required.",
+  "invalidEmail": "Enter a valid email address.",
+  "passwordMinLength": "Password must be at least 8 characters.",
+  "sessionExpired": "Your session expired. Please sign in again.",
+  "genericError": "Something went wrong. Please try again.",
+  "networkError": "Cannot reach the server. Check the API URL and connection.",
+  "serverError": "The server is unavailable right now. Please try again shortly.",
+  "loadingText": "Loading...",
+  "welcomeLabel": "Welcome, {name}",
+  "@welcomeLabel": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "acceptInviteTitle": "Accept invitation",
+  "acceptInviteSubtitle": "Set a password to activate your account.",
+  "savePasswordButton": "Save password",
+  "demoApiHint": "Demo API URL is configured with --dart-define=API_BASE_URL.",
+  "notAvailableValue": "Not available"
+}
