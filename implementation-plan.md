@@ -131,8 +131,8 @@ Native apps for **parents, players, VVIP clients** on the Phase C API. Parents e
 - Redemption: one catalog across **fees + events + merch**.
 - **No in-app payments yet** — redemptions issue vouchers/credits fulfilled offline; API has a payments seam for later.
 - Scan: parent shows a **rotating signed QR**; **staff scan it**; server enforces **one scan per parent per match**.
-- VVIP: **manual flag** by admin; offers target it.
-- Points: **per player**; VVIP is a **parent-account** attribute.
+- VVIP: **manual flag** by admin; offers target it. A **VVIP client may be a parent OR a standalone account the admin creates** (no player links) — same `parent_accounts` table, distinguished by `account_type` (`parent` | `vvip_client`). Both see VVIP offers and **both can redeem**. *(Added 2026-06-30.)*
+- Points: **per player** (earned via attendance) **and per account** (admin-granted, for standalone VVIP clients with no player). The append-only ledger's owner is **a player or an account**; balance = Σ transactions per owner. The existing per-player path is unchanged.
 - New **Matches/Fixtures** module; scans link to a match.
 
 **Assumptions (confirmed):** iOS + Android; players view-only (parent redeems on their behalf); a scan credits the parent's linked player(s) **on that match's team**.
@@ -144,9 +144,9 @@ Native apps for **parents, players, VVIP clients** on the Phase C API. Parents e
 - **Matches** (Filament) — fixtures with an "open for scanning" window.
 - **Scanning** — rotating signed QR + staff scanner (role-gated): validates signature, freshness, open match, dedupe; credits per active rule; **offline queue + sync**.
 - **Earning-rules engine** (Filament) — fixed/percentage, scoped, dated.
-- **Points ledger** — append-only per player; optional expiry; gated, audited manual adjustments.
-- **Redemption catalog** (Filament + app) — fee/event/merch items with cost, validity, stock; redeem → voucher/booking → offline fulfillment queue.
-- **VVIP & offers** (Filament) — manual flag; offers targeting all or VVIP-only; push on publish.
+- **Points ledger** — append-only, owner = **player or account**; optional expiry; gated, audited manual adjustments (incl. **admin grant of points to a VVIP-client account**).
+- **Redemption catalog** (Filament + app) — fee/event/merch items with cost, validity, stock; redeem → voucher/booking → offline fulfillment queue. Redeemer balance = **a player's (parent) or an account's (VVIP client)**.
+- **VVIP & offers** (Filament) — manual flag; offers targeting all or VVIP-only; push on publish. **VVIP clients = parents flagged VVIP *or* admin-created standalone `vvip_client` accounts.**
 - **Notifications** — Firebase + in-app.
 - **Flutter app** — parent (players, balances, **show QR**, redeem, offers, progress + docs), player (view-only), staff (scanner). AR/EN/RTL.
 - **Loyalty dashboard** (Filament) — issued/redeemed, attendance, top earners, VVIP activity, fulfillment, **outstanding-points liability**.
@@ -185,7 +185,7 @@ Native apps for **parents, players, VVIP clients** on the Phase C API. Parents e
 
 **Phase C:** parent_accounts; parent_player_links; parent_notifications; document_upload_requests; reminder_rules; reminder_logs; message_templates; season_settings; public_registration_settings.
 
-**Phase D:** personal_access_tokens; device_tokens; matches; attendance_scans *(unique per parent+match)*; point_rules; point_transactions *(ledger)*; redemption_items; redemptions; offers. *(VVIP = flag on parent_accounts.)*
+**Phase D:** personal_access_tokens; device_tokens; matches; attendance_scans *(unique per parent+match)*; point_rules; point_transactions *(ledger — owner = player **or** account)*; redemption_items; redemptions; offers. *(VVIP = flag on parent_accounts; `account_type` = parent | vvip_client; point_transactions + redemptions reference a candidate **or** a parent_account — exactly one owner.)*
 
 ---
 

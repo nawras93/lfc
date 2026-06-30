@@ -21,20 +21,21 @@
 | T5 | DONE | Points ledger (append-only) + earning-rules engine (fixed/percentage, scoped) |
 | T6 | DONE | Attendance scan: rotating signed QR (app) + staff scanner endpoint; validate signature/freshness/open-match; one-scan dedupe; credit linked player(s) on match team |
 | T7 | DONE | Redemption catalog (fees/events/merch) + redeem→voucher; VVIP flag + offers (all / VVIP-only) |
+| T7b | TODO | VVIP client accounts (non-parent): `account_type` (parent\|vvip_client) on accounts; admin "Create VVIP client" + "Grant points"; account-level points ledger owner + account-balance redemption. Keep the existing per-player path unchanged. |
 | T8 | TODO | Loyalty dashboard (Filament): issued/redeemed, attendance, fulfillment, outstanding-points liability |
 | T9 | TODO | Flutter app (iOS+Android, **AR+EN/RTL**): auth, players+balances, show QR, points history, redeem, offers (may split T9a wiring / T9b screens) |
 | T10 | TODO | Seed demo data + scripted end-to-end walkthrough (parent → scan → points → redeem → VVIP offer) |
 
 ## Dependencies
 
-T1 → T2 → T3 → (T4–T8 partly parallel) → T9 → T10.
+T1 → T2 → T3 → (T4–T8 partly parallel) → T9 → T10. **T7b** (VVIP client accounts) depends on T5 (ledger) + T7 (VVIP/offers + redemption) and should land **before T8** so the dashboard counts account-level points/liability.
 
 ## PM review checklist
 
 - Matches §7/§8 scope — no over-build beyond the demo cut.
-- Ledger integrity: balance = Σ transactions; no direct balance edits.
+- Ledger integrity: balance = Σ transactions; no direct balance edits. **Each ledger row has exactly one owner (player XOR account); per-player path unchanged.**
 - Scan: one-scan dedupe; correct player credited for the match's team.
-- VVIP-only offers hidden from non-VVIP accounts.
+- VVIP-only offers hidden from non-VVIP accounts. **VVIP client (non-parent) accounts: see VVIP offers + can redeem from an account balance; admin grant is gated + audited.**
 - Private document access enforced.
 - AR/RTL renders correctly.
 
