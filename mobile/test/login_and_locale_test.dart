@@ -26,6 +26,18 @@ void main() {
     expect(find.text('This field is required.'), findsNWidgets(2));
   });
 
+  testWidgets('login screen accepts .test email addresses', (tester) async {
+    await tester.pumpWidget(_testApp());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key('login-email')), 'parent.demo@lfc.test');
+    await tester.enterText(find.byKey(const Key('login-password')), 'password');
+    await tester.tap(find.byKey(const Key('login-submit')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Enter a valid email address.'), findsNothing);
+  });
+
   testWidgets('language toggle switches locale and home shell becomes RTL', (tester) async {
     await tester.pumpWidget(
       _testApp(

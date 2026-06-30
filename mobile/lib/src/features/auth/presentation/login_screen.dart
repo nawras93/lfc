@@ -88,7 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             if (text.isEmpty) {
                               return l10n.requiredField;
                             }
-                            final emailPattern = RegExp(r'^[^@\\s]+@[^@\\s]+\\.[^@\\s]+\$');
+                            final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
                             if (!emailPattern.hasMatch(text)) {
                               return l10n.invalidEmail;
                             }
