@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -44,6 +45,11 @@ class ParentAccount extends Authenticatable
     {
         return $this->belongsToMany(Candidate::class, 'parent_player_links')
             ->withTimestamps();
+    }
+
+    public function redemptions(): HasMany
+    {
+        return $this->hasMany(Redemption::class);
     }
 
     public function syncPlayers(array $candidateIds): void
