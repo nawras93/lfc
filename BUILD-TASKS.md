@@ -12,7 +12,7 @@
 
 | ID | Status | Task |
 | --- | --- | --- |
-| T1 | TODO | Scaffold: Laravel + Filament v5, auth, Shield roles (Admin/Coach/Mgmt), `.env`/staging, seeder skeleton |
+| T1 | DONE | Scaffold: Laravel + Filament v5, auth, Shield roles (Admin/Coach/Mgmt), `.env`/staging, seeder skeleton |
 | T2 | TODO | Phase A core (demo): Candidate resource + teams + seasons; multi-dimension status + transition guards; private-disk documents + consent; mark accepted candidate as "player" |
 | T3 | TODO | Accounts/API slice: `parent_accounts`, parent↔player links, invitation; Sanctum API (auth + endpoints D needs) |
 | T4 | TODO | Matches/Fixtures module (Filament) with open-for-scanning window |
@@ -35,3 +35,8 @@ T1 → T2 → T3 → (T4–T8 partly parallel) → T9 → T10.
 - VVIP-only offers hidden from non-VVIP accounts.
 - Private document access enforced.
 - AR/RTL renders correctly.
+
+## Carry-over follow-ups
+
+- **From T1 → do in T2:** widen `User::canAccessPanel()` from `hasRole('Admin')` to `hasAnyRole(['Admin','Coach','Management'])` (or a Shield permission) so Coach/Management can reach `/admin` once their features exist. Stack actually used: Laravel 13 / PHP ^8.3 (latest stable — fine).
+- **For T2 documents:** store on the `private` disk explicitly (already configured), not `local`/`public`.
