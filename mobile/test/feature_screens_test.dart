@@ -153,6 +153,51 @@ void main() {
     expect(find.text('This reward is unavailable right now.'), findsOneWidget);
   });
 
+  testWidgets('redeem insufficient-points error shows a distinct message', (
+    tester,
+  ) async {
+    final redemptionRepository = FakeRedemptionRepository(
+      items: const [
+        RedemptionItemSummary(
+          id: 12,
+          name: 'VIP Match Ticket',
+          description: 'Premium seat',
+          type: 'event',
+          pointsCost: 80,
+          inStock: true,
+        ),
+      ],
+      error: ApiException(
+        message: 'Insufficient points for this redemption.',
+        kind: ApiErrorKind.validation,
+        statusCode: 422,
+      ),
+    );
+
+    await tester.pumpWidget(
+      _testApp(
+        session: _parentState(),
+        playerRepository: FakePlayerRepository(players: _players),
+        redemptionRepository: redemptionRepository,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Rewards'));
+    await tester.pumpAndSettle();
+    final redeemButton = tester.widget<FilledButton>(
+      find.byKey(const Key('redeem-item-12')),
+    );
+    redeemButton.onPressed!.call();
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text("You don't have enough points for this reward."),
+      findsOneWidget,
+    );
+    expect(find.text('This reward is unavailable right now.'), findsNothing);
+  });
+
   testWidgets('VVIP client redeem omits player_id', (tester) async {
     final redemptionRepository = FakeRedemptionRepository(
       items: const [
