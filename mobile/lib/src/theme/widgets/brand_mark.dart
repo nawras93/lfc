@@ -103,12 +103,22 @@ class LfcCrest extends StatelessWidget {
         ? context.lfc.onHero
         : (isDark ? context.lfc.onHero : null);
 
-    return Image.asset(
+    final image = Image.asset(
       LfcAssets.crest,
       height: height,
-      color: tint,
-      colorBlendMode: tint == null ? null : BlendMode.srcIn,
       filterQuality: FilterQuality.medium,
+    );
+
+    if (tint == null) {
+      return image;
+    }
+
+    // Tint via ColorFiltered rather than Image.colorBlendMode: on
+    // Android/Impeller the latter paints the quad's antialiased edge and leaves
+    // faint seams at the image's box edges. A layer filter avoids that.
+    return ColorFiltered(
+      colorFilter: ColorFilter.mode(tint, BlendMode.srcIn),
+      child: image,
     );
   }
 }

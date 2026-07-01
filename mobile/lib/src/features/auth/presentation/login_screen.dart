@@ -233,12 +233,20 @@ class _Header extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        LfcAssets.logo,
-                        height: 132,
-                        color: palette.onHero,
-                        colorBlendMode: BlendMode.srcIn,
-                        filterQuality: FilterQuality.medium,
+                      // Tint via ColorFiltered rather than Image.colorBlendMode:
+                      // on Android/Impeller the latter paints the image quad's
+                      // antialiased edge, leaving faint vertical seams at the
+                      // logo's box edges. A layer filter avoids that.
+                      ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          palette.onHero,
+                          BlendMode.srcIn,
+                        ),
+                        child: Image.asset(
+                          LfcAssets.logo,
+                          height: 132,
+                          filterQuality: FilterQuality.medium,
+                        ),
                       ),
                       const SizedBox(height: 18),
                       Text(
