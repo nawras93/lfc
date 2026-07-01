@@ -16,8 +16,9 @@ use App\Filament\Resources\Candidates\Tables\CandidatesTable;
 use App\Models\Candidate;
 use App\Models\ParentAccount;
 use App\Models\Team;
-use App\Services\RecruitmentStageGuard;
+use App\Services\CandidateDataNormalizer;
 use App\Services\PointsEngine;
+use App\Services\RecruitmentStageGuard;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -93,15 +94,7 @@ class CandidateResource extends Resource
      */
     public static function mutateCandidateData(array $data): array
     {
-        $consentGiven = (bool) ($data['consent_given'] ?? false);
-
-        if ($consentGiven) {
-            $data['consent_at'] ??= now();
-        } else {
-            $data['consent_at'] = null;
-        }
-
-        return $data;
+        return app(CandidateDataNormalizer::class)->normalize($data);
     }
 
     public static function makeChangeRecruitmentStageAction(): Action

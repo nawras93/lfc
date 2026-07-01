@@ -45,15 +45,27 @@ class PublicRegistrationController extends Controller
         ]);
     }
 
-    public function create(string $seasonSlug, string $registrationSlug): View
+    public function create(string $seasonSlug, string $registrationSlug): View|RedirectResponse
     {
-        $season = $this->publicRegistrationService->resolveSeasonFromRegistrationLink($seasonSlug, $registrationSlug);
+        $season = $this->publicRegistrationService->resolveSeasonFromRegistrationLink($registrationSlug);
+
+        // The season-name slug is cosmetic. If it's stale (e.g. the season was
+        // renamed after the link was shared), redirect once to the canonical URL.
+        $canonicalSeasonSlug = $season->registrationSeasonSlug();
+
+        if ($seasonSlug !== $canonicalSeasonSlug) {
+            return redirect()->route('public.register.show', [
+                'seasonSlug' => $canonicalSeasonSlug,
+                'registrationSlug' => $registrationSlug,
+                'lang' => app()->getLocale(),
+            ], 301);
+        }
 
         return view('public.register', [
             'season' => $season,
             'registrationOpen' => $season->registrationIsOpen(),
             'registrationSlug' => $registrationSlug,
-            'seasonSlug' => $seasonSlug,
+            'seasonSlug' => $canonicalSeasonSlug,
             'isRtl' => app()->getLocale() === 'ar',
             'locale' => app()->getLocale(),
             'positionOptions' => [
@@ -67,7 +79,10 @@ class PublicRegistrationController extends Controller
 
     public function store(StorePublicRegistrationRequest $request, string $seasonSlug, string $registrationSlug): RedirectResponse
     {
-        $season = $this->publicRegistrationService->resolveSeasonFromRegistrationLink($seasonSlug, $registrationSlug);
+        $season = $this->publicRegistrationService->resolveSeasonFromRegistrationLink($registrationSlug);
+
+        // Always redirect back to the canonical URL regardless of the slug posted.
+        $seasonSlug = $season->registrationSeasonSlug();
 
         if (! $season->registrationIsOpen()) {
             return redirect()
