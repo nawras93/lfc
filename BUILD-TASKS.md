@@ -25,7 +25,7 @@
 | T8 | DONE | Loyalty dashboard (Filament): issued/redeemed, attendance, fulfillment, outstanding-points liability |
 | T9a | DONE | Flutter scaffold (`mobile/`, iOS+Android) + **AR+EN/RTL** localization + auth/API wiring (Dio client, secure-storage token, session/routing, login + accept-invite, `/me` shell). No feature screens. |
 | T9b | DONE | Flutter feature screens (**AR+EN/RTL**): players+balances, show rotating QR, points history, redeem (player or account), offers, staff scanner. Needs `points_balance` added to `PlayerResource`. |
-| T10 | TODO | Seed demo data + scripted end-to-end walkthrough (parent → scan → points → redeem → VVIP offer) |
+| T10 | TODO | Seed demo data + scripted end-to-end walkthrough (parent → scan → points → redeem → VVIP offer). **Fold in 3 fixes:** (A) platform-aware API base URL default (Android→10.0.2.2), (B) `ApiException.toString()=>message` (6 screens show "Instance of 'ApiException'"), (C) **balances go stale after redeem** — Players tab (IndexedStack, fetched once in initState) + profile header (`session.account` login snapshot) don't refresh; invalidate a shared players provider + `SessionController.refreshAccount()` after redeem/scan. |
 
 ## Dependencies
 
