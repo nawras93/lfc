@@ -116,9 +116,10 @@
     }
 
     /* ---- Layout ---- */
+    /* Stacked: hero banner on top, form full-width below for more room. */
     .lfc-grid {
         display: grid;
-        grid-template-columns: 1.05fr 1fr;
+        grid-template-columns: 1fr;
         gap: 1.5rem;
         align-items: start;
     }
@@ -189,6 +190,7 @@
 
     .lfc-highlights {
         display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: .7rem;
         margin: 2rem 0 0;
         padding: 0;
@@ -197,7 +199,9 @@
 
     .lfc-highlights li {
         position: relative;
-        padding: .95rem 1rem .95rem 2.6rem;
+        /* Logical padding so the bullet gutter flips correctly in RTL. */
+        padding: .95rem 1rem;
+        padding-inline-start: 2.6rem;
         border: 1px solid rgb(255 255 255 / 8%);
         border-radius: 1rem;
         background: rgb(255 255 255 / 5%);
