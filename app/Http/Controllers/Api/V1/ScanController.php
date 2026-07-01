@@ -37,6 +37,37 @@ class ScanController extends Controller
         ]);
     }
 
+    public function fixtures(Request $request): JsonResponse
+    {
+        $staff = $request->user();
+
+        if ($staff instanceof ParentAccount) {
+            abort(403, 'Staff endpoint — parent tokens are not accepted.');
+        }
+
+        if (! $staff->hasAnyRole(['Admin', 'Coach', 'Management'])) {
+            abort(403, 'You do not have scanner privileges.');
+        }
+
+        $fixtures = Fixture::query()
+            ->with('team')
+            ->where('status', \App\Enums\FixtureStatus::OpenForScanning)
+            ->orderBy('kickoff_at')
+            ->get()
+            ->filter(fn (Fixture $fixture) => $fixture->isOpenForScanning())
+            ->values()
+            ->map(fn (Fixture $fixture) => [
+                'id' => $fixture->id,
+                'team_name' => $fixture->team?->name,
+                'opponent' => $fixture->opponent,
+                'venue' => $fixture->venue,
+                'kickoff_at' => $fixture->kickoff_at?->toIso8601String(),
+                'scan_closes_at' => $fixture->scan_closes_at?->toIso8601String(),
+            ]);
+
+        return response()->json(['data' => $fixtures]);
+    }
+
     public function scan(Request $request): JsonResponse
     {
         $staff = $request->user();

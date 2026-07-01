@@ -111,4 +111,227 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notAvailableValue => 'غير متوفر';
+
+  @override
+  String get playersTab => 'اللاعبون';
+
+  @override
+  String get qrTab => 'الرمز';
+
+  @override
+  String get rewardsTab => 'المكافآت';
+
+  @override
+  String get offersTab => 'العروض';
+
+  @override
+  String get staffScannerEntry => 'ماسح الموظفين';
+
+  @override
+  String get pointsUnit => 'نقطة';
+
+  @override
+  String get playersEmptyTitle => 'لا يوجد لاعبون مرتبطون بعد';
+
+  @override
+  String get playersEmptyBody =>
+      'هذا الحساب لا يحتوي على روابط لاعبين في النسخة التجريبية.';
+
+  @override
+  String get accountPointsHistoryTitle => 'سجل نقاط الحساب';
+
+  @override
+  String playerPointsHistoryTitle(Object name) {
+    return 'سجل نقاط $name';
+  }
+
+  @override
+  String get noTransactionsEmpty => 'لا توجد حركات نقاط بعد.';
+
+  @override
+  String get transactionSourceScan => 'مسح الحضور';
+
+  @override
+  String get transactionSourceRedemption => 'استبدال';
+
+  @override
+  String get transactionTypeEarn => 'اكتساب';
+
+  @override
+  String get transactionTypeRedeem => 'استبدال';
+
+  @override
+  String get transactionTypeExpire => 'انتهاء';
+
+  @override
+  String get transactionTypeAdjust => 'تعديل';
+
+  @override
+  String get transactionTypeReverse => 'عكس';
+
+  @override
+  String get teamLabel => 'الفريق';
+
+  @override
+  String get positionLabel => 'المركز';
+
+  @override
+  String get progressLabel => 'التقدم';
+
+  @override
+  String get pointsHistoryAction => 'سجل النقاط';
+
+  @override
+  String get retryButton => 'إعادة المحاولة';
+
+  @override
+  String get qrScreenTitle => 'اعرض هذا الرمز عند البوابة';
+
+  @override
+  String get qrScreenSubtitle =>
+      'سيقوم الموظف بمسحه لإضافة النقاط للاعبين المؤهلين في المباراة المفتوحة.';
+
+  @override
+  String qrExpiresIn(int seconds) {
+    return 'يتجدد خلال $secondsث';
+  }
+
+  @override
+  String get refreshQrButton => 'تحديث الرمز';
+
+  @override
+  String get offersEmpty => 'لا توجد عروض متاحة الآن.';
+
+  @override
+  String get vvipBadge => 'كبار الشخصيات';
+
+  @override
+  String offerValidity(Object from, Object until) {
+    return 'صالح من $from حتى $until';
+  }
+
+  @override
+  String get selectPlayerBeforeRedeem => 'اختر لاعبًا قبل الاستبدال.';
+
+  @override
+  String get redeemForPlayerLabel => 'الاستبدال للاعب';
+
+  @override
+  String get catalogTab => 'الكتالوج';
+
+  @override
+  String get vouchersTab => 'القسائم';
+
+  @override
+  String get redeemButton => 'استبدال';
+
+  @override
+  String get outOfStockLabel => 'غير متوفر';
+
+  @override
+  String get redeemLinkedPlayerError => 'هذا اللاعب غير مرتبط بحسابك.';
+
+  @override
+  String get redeemVvipOnlyError =>
+      'الاستبدال على مستوى الحساب يتطلب حساب كبار الشخصيات.';
+
+  @override
+  String get redeemUnavailableError => 'هذه المكافأة غير متاحة الآن.';
+
+  @override
+  String get redemptionTypeFeeDiscount => 'خصم رسوم';
+
+  @override
+  String get redemptionTypeEvent => 'فعالية';
+
+  @override
+  String get redemptionTypeMerch => 'منتجات';
+
+  @override
+  String get accountLabel => 'الحساب';
+
+  @override
+  String get voucherDialogTitle => 'تم إصدار القسيمة';
+
+  @override
+  String get voucherCodeLabel => 'رمز القسيمة';
+
+  @override
+  String get pointsSpentLabel => 'النقاط المصروفة';
+
+  @override
+  String get statusLabel => 'الحالة';
+
+  @override
+  String get playerLabel => 'اللاعب';
+
+  @override
+  String get closeButton => 'إغلاق';
+
+  @override
+  String get vouchersEmpty => 'لا توجد قسائم بعد.';
+
+  @override
+  String get staffLoginTitle => 'دخول ماسح الموظفين';
+
+  @override
+  String get staffLoginSubtitle => 'استخدم حساب موظف يملك صلاحية المسح.';
+
+  @override
+  String get staffLoginButton => 'دخول كموظف';
+
+  @override
+  String get backToParentLogin => 'العودة إلى دخول أولياء الأمور';
+
+  @override
+  String get staffScannerTitle => 'الماسح';
+
+  @override
+  String get fixtureLabel => 'المباراة';
+
+  @override
+  String get manualTokenTitle => 'إدخال الرمز يدويًا';
+
+  @override
+  String get tokenLabel => 'رمز QR';
+
+  @override
+  String get manualTokenHint => 'الصق رمز ولي الأمر هنا لعروض المحاكيات.';
+
+  @override
+  String get submitScanButton => 'إرسال المسح';
+
+  @override
+  String get hideCameraButton => 'إخفاء الكاميرا';
+
+  @override
+  String get openCameraButton => 'فتح الكاميرا';
+
+  @override
+  String get scanSuccessTitle => 'تم احتساب المسح';
+
+  @override
+  String get totalPointsLabel => 'إجمالي النقاط';
+
+  @override
+  String get selectFixtureHint => 'اختر مباراة أولًا.';
+
+  @override
+  String get staffForbiddenError => 'ليست لديك صلاحية الماسح.';
+
+  @override
+  String get scanAlreadyUsedError => 'تم المسح لهذه المباراة بالفعل.';
+
+  @override
+  String get scanInvalidQrError => 'رمز QR غير صالح أو منتهي الصلاحية.';
+
+  @override
+  String get scanFixtureClosedError => 'هذه المباراة غير مفتوحة للمسح.';
+
+  @override
+  String get scanNoLinkedPlayerError =>
+      'لا يوجد لاعب مرتبط في فريق هذه المباراة.';
+
+  @override
+  String get scanValidationError => 'تعذر إكمال عملية المسح.';
 }

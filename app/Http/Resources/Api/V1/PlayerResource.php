@@ -14,6 +14,7 @@ class PlayerResource extends JsonResource
             'full_name' => $this->full_name,
             'playing_position' => $this->playingPositionLabel(),
             'team_name' => $this->team?->name,
+            'points_balance' => $this->pointsBalance(),
             'is_player' => $this->is_player,
             'progress' => $this->publicProgressLabel(),
         ];

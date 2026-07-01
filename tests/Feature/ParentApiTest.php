@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PointTransactionType;
 use App\Models\Candidate;
 use App\Models\ParentAccount;
+use App\Models\PointTransaction;
 use App\Models\Season;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -114,8 +116,120 @@ class ParentApiTest extends TestCase
             ->assertJsonMissingPath('data.status_updated_by')
             ->assertJsonMissingPath('data.parent_phone')
             ->assertJsonStructure([
-                'data' => ['id', 'full_name', 'playing_position', 'team_name', 'is_player', 'progress'],
+                'data' => ['id', 'full_name', 'playing_position', 'team_name', 'points_balance', 'is_player', 'progress'],
             ]);
+    }
+
+    public function test_players_api_includes_points_balance_from_ledger_sum(): void
+    {
+        $this->seed();
+
+        [$parent, $player] = $this->createParentWithLinkedPlayer('balance@example.com', 'Balance Player');
+        $token = $parent->createToken('mobile')->plainTextToken;
+
+        PointTransaction::query()->create([
+            'candidate_id' => $player->id,
+            'type' => PointTransactionType::Earn,
+            'points' => 80,
+        ]);
+
+        PointTransaction::query()->create([
+            'candidate_id' => $player->id,
+            'type' => PointTransactionType::Redeem,
+            'points' => -25,
+        ]);
+
+        $this->withToken($token)
+            ->getJson("/api/v1/players/{$player->id}")
+            ->assertOk()
+            ->assertJsonPath('data.points_balance', 55);
+    }
+
+    public function test_player_transactions_endpoint_returns_only_linked_players_rows(): void
+    {
+        $this->seed();
+
+        [$parent, $player] = $this->createParentWithLinkedPlayer('history@example.com', 'History Player');
+        [, $otherPlayer] = $this->createParentWithLinkedPlayer('other-history@example.com', 'Other History');
+        $token = $parent->createToken('mobile')->plainTextToken;
+
+        PointTransaction::query()->create([
+            'candidate_id' => $player->id,
+            'type' => PointTransactionType::Earn,
+            'points' => 20,
+            'reason' => 'Joined loyalty',
+        ]);
+
+        $this->travel(2)->seconds();
+
+        PointTransaction::query()->create([
+            'candidate_id' => $player->id,
+            'type' => PointTransactionType::Redeem,
+            'points' => -10,
+            'reason' => 'Voucher issued',
+        ]);
+
+        PointTransaction::query()->create([
+            'candidate_id' => $otherPlayer->id,
+            'type' => PointTransactionType::Earn,
+            'points' => 99,
+            'reason' => 'Other player',
+        ]);
+
+        $this->withToken($token)
+            ->getJson("/api/v1/players/{$player->id}/transactions")
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.points', -10)
+            ->assertJsonPath('data.0.type', PointTransactionType::Redeem->value)
+            ->assertJsonPath('data.0.reason', 'Voucher issued')
+            ->assertJsonPath('data.0.source', null)
+            ->assertJsonPath('data.1.points', 20)
+            ->assertJsonPath('data.1.type', PointTransactionType::Earn->value)
+            ->assertJsonPath('data.1.reason', 'Joined loyalty');
+    }
+
+    public function test_account_transactions_endpoint_returns_only_account_rows(): void
+    {
+        $this->seed();
+
+        [$parent, $player] = $this->createParentWithLinkedPlayer('account-history@example.com', 'Linked Player');
+        $token = $parent->createToken('mobile')->plainTextToken;
+
+        PointTransaction::query()->create([
+            'parent_account_id' => $parent->id,
+            'type' => PointTransactionType::Adjust,
+            'points' => 150,
+            'reason' => 'Manual grant',
+        ]);
+
+        PointTransaction::query()->create([
+            'candidate_id' => $player->id,
+            'type' => PointTransactionType::Earn,
+            'points' => 30,
+            'reason' => 'Player only',
+        ]);
+
+        $this->withToken($token)
+            ->getJson('/api/v1/me/transactions')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.points', 150)
+            ->assertJsonPath('data.0.type', PointTransactionType::Adjust->value)
+            ->assertJsonPath('data.0.reason', 'Manual grant');
+    }
+
+    public function test_player_transactions_404_for_non_linked_player(): void
+    {
+        $this->seed();
+
+        [$parent] = $this->createParentWithLinkedPlayer('reader@example.com', 'Reader Player');
+        [, $otherPlayer] = $this->createParentWithLinkedPlayer('other-reader@example.com', 'Other Reader');
+        $token = $parent->createToken('mobile')->plainTextToken;
+
+        $this->withToken($token)
+            ->getJson("/api/v1/players/{$otherPlayer->id}/transactions")
+            ->assertNotFound();
     }
 
     /**
