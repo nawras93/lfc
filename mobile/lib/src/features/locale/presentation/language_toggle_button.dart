@@ -5,8 +5,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../providers.dart';
 
 /// Language switch shown as a flag: the flag represents the language you'll
-/// switch **to** — Qatar (Arabic) while in English, USA (English) while in
-/// Arabic — mirroring the old "AR"/"EN" toggle.
+/// switch **to** — Qatar (Arabic) while in English, Great Britain (English)
+/// while in Arabic — mirroring the old "AR"/"EN" toggle.
 class LanguageToggleButton extends ConsumerWidget {
   const LanguageToggleButton({super.key});
 
@@ -15,7 +15,7 @@ class LanguageToggleButton extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final locale = ref.watch(localeControllerProvider);
     final isArabic = locale.languageCode == 'ar';
-    final targetFlag = isArabic ? 'assets/flags/us.png' : 'assets/flags/qa.png';
+    final targetFlag = isArabic ? 'assets/flags/gb.png' : 'assets/flags/qa.png';
 
     return IconButton(
       key: const Key('language-toggle'),
