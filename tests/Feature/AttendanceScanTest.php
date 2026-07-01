@@ -302,6 +302,39 @@ class AttendanceScanTest extends TestCase
         ])->assertUnauthorized();
     }
 
+    public function test_staff_fixtures_endpoint_returns_open_fixtures_only(): void
+    {
+        $closedFixture = Fixture::query()->create([
+            'team_id' => $this->team->id,
+            'season_id' => $this->season->id,
+            'opponent' => 'Closed Fixture',
+            'venue' => 'Training Ground',
+            'kickoff_at' => now()->addDays(2),
+            'scan_opens_at' => now()->addDay(),
+            'scan_closes_at' => now()->addDays(2),
+            'status' => FixtureStatus::OpenForScanning,
+        ]);
+
+        $this->withToken($this->adminToken())
+            ->getJson('/api/v1/staff/fixtures')
+            ->assertOk()
+            ->assertJsonFragment([
+                'id' => $this->openFixture->id,
+                'team_name' => $this->team->name,
+            ])
+            ->assertJsonMissing([
+                'id' => $closedFixture->id,
+                'opponent' => 'Closed Fixture',
+            ]);
+    }
+
+    public function test_parent_token_rejected_on_staff_fixtures_endpoint(): void
+    {
+        $this->withToken($this->parentToken())
+            ->getJson('/api/v1/staff/fixtures')
+            ->assertStatus(403);
+    }
+
     public function test_non_scanner_role_cannot_login(): void
     {
         $plainUser = User::factory()->create([

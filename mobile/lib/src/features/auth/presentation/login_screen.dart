@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../providers.dart';
+import '../../locale/presentation/language_toggle_button.dart';
 import 'accept_invite_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -54,7 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.loginTitle),
-        actions: const [_LanguageToggleButton()],
+        actions: const [LanguageToggleButton()],
       ),
       body: SafeArea(
         child: Center(
@@ -136,6 +137,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           },
                           child: Text(l10n.openAcceptInvite),
                         ),
+                        const SizedBox(height: 8),
+                        TextButton(
+                          onPressed: () =>
+                              ref.read(staffSessionControllerProvider.notifier).showLogin(),
+                          child: Text(l10n.staffScannerEntry),
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           l10n.demoApiHint,
@@ -160,24 +167,5 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ApiErrorKind.unauthorized => l10n.sessionExpired,
       _ => error.message.isEmpty ? l10n.genericError : error.message,
     };
-  }
-}
-
-class _LanguageToggleButton extends ConsumerWidget {
-  const _LanguageToggleButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return IconButton(
-      key: const Key('language-toggle'),
-      tooltip: l10n.languageLabel,
-      onPressed: () => ref.read(localeControllerProvider.notifier).toggle(),
-      icon: Text(
-        l10n.languageToggle,
-        style: Theme.of(context).textTheme.labelLarge,
-      ),
-    );
   }
 }

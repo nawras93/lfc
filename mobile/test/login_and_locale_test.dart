@@ -58,13 +58,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(Directionality.of(tester.element(find.text('Account'))), TextDirection.ltr);
+    expect(Directionality.of(tester.element(find.text('Players').first)), TextDirection.ltr);
 
     await tester.tap(find.byKey(const Key('language-toggle')).first);
     await tester.pumpAndSettle();
 
-    expect(find.text('الحساب'), findsOneWidget);
-    expect(Directionality.of(tester.element(find.text('الحساب'))), TextDirection.rtl);
+    expect(find.text('اللاعبون'), findsWidgets);
+    expect(Directionality.of(tester.element(find.text('اللاعبون').first)), TextDirection.rtl);
   });
 }
 

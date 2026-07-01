@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\OfferController;
 use App\Http\Controllers\Api\V1\PlayerController;
+use App\Http\Controllers\Api\V1\PointTransactionController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RedemptionController;
 use App\Http\Controllers\Api\V1\ScanController;
@@ -21,8 +22,11 @@ Route::prefix('v1')
             Route::get('/me', ProfileController::class);
             Route::get('/players', [PlayerController::class, 'index']);
             Route::get('/players/{player}', [PlayerController::class, 'show']);
+            Route::get('/players/{player}/transactions', [PointTransactionController::class, 'playerHistory']);
+            Route::get('/me/transactions', [PointTransactionController::class, 'accountHistory']);
             Route::get('/scan-token', [ScanController::class, 'token']);
             Route::post('/scan', [ScanController::class, 'scan']);
+            Route::get('/staff/fixtures', [ScanController::class, 'fixtures']);
 
             Route::get('/redemption-items', [RedemptionController::class, 'items']);
             Route::post('/redemptions', [RedemptionController::class, 'redeem']);

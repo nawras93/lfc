@@ -10,7 +10,14 @@ import 'core/api/api_exception.dart';
 import 'core/storage/token_storage.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/locale/locale_controller.dart';
+import 'features/locale/data/locale_storage.dart';
+import 'features/offers/data/offers_repository.dart';
+import 'features/players/data/player_repository.dart';
+import 'features/redemptions/data/redemption_repository.dart';
+import 'features/scan/data/scan_repository.dart';
 import 'features/session/session_controller.dart';
+import 'features/staff/data/staff_session_storage.dart';
+import 'features/staff/staff_session_controller.dart';
 
 final appConfigProvider = Provider<AppConfig>((ref) => AppConfig.fromEnvironment());
 
@@ -22,6 +29,14 @@ final tokenStorageProvider = Provider<TokenStorage>(
   (ref) => TokenStorage(ref.watch(secureStorageProvider)),
 );
 
+final localeStorageProvider = Provider<LocaleStorage>(
+  (ref) => LocaleStorage(ref.watch(secureStorageProvider)),
+);
+
+final staffSessionStorageProvider = Provider<StaffSessionStorage>(
+  (ref) => StaffSessionStorage(ref.watch(secureStorageProvider)),
+);
+
 final sessionEventsProvider = Provider<SessionEvents>((ref) {
   final events = SessionEvents();
   ref.onDispose(events.dispose);
@@ -30,6 +45,12 @@ final sessionEventsProvider = Provider<SessionEvents>((ref) {
 
 final localeControllerProvider =
     NotifierProvider<LocaleController, Locale>(LocaleController.new);
+
+final staffSessionEventsProvider = Provider<SessionEvents>((ref) {
+  final events = SessionEvents();
+  ref.onDispose(events.dispose);
+  return events;
+});
 
 final dioProvider = Provider<Dio>((ref) {
   final config = ref.watch(appConfigProvider);
@@ -96,6 +117,87 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 
 final sessionControllerProvider =
     NotifierProvider<SessionController, SessionState>(SessionController.new);
+
+final playerRepositoryProvider = Provider<PlayerRepository>(
+  (ref) => PlayerRepository(ref.watch(dioProvider)),
+);
+
+final redemptionRepositoryProvider = Provider<RedemptionRepository>(
+  (ref) => RedemptionRepository(ref.watch(dioProvider)),
+);
+
+final offersRepositoryProvider = Provider<OffersRepository>(
+  (ref) => OffersRepository(ref.watch(dioProvider)),
+);
+
+final parentScanRepositoryProvider = Provider<ScanRepository>(
+  (ref) => ScanRepository(ref.watch(dioProvider)),
+);
+
+final staffDioProvider = Provider<Dio>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final storage = ref.watch(staffSessionStorageProvider);
+  final sessionEvents = ref.watch(staffSessionEventsProvider);
+
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: config.apiBaseUrl,
+      headers: const {'Accept': 'application/json'},
+      validateStatus: (status) => status != null && status < 500,
+    ),
+  );
+
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final token = await storage.readToken();
+        if (token != null && token.isNotEmpty) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        options.headers['Accept'] = 'application/json';
+        handler.next(options);
+      },
+      onResponse: (response, handler) async {
+        if (response.statusCode == 401) {
+          await storage.clear();
+          sessionEvents.emitUnauthorized();
+        }
+
+        if (response.statusCode != null && response.statusCode! >= 400) {
+          handler.reject(
+            DioException.badResponse(
+              statusCode: response.statusCode!,
+              requestOptions: response.requestOptions,
+              response: response,
+            ),
+          );
+          return;
+        }
+
+        handler.next(response);
+      },
+      onError: (error, handler) async {
+        final mapped = ApiException.fromDioException(error);
+        if (mapped.kind == ApiErrorKind.unauthorized) {
+          await storage.clear();
+          sessionEvents.emitUnauthorized();
+        }
+        handler.next(error.copyWith(error: mapped));
+      },
+    ),
+  );
+
+  return dio;
+});
+
+final staffSessionControllerProvider =
+    NotifierProvider<StaffSessionController, StaffSessionState>(
+      StaffSessionController.new,
+    );
+
+final staffScanRepositoryProvider = Provider<ScanRepository>(
+  (ref) => ScanRepository(ref.watch(staffDioProvider)),
+);
 
 class SessionEvents {
   final StreamController<void> _unauthorizedController = StreamController<void>.broadcast();
