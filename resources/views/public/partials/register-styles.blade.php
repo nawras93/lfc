@@ -143,15 +143,11 @@
         border: 1px solid rgb(200 162 74 / 22%);
     }
 
+    /* No gold glow blob. `content: none` also suppresses the built app.css
+       (.lfc-* @layer) version of this pseudo-element. */
     .lfc-hero-card::after {
-        content: "";
-        position: absolute;
-        inset-inline-end: -4rem;
-        bottom: -4rem;
-        width: 18rem;
-        height: 18rem;
-        border-radius: 999px;
-        background: radial-gradient(circle, rgb(200 162 74 / 42%) 0%, transparent 68%);
+        content: none;
+        display: none;
     }
 
     .lfc-hero-kicker {
