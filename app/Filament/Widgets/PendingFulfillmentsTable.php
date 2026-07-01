@@ -2,6 +2,8 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\RedemptionStatus;
+use App\Filament\Resources\Redemptions\RedemptionResource;
 use App\Models\Redemption;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -11,11 +13,13 @@ class PendingFulfillmentsTable extends TableWidget
 {
     protected int | string | array $columnSpan = 'full';
 
+    protected static ?string $heading = 'Pending fulfillments';
+
     public function table(Table $table): Table
     {
         return $table
             ->query(
-                Redemption::where('status', 'issued')
+                Redemption::where('status', RedemptionStatus::Issued)
             )
             ->columns([
                 TextColumn::make('parent.name')
@@ -35,6 +39,11 @@ class PendingFulfillmentsTable extends TableWidget
                     ->copyable()
                     ->copyMessage('Voucher code copied'),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->recordActions([
+                RedemptionResource::markFulfilledAction(),
+            ])
+            ->emptyStateHeading('No vouchers awaiting fulfillment')
+            ->emptyStateIcon('heroicon-o-check-circle');
     }
 }

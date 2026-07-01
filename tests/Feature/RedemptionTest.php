@@ -88,6 +88,32 @@ class RedemptionTest extends TestCase
         $this->assertSame($redemption->id, $txn->source_id);
     }
 
+    public function test_fulfill_marks_issued_voucher_and_stamps_staff(): void
+    {
+        $redemption = $this->redemptionService->redeem($this->parent, $this->player, $this->item);
+        $staff = User::factory()->create();
+
+        $fulfilled = $this->redemptionService->fulfill($redemption, $staff);
+
+        $this->assertSame(RedemptionStatus::Fulfilled, $fulfilled->status);
+        $this->assertNotNull($fulfilled->fulfilled_at);
+        $this->assertSame($staff->id, $fulfilled->fulfilled_by);
+
+        $fresh = $redemption->fresh();
+        $this->assertSame(RedemptionStatus::Fulfilled, $fresh->status);
+        $this->assertSame($staff->id, $fresh->fulfilled_by);
+    }
+
+    public function test_fulfill_rejects_already_fulfilled_voucher(): void
+    {
+        $redemption = $this->redemptionService->redeem($this->parent, $this->player, $this->item);
+        $staff = User::factory()->create();
+        $this->redemptionService->fulfill($redemption, $staff);
+
+        $this->expectException(\App\Exceptions\RedemptionNotFulfillableException::class);
+        $this->redemptionService->fulfill($redemption->fresh(), $staff);
+    }
+
     public function test_insufficient_balance_rejected_no_redemption_no_stock_change(): void
     {
         $expensiveItem = RedemptionItem::query()->create([

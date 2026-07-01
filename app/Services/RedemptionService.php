@@ -5,12 +5,15 @@ namespace App\Services;
 use App\Enums\RedemptionStatus;
 use App\Exceptions\InsufficientPointsException;
 use App\Exceptions\RedemptionItemNotAvailableException;
+use App\Exceptions\RedemptionNotFulfillableException;
 use App\Exceptions\PlayerNotLinkedException;
 use App\Models\Candidate;
 use App\Models\ParentAccount;
 use App\Models\Redemption;
 use App\Models\RedemptionItem;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -102,6 +105,27 @@ class RedemptionService
 
             return $redemption;
         });
+    }
+
+    /**
+     * Mark an issued voucher as fulfilled (the reward was handed over), stamping
+     * who did it and when. Only issued vouchers can be fulfilled.
+     */
+    public function fulfill(Redemption $redemption, User $staff): Redemption
+    {
+        if ($redemption->status !== RedemptionStatus::Issued) {
+            throw new RedemptionNotFulfillableException(
+                'Only issued vouchers can be marked fulfilled.'
+            );
+        }
+
+        $redemption->update([
+            'status' => RedemptionStatus::Fulfilled,
+            'fulfilled_at' => Carbon::now(),
+            'fulfilled_by' => $staff->id,
+        ]);
+
+        return $redemption;
     }
 
     private function generateUniqueVoucherCode(): string

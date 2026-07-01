@@ -2,17 +2,23 @@
 
 namespace App\Filament\Resources\Redemptions;
 
+use App\Enums\RedemptionStatus;
 use App\Filament\Resources\Redemptions\Pages\ListRedemptions;
 use App\Models\Redemption;
+use App\Services\RedemptionService;
+use App\Support\EnumOptions;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class RedemptionResource extends Resource
@@ -75,7 +81,36 @@ class RedemptionResource extends Resource
                     ->sortable()
                     ->label('Redeemed at'),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(EnumOptions::for(RedemptionStatus::class)),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->recordActions([
+                self::markFulfilledAction(),
+            ]);
+    }
+
+    public static function markFulfilledAction(): Action
+    {
+        return Action::make('markFulfilled')
+            ->label('Mark fulfilled')
+            ->icon(Heroicon::OutlinedCheckCircle)
+            ->color('success')
+            ->requiresConfirmation()
+            ->modalHeading('Mark voucher fulfilled')
+            ->modalDescription('Confirm the reward has been handed over. This records who fulfilled it and when.')
+            ->visible(fn (Redemption $record): bool => $record->status === RedemptionStatus::Issued
+                && (auth()->user()?->hasRole(['Admin', 'Management']) ?? false))
+            ->action(function (Redemption $record): void {
+                app(RedemptionService::class)->fulfill($record, auth()->user());
+
+                Notification::make()
+                    ->success()
+                    ->title('Voucher marked fulfilled')
+                    ->body("Voucher {$record->voucher_code} is now fulfilled.")
+                    ->send();
+            });
     }
 
     public static function getPages(): array

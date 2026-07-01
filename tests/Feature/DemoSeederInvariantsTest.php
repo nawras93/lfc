@@ -75,5 +75,27 @@ class DemoSeederInvariantsTest extends TestCase
         $this->assertTrue(
             Redemption::query()->where('status', RedemptionStatus::Fulfilled)->exists(),
         );
+
+        // Extra scenarios: a parent with two players, and a recruitment-pipeline
+        // candidate who is not yet a player.
+        $multiChildParent = ParentAccount::query()
+            ->where('email', 'parent2.demo@lfc.test')
+            ->firstOrFail();
+        $this->assertSame(2, $multiChildParent->players()->count());
+
+        $yousef = Candidate::query()->where('email', 'yousef.demo@lfc.test')->firstOrFail();
+        $hassan = Candidate::query()->where('email', 'hassan.demo@lfc.test')->firstOrFail();
+        $this->assertSame(220, $yousef->pointsBalance());
+        $this->assertSame(100, $hassan->pointsBalance());
+
+        // At least two pending fulfillments so the "Mark fulfilled" action has
+        // more than one row to demo.
+        $this->assertGreaterThanOrEqual(
+            2,
+            Redemption::query()->where('status', RedemptionStatus::Issued)->count(),
+        );
+
+        $trialCandidate = Candidate::query()->where('email', 'tariq.trial@lfc.test')->firstOrFail();
+        $this->assertFalse($trialCandidate->is_player);
     }
 }

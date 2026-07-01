@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             OfferSeeder::class,
             ParentAccountSeeder::class,
             VvipClientSeeder::class,
+            DemoScenariosSeeder::class,
         ]);
     }
 }
