@@ -1,0 +1,41 @@
+{
+  "@@locale": "ar",
+  "appTitle": "أكاديمية لوسيل",
+  "loginTitle": "تسجيل الدخول",
+  "loginSubtitle": "استخدم حساب ولي الأمر أو حساب كبار الشخصيات للمتابعة.",
+  "emailLabel": "البريد الإلكتروني",
+  "passwordLabel": "كلمة المرور",
+  "inviteTokenLabel": "رمز الدعوة",
+  "signInButton": "دخول",
+  "acceptInviteButton": "قبول الدعوة",
+  "openAcceptInvite": "تعيين كلمة المرور من الدعوة",
+  "backToLogin": "العودة إلى تسجيل الدخول",
+  "logoutButton": "تسجيل الخروج",
+  "languageToggle": "EN",
+  "languageLabel": "اللغة",
+  "homeTitle": "الحساب",
+  "accountTypeLabel": "نوع الحساب",
+  "vvipStatusLabel": "كبار الشخصيات",
+  "balanceLabel": "رصيد الحساب",
+  "yesText": "نعم",
+  "noText": "لا",
+  "requiredField": "هذا الحقل مطلوب.",
+  "invalidEmail": "أدخل بريدًا إلكترونيًا صحيحًا.",
+  "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل.",
+  "sessionExpired": "انتهت الجلسة. يرجى تسجيل الدخول مرة أخرى.",
+  "genericError": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "networkError": "تعذر الوصول إلى الخادم. تحقق من عنوان الـ API والاتصال.",
+  "serverError": "الخادم غير متاح الآن. حاول مرة أخرى بعد قليل.",
+  "loadingText": "جارٍ التحميل...",
+  "welcomeLabel": "مرحبًا، {name}",
+  "@welcomeLabel": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "acceptInviteTitle": "قبول الدعوة",
+  "acceptInviteSubtitle": "عيّن كلمة مرور لتفعيل حسابك.",
+  "savePasswordButton": "حفظ كلمة المرور",
+  "demoApiHint": "يتم ضبط عنوان الـ API التجريبي عبر --dart-define=API_BASE_URL.",
+  "notAvailableValue": "غير متوفر"
+}
