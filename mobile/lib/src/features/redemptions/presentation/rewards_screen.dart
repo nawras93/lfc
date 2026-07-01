@@ -253,6 +253,10 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
       return l10n.redeemVvipOnlyError;
     }
 
+    if (error.statusCode == 422 && message.contains('insufficient')) {
+      return l10n.redeemInsufficientError;
+    }
+
     if (error.statusCode == 422) {
       return l10n.redeemUnavailableError;
     }

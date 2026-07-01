@@ -94,6 +94,7 @@
   "outOfStockLabel": "Out of stock",
   "redeemLinkedPlayerError": "This player is not linked to your account.",
   "redeemVvipOnlyError": "Account redemption requires a VVIP client account.",
+  "redeemInsufficientError": "You don't have enough points for this reward.",
   "redeemUnavailableError": "This reward is unavailable right now.",
   "redemptionTypeFeeDiscount": "Fee discount",
   "redemptionTypeEvent": "Event",
