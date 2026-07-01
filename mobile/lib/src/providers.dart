@@ -19,6 +19,8 @@ import 'features/scan/data/scan_repository.dart';
 import 'features/session/session_controller.dart';
 import 'features/staff/data/staff_session_storage.dart';
 import 'features/staff/staff_session_controller.dart';
+import 'theme/data/theme_storage.dart';
+import 'theme/theme_controller.dart';
 
 final appConfigProvider = Provider<AppConfig>(
   (ref) => AppConfig.fromEnvironment(),
@@ -48,6 +50,14 @@ final sessionEventsProvider = Provider<SessionEvents>((ref) {
 
 final localeControllerProvider = NotifierProvider<LocaleController, Locale>(
   LocaleController.new,
+);
+
+final themeStorageProvider = Provider<ThemeStorage>(
+  (ref) => ThemeStorage(ref.watch(secureStorageProvider)),
+);
+
+final themeControllerProvider = NotifierProvider<ThemeController, ThemeMode>(
+  ThemeController.new,
 );
 
 final staffSessionEventsProvider = Provider<SessionEvents>((ref) {

@@ -727,6 +727,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The scan could not be completed.'**
   String get scanValidationError;
+
+  /// No description provided for @themeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeLabel;
+
+  /// No description provided for @memberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get memberLabel;
+
+  /// No description provided for @staffRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff'**
+  String get staffRole;
+
+  /// No description provided for @loginTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Your academy. Your points. Your matchday.'**
+  String get loginTagline;
 }
 
 class _AppLocalizationsDelegate

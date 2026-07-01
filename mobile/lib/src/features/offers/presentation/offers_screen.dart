@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers.dart';
+import '../../../theme/app_theme.dart';
+import '../../../theme/widgets/pills.dart';
 import '../models/offer_summary.dart';
 
 class OffersScreen extends ConsumerStatefulWidget {
@@ -44,7 +46,23 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
 
         final offers = snapshot.data ?? const <OfferSummary>[];
         if (offers.isEmpty) {
-          return Center(child: Text(l10n.offersEmpty));
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.local_offer_outlined,
+                    size: 40,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(l10n.offersEmpty, textAlign: TextAlign.center),
+                ],
+              ),
+            ),
+          );
         }
 
         return RefreshIndicator(
@@ -56,36 +74,69 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
             await next;
           },
           child: ListView.separated(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
             itemCount: offers.length,
             separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final offer = offers[index];
+              final theme = Theme.of(context);
+              final isVvip = offer.audience == 'vvip';
 
               return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              offer.title,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ),
-                          if (offer.audience == 'vvip')
-                            Chip(label: Text(l10n.vvipBadge)),
-                        ],
+                      Container(
+                        width: 5,
+                        color: isVvip
+                            ? context.lfc.gold
+                            : theme.colorScheme.primary,
                       ),
-                      const SizedBox(height: 12),
-                      Text(offer.body),
-                      const SizedBox(height: 16),
-                      Text(
-                        _validityText(l10n, dateFormat, offer),
-                        style: Theme.of(context).textTheme.bodySmall,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      offer.title,
+                                      style: theme.textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  if (isVvip) VvipPill(label: l10n.vvipBadge),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                offer.body,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.event_outlined,
+                                    size: 14,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      _validityText(l10n, dateFormat, offer),
+                                      style: theme.textTheme.bodySmall,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),

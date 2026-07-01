@@ -18,6 +18,7 @@ class LfcApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeControllerProvider);
+    final themeMode = ref.watch(themeControllerProvider);
     final session = ref.watch(sessionControllerProvider);
     final staffSession = ref.watch(staffSessionControllerProvider);
 
@@ -34,7 +35,9 @@ class LfcApp extends ConsumerWidget {
     return MaterialApp(
       title: 'LFC',
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
+      theme: buildLightTheme(),
+      darkTheme: buildDarkTheme(),
+      themeMode: themeMode,
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [

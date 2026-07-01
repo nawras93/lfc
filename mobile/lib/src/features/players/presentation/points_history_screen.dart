@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers.dart';
+import '../../../theme/app_theme.dart';
 import '../models/player_summary.dart';
 import '../models/point_history_entry.dart';
 
@@ -81,21 +82,24 @@ class _PointsHistoryScreenState extends ConsumerState<PointsHistoryScreen> {
               itemBuilder: (context, index) {
                 final entry = entries[index];
                 final positive = entry.points >= 0;
+                final accent = positive
+                    ? context.lfc.success
+                    : Theme.of(context).colorScheme.error;
 
                 return Card(
                   child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
                     leading: CircleAvatar(
-                      backgroundColor: positive
-                          ? Colors.green.withValues(alpha: 0.14)
-                          : Colors.red.withValues(alpha: 0.14),
-                      child: Text(
-                        positive ? '+' : '-',
-                        style: TextStyle(
-                          color: positive
-                              ? Colors.green.shade700
-                              : Colors.red.shade700,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      backgroundColor: accent.withValues(alpha: 0.14),
+                      child: Icon(
+                        positive
+                            ? Icons.arrow_upward_rounded
+                            : Icons.arrow_downward_rounded,
+                        color: accent,
+                        size: 20,
                       ),
                     ),
                     title: Text(_transactionTypeLabel(l10n, entry.type)),
@@ -110,9 +114,7 @@ class _PointsHistoryScreenState extends ConsumerState<PointsHistoryScreen> {
                     trailing: Text(
                       '${positive ? '+' : ''}${entry.points}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: positive
-                            ? Colors.green.shade700
-                            : Colors.red.shade700,
+                        color: accent,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

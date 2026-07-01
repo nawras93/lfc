@@ -6,6 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers.dart';
+import '../../../theme/app_theme.dart';
 import '../models/scan_token.dart';
 
 class QrScreen extends ConsumerStatefulWidget {
@@ -89,6 +90,8 @@ class _QrScreenState extends ConsumerState<QrScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final palette = context.lfc;
     final token = _token;
     final remaining = token == null
         ? 0
@@ -99,7 +102,12 @@ class _QrScreenState extends ConsumerState<QrScreen>
               .clamp(0, 999);
 
     if (_loading) {
-      return Center(child: Text(l10n.loadingText));
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32),
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     if (_error != null) {
@@ -109,8 +117,14 @@ class _QrScreenState extends ConsumerState<QrScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Icon(
+                Icons.qr_code_2_outlined,
+                size: 40,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: 14),
               Text(_error!, textAlign: TextAlign.center),
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
               FilledButton(onPressed: _refresh, child: Text(l10n.retryButton)),
             ],
           ),
@@ -121,46 +135,130 @@ class _QrScreenState extends ConsumerState<QrScreen>
     return RefreshIndicator(
       onRefresh: _refresh,
       child: ListView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  Text(
-                    l10n.qrScreenTitle,
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
+          Text(
+            l10n.qrScreenTitle,
+            style: theme.textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.qrScreenSubtitle,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 20),
+          // The pass itself — always on a light card so the QR scans reliably
+          // even in dark mode.
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(
+                  color: palette.gold.withValues(alpha: 0.55),
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: LfcColors.navy900.withValues(alpha: 0.18),
+                    blurRadius: 24,
+                    offset: const Offset(0, 10),
                   ),
-                  const SizedBox(height: 12),
-                  Text(l10n.qrScreenSubtitle, textAlign: TextAlign.center),
-                  const SizedBox(height: 24),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   if (token != null)
                     QrImageView(
                       key: const Key('parent-qr'),
                       data: token.token,
-                      size: 240,
+                      size: 200,
                       backgroundColor: Colors.white,
+                      eyeStyle: const QrEyeStyle(
+                        eyeShape: QrEyeShape.square,
+                        color: LfcColors.navy700,
+                      ),
+                      dataModuleStyle: const QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.square,
+                        color: LfcColors.navy800,
+                      ),
                     ),
-                  const SizedBox(height: 24),
-                  Text(
-                    l10n.qrExpiresIn(remaining),
-                    key: const Key('qr-countdown'),
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  FilledButton.tonalIcon(
-                    onPressed: _refresh,
-                    icon: const Icon(Icons.refresh),
-                    label: Text(l10n.refreshQrButton),
+                  const SizedBox(height: 14),
+                  _CountdownBar(
+                    remaining: remaining,
+                    label: l10n.qrExpiresIn(remaining),
+                    palette: palette,
                   ),
                 ],
               ),
             ),
           ),
+          const SizedBox(height: 20),
+          FilledButton(
+            onPressed: _refresh,
+            style: FilledButton.styleFrom(
+              backgroundColor: theme.colorScheme.secondaryContainer,
+              foregroundColor: theme.colorScheme.onSecondaryContainer,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.refresh, size: 20),
+                const SizedBox(width: 8),
+                Text(l10n.refreshQrButton),
+              ],
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _CountdownBar extends StatelessWidget {
+  const _CountdownBar({
+    required this.remaining,
+    required this.label,
+    required this.palette,
+  });
+
+  final int remaining;
+  final String label;
+  final LfcPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    // Tokens refresh on a short rotating window; show progress out of 30s.
+    final fraction = (remaining / 30).clamp(0.0, 1.0);
+    return Column(
+      children: [
+        Text(
+          label,
+          key: const Key('qr-countdown'),
+          style: TextStyle(
+            fontFamily: 'Changa',
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            color: LfcColors.navy700,
+          ),
+        ),
+        const SizedBox(height: 10),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            value: fraction,
+            minHeight: 6,
+            backgroundColor: LfcColors.navy100,
+            valueColor: AlwaysStoppedAnimation<Color>(palette.gold),
+          ),
+        ),
+      ],
     );
   }
 }

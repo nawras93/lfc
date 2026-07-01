@@ -3,12 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers.dart';
+import '../../../theme/app_theme.dart';
+import '../../../theme/presentation/theme_toggle_button.dart';
+import '../../../theme/widgets/brand_app_bar.dart';
 import '../../auth/models/account.dart';
 import '../../locale/presentation/language_toggle_button.dart';
 import '../../offers/presentation/offers_screen.dart';
 import '../../players/presentation/players_screen.dart';
 import '../../redemptions/presentation/rewards_screen.dart';
 import '../../scan/presentation/qr_screen.dart';
+import 'widgets/points_hero_card.dart';
 
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
@@ -30,14 +34,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final isVvipClient = account?.accountType == 'vvip_client';
     final pointsLabel = isVvipClient ? l10n.balanceLabel : l10n.totalPointsLabel;
     final pointsValue = isVvipClient
-        ? '${account!.accountBalance} ${l10n.pointsUnit}'
+        ? '${account!.accountBalance}'
         : playersAsync.maybeWhen(
             data: (players) =>
-                '${players.fold<int>(0, (sum, p) => sum + p.pointsBalance)} ${l10n.pointsUnit}',
-            orElse: () => '...',
+                '${players.fold<int>(0, (sum, p) => sum + p.pointsBalance)}',
+            orElse: () => '…',
           );
 
-    final titles = [
+    final tabs = [
       l10n.playersTab,
       l10n.qrTab,
       l10n.rewardsTab,
@@ -45,9 +49,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(titles[_index]),
+      appBar: BrandAppBar(
         actions: [
+          const ThemeToggleButton(),
           const LanguageToggleButton(),
           IconButton(
             key: const Key('logout-button'),
@@ -60,17 +64,17 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: account == null
-              ? Center(child: Text(l10n.loadingText))
-              : _Body(
-                  index: _index,
-                  account: account,
-                  pointsLabel: pointsLabel,
-                  pointsValue: pointsValue,
-                ),
-        ),
+        top: false,
+        child: account == null
+            ? Center(child: Text(l10n.loadingText))
+            : _Body(
+                index: _index,
+                account: account,
+                pointsLabel: pointsLabel,
+                pointsValue: pointsValue,
+                isVvip: account.isVvip,
+                sectionTitle: tabs[_index],
+              ),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
@@ -78,18 +82,22 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.groups_2_outlined),
+            selectedIcon: const Icon(Icons.groups_2),
             label: l10n.playersTab,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.qr_code_2),
+            icon: const Icon(Icons.qr_code_2_outlined),
+            selectedIcon: const Icon(Icons.qr_code_2),
             label: l10n.qrTab,
           ),
           NavigationDestination(
             icon: const Icon(Icons.redeem_outlined),
+            selectedIcon: const Icon(Icons.redeem),
             label: l10n.rewardsTab,
           ),
           NavigationDestination(
             icon: const Icon(Icons.local_offer_outlined),
+            selectedIcon: const Icon(Icons.local_offer),
             label: l10n.offersTab,
           ),
         ],
@@ -104,61 +112,50 @@ class _Body extends StatelessWidget {
     required this.account,
     required this.pointsLabel,
     required this.pointsValue,
+    required this.isVvip,
+    required this.sectionTitle,
   });
 
   final int index;
   final Account account;
   final String pointsLabel;
   final String pointsValue;
+  final bool isVvip;
+  final String sectionTitle;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // The points hero is the home dashboard's centrepiece. On the functional
+    // tabs (QR, rewards, offers) it would only steal vertical space, so those
+    // screens get the full canvas. IndexedStack keeps every tab alive.
+    final showHero = index == 0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Wrap(
-              spacing: 16,
-              runSpacing: 12,
-              alignment: WrapAlignment.spaceBetween,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.welcomeLabel(account.name),
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(account.email),
-                  ],
-                ),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: [
-                    _InfoChip(
-                      label: l10n.accountTypeLabel,
-                      value: account.accountType ?? l10n.notAvailableValue,
-                    ),
-                    if (account.isVvip)
-                      _InfoChip(
-                        label: l10n.vvipStatusLabel,
-                        value: l10n.yesText,
-                      ),
-                    _InfoChip(label: pointsLabel, value: pointsValue),
-                  ],
-                ),
-              ],
+        if (showHero) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+            child: PointsHeroCard(
+              label: pointsLabel,
+              value: pointsValue,
+              unit: l10n.pointsUnit,
+              greeting: l10n.welcomeLabel(account.name),
+              isVvip: isVvip,
+              tierLabel: isVvip ? l10n.vvipStatusLabel : l10n.memberLabel,
             ),
           ),
-        ),
-        const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(22, 22, 22, 10),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: _SectionHeading(title: sectionTitle),
+            ),
+          ),
+        ] else
+          const SizedBox(height: 8),
         Expanded(
           child: IndexedStack(
             index: index,
@@ -175,29 +172,28 @@ class _Body extends StatelessWidget {
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  const _InfoChip({required this.label, required this.value});
+class _SectionHeading extends StatelessWidget {
+  const _SectionHeading({required this.title});
 
-  final String label;
-  final String value;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: Theme.of(context).textTheme.bodySmall),
-            Text(value, style: Theme.of(context).textTheme.titleMedium),
-          ],
+    final palette = context.lfc;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 4,
+          height: 20,
+          decoration: BoxDecoration(
+            color: palette.gold,
+            borderRadius: BorderRadius.circular(2),
+          ),
         ),
-      ),
+        const SizedBox(width: 10),
+        Text(title, style: Theme.of(context).textTheme.headlineSmall),
+      ],
     );
   }
 }

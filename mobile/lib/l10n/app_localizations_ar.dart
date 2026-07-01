@@ -337,4 +337,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scanValidationError => 'تعذر إكمال عملية المسح.';
+
+  @override
+  String get themeLabel => 'المظهر';
+
+  @override
+  String get memberLabel => 'عضو';
+
+  @override
+  String get staffRole => 'موظف';
+
+  @override
+  String get loginTagline => 'أكاديميتك. نقاطك. يوم مباراتك.';
 }

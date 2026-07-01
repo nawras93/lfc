@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../theme/widgets/pills.dart';
 import '../models/player_summary.dart';
 import 'points_history_screen.dart';
+import 'widgets/player_avatar.dart';
 
 class PlayerDetailScreen extends StatelessWidget {
   const PlayerDetailScreen({super.key, required this.player});
@@ -12,42 +14,63 @@ class PlayerDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(player.fullName)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         children: [
           Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  PlayerAvatar(name: player.fullName, size: 72),
+                  const SizedBox(height: 14),
                   Text(
                     player.fullName,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${player.teamName ?? l10n.notAvailableValue} · ${player.playingPosition}',
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall,
                   ),
                   const SizedBox(height: 16),
-                  _DetailRow(
-                    label: l10n.teamLabel,
-                    value: player.teamName ?? l10n.notAvailableValue,
-                  ),
-                  _DetailRow(
-                    label: l10n.positionLabel,
-                    value: player.playingPosition,
-                  ),
-                  _DetailRow(label: l10n.progressLabel, value: player.progress),
-                  _DetailRow(
-                    label: l10n.balanceLabel,
-                    value: player.pointsBalance.toString(),
+                  PointsPill(
+                    icon: Icons.stars_rounded,
+                    label: '${player.pointsBalance} ${l10n.pointsUnit}',
                   ),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 16),
-          FilledButton.tonal(
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              child: Column(
+                children: [
+                  _DetailRow(
+                    label: l10n.teamLabel,
+                    value: player.teamName ?? l10n.notAvailableValue,
+                  ),
+                  const Divider(height: 1),
+                  _DetailRow(
+                    label: l10n.positionLabel,
+                    value: player.playingPosition,
+                  ),
+                  const Divider(height: 1),
+                  _DetailRow(label: l10n.progressLabel, value: player.progress),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute<void>(
@@ -55,7 +78,8 @@ class PlayerDetailScreen extends StatelessWidget {
                 ),
               );
             },
-            child: Text(l10n.pointsHistoryAction),
+            icon: const Icon(Icons.receipt_long_outlined),
+            label: Text(l10n.pointsHistoryAction),
           ),
         ],
       ),
@@ -71,19 +95,26 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 14),
       child: Row(
         children: [
           Expanded(
             child: Text(
               label,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.labelMedium?.copyWith(
+                letterSpacing: 0.4,
+              ),
             ),
           ),
-          Expanded(child: Text(value, textAlign: TextAlign.end)),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: theme.textTheme.titleSmall,
+            ),
+          ),
         ],
       ),
     );

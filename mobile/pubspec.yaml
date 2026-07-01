@@ -60,6 +60,24 @@ flutter:
   uses-material-design: true
   generate: true
 
+  assets:
+    - assets/images/
+    - assets/flags/
+
+  fonts:
+    # Changa (SIL OFL) — Arabic + Latin display/headings, variable weight.
+    - family: Changa
+      fonts:
+        - asset: assets/fonts/Changa-VF.ttf
+    # Tajawal (SIL OFL) — Arabic + Latin body text.
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal-Regular.ttf
+        - asset: assets/fonts/Tajawal-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Tajawal-Bold.ttf
+          weight: 700
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -340,4 +340,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanValidationError => 'The scan could not be completed.';
+
+  @override
+  String get themeLabel => 'Theme';
+
+  @override
+  String get memberLabel => 'Member';
+
+  @override
+  String get staffRole => 'Staff';
+
+  @override
+  String get loginTagline => 'Your academy. Your points. Your matchday.';
 }

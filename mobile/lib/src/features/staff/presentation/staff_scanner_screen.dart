@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../providers.dart';
+import '../../../theme/presentation/theme_toggle_button.dart';
+import '../../../theme/widgets/brand_app_bar.dart';
 import '../../locale/presentation/language_toggle_button.dart';
 import '../../scan/models/fixture_summary.dart';
 import '../../scan/models/scan_result.dart';
@@ -23,6 +27,7 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
   int? _selectedFixtureId;
   ScanResult? _result;
   String? _error;
+  Timer? _errorTimer;
   bool _submitting = false;
   bool _cameraEnabled = false;
   bool _handlingDetection = false;
@@ -35,8 +40,22 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
 
   @override
   void dispose() {
+    _errorTimer?.cancel();
     _tokenController.dispose();
     super.dispose();
+  }
+
+  /// Shows a transient error that clears itself after a few seconds.
+  void _setError(String? message) {
+    _errorTimer?.cancel();
+    setState(() => _error = message);
+    if (message != null) {
+      _errorTimer = Timer(const Duration(seconds: 5), () {
+        if (mounted) {
+          setState(() => _error = null);
+        }
+      });
+    }
   }
 
   Future<List<FixtureSummary>> _loadFixtures() async {
@@ -53,10 +72,11 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     if (_selectedFixtureId == null) {
-      setState(() => _error = l10n.selectFixtureHint);
+      _setError(l10n.selectFixtureHint);
       return;
     }
 
+    _errorTimer?.cancel();
     setState(() {
       _submitting = true;
       _error = null;
@@ -74,7 +94,7 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
       }
     } on ApiException catch (error) {
       if (mounted) {
-        setState(() => _error = _friendlyError(l10n, error));
+        _setError(_friendlyError(l10n, error));
       }
     } finally {
       if (mounted) {
@@ -94,9 +114,10 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
     final formatter = DateFormat.yMMMd(locale).add_jm();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.staffScannerTitle),
+      appBar: BrandAppBar(
+        roleLabel: l10n.staffRole,
         actions: [
+          const ThemeToggleButton(),
           const LanguageToggleButton(),
           IconButton(
             onPressed: () =>
@@ -141,24 +162,26 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 8),
-                        DropdownButtonFormField<int>(
+                        DropdownMenu<int>(
                           key: const Key('staff-fixture-select'),
-                          initialValue: _selectedFixtureId,
-                          decoration: InputDecoration(
-                            labelText: l10n.fixtureLabel,
-                          ),
-                          items: fixtures
+                          initialSelection: _selectedFixtureId,
+                          expandedInsets: EdgeInsets.zero,
+                          requestFocusOnTap: false,
+                          enableSearch: false,
+                          menuHeight: 320,
+                          label: Text(l10n.fixtureLabel),
+                          leadingIcon: const Icon(Icons.sports_soccer),
+                          onSelected: (value) =>
+                              setState(() => _selectedFixtureId = value),
+                          dropdownMenuEntries: fixtures
                               .map(
-                                (fixture) => DropdownMenuItem<int>(
+                                (fixture) => DropdownMenuEntry<int>(
                                   value: fixture.id,
-                                  child: Text(
-                                    '${fixture.teamName ?? ''} vs ${fixture.opponent}',
-                                  ),
+                                  label:
+                                      '${fixture.teamName ?? ''} vs ${fixture.opponent}',
                                 ),
                               )
                               .toList(),
-                          onChanged: (value) =>
-                              setState(() => _selectedFixtureId = value),
                         ),
                         if (_selectedFixture(fixtures) case final fixture?)
                           Padding(
@@ -251,11 +274,9 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                 ),
                 if (_error != null) ...[
                   const SizedBox(height: 16),
-                  Text(
-                    _error!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                  _ScanErrorBanner(
+                    message: _error!,
+                    onDismiss: () => _setError(null),
                   ),
                 ],
                 if (_result != null) ...[
@@ -328,5 +349,43 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
       return l10n.scanNoLinkedPlayerError;
     }
     return l10n.scanValidationError;
+  }
+}
+
+class _ScanErrorBanner extends StatelessWidget {
+  const _ScanErrorBanner({required this.message, required this.onDismiss});
+
+  final String message;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 6, 12),
+      decoration: BoxDecoration(
+        color: scheme.errorContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, size: 18, color: scheme.onErrorContainer),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(color: scheme.onErrorContainer),
+            ),
+          ),
+          IconButton(
+            onPressed: onDismiss,
+            icon: const Icon(Icons.close, size: 18),
+            color: scheme.onErrorContainer,
+            visualDensity: VisualDensity.compact,
+            tooltip: MaterialLocalizations.of(context).closeButtonLabel,
+          ),
+        ],
+      ),
+    );
   }
 }

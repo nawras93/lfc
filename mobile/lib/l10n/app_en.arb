@@ -127,5 +127,9 @@
   "scanInvalidQrError": "The QR token is invalid or expired.",
   "scanFixtureClosedError": "This fixture is not open for scanning.",
   "scanNoLinkedPlayerError": "No linked player is on this fixture's team.",
-  "scanValidationError": "The scan could not be completed."
+  "scanValidationError": "The scan could not be completed.",
+  "themeLabel": "Theme",
+  "memberLabel": "Member",
+  "staffRole": "Staff",
+  "loginTagline": "Your academy. Your points. Your matchday."
 }

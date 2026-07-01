@@ -4,6 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../providers.dart';
+import '../../../theme/app_theme.dart';
+import '../../../theme/presentation/theme_toggle_button.dart';
+import '../../../theme/widgets/brand_mark.dart';
+import '../../../theme/widgets/fanar_backdrop.dart';
 import '../../locale/presentation/language_toggle_button.dart';
 import 'accept_invite_screen.dart';
 
@@ -53,115 +57,129 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final session = ref.watch(sessionControllerProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.loginTitle),
-        actions: const [LanguageToggleButton()],
-      ),
       body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          l10n.loginSubtitle,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        const SizedBox(height: 24),
-                        TextFormField(
-                          key: const Key('login-email'),
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: l10n.emailLabel,
-                            errorText: _error?.firstErrorFor('email'),
+        bottom: false,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _Header(tagline: l10n.loginTagline),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l10n.loginTitle,
+                            style: theme.textTheme.headlineMedium,
                           ),
-                          validator: (value) {
-                            final text = value?.trim() ?? '';
-                            if (text.isEmpty) {
-                              return l10n.requiredField;
-                            }
-                            final emailPattern = RegExp(
-                              r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-                            );
-                            if (!emailPattern.hasMatch(text)) {
-                              return l10n.invalidEmail;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          key: const Key('login-password'),
-                          controller: _passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: l10n.passwordLabel,
-                            errorText: _error?.firstErrorFor('password'),
-                          ),
-                          validator: (value) {
-                            if ((value ?? '').isEmpty) {
-                              return l10n.requiredField;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        if (_error != null &&
-                            _error!.kind != ApiErrorKind.validation)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: Text(
-                              _friendlyErrorMessage(l10n, _error!),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
+                          const SizedBox(height: 6),
+                          Text(
+                            l10n.loginSubtitle,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
-                        FilledButton(
-                          key: const Key('login-submit'),
-                          onPressed: session.isBusy ? null : _submit,
-                          child: Text(l10n.signInButton),
-                        ),
-                        const SizedBox(height: 12),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => const AcceptInviteScreen(),
-                              ),
-                            );
-                          },
-                          child: Text(l10n.openAcceptInvite),
-                        ),
-                        const SizedBox(height: 8),
-                        TextButton(
-                          onPressed: () => ref
-                              .read(staffSessionControllerProvider.notifier)
-                              .showLogin(),
-                          child: Text(l10n.staffScannerEntry),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          l10n.demoApiHint,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          TextFormField(
+                            key: const Key('login-email'),
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              labelText: l10n.emailLabel,
+                              prefixIcon: const Icon(Icons.alternate_email),
+                              errorText: _error?.firstErrorFor('email'),
+                            ),
+                            validator: (value) {
+                              final text = value?.trim() ?? '';
+                              if (text.isEmpty) {
+                                return l10n.requiredField;
+                              }
+                              final emailPattern = RegExp(
+                                r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                              );
+                              if (!emailPattern.hasMatch(text)) {
+                                return l10n.invalidEmail;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 14),
+                          TextFormField(
+                            key: const Key('login-password'),
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: l10n.passwordLabel,
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              errorText: _error?.firstErrorFor('password'),
+                            ),
+                            validator: (value) {
+                              if ((value ?? '').isEmpty) {
+                                return l10n.requiredField;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 14),
+                          if (_error != null &&
+                              _error!.kind != ApiErrorKind.validation)
+                            _ErrorBanner(
+                              message: _friendlyErrorMessage(l10n, _error!),
+                            ),
+                          FilledButton(
+                            key: const Key('login-submit'),
+                            onPressed: session.isBusy ? null : _submit,
+                            child: session.isBusy
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.4,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(l10n.signInButton),
+                          ),
+                          const SizedBox(height: 6),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => const AcceptInviteScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(l10n.openAcceptInvite),
+                          ),
+                          const Divider(height: 28),
+                          OutlinedButton.icon(
+                            onPressed: () => ref
+                                .read(staffSessionControllerProvider.notifier)
+                                .showLogin(),
+                            icon: const Icon(Icons.qr_code_scanner),
+                            label: Text(l10n.staffScannerEntry),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            l10n.demoApiHint,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -175,5 +193,104 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ApiErrorKind.unauthorized => l10n.sessionExpired,
       _ => error.message.isEmpty ? l10n.genericError : error.message,
     };
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({required this.tagline});
+
+  final String tagline;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.lfc;
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: palette.heroGradient,
+        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
+        child: Stack(
+          children: [
+            FanarBackdrop(color: palette.heroPattern),
+            Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [ThemeToggleButton(), LanguageToggleButton()],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 4, 24, 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        LfcAssets.logo,
+                        height: 132,
+                        color: palette.onHero,
+                        colorBlendMode: BlendMode.srcIn,
+                        filterQuality: FilterQuality.medium,
+                      ),
+                      const SizedBox(height: 18),
+                      Text(
+                        tagline,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          height: 1.25,
+                          color: palette.onHero,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorBanner extends StatelessWidget {
+  const _ErrorBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: scheme.errorContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, size: 18, color: scheme.onErrorContainer),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(color: scheme.onErrorContainer),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

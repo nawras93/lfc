@@ -127,5 +127,9 @@
   "scanInvalidQrError": "رمز QR غير صالح أو منتهي الصلاحية.",
   "scanFixtureClosedError": "هذه المباراة غير مفتوحة للمسح.",
   "scanNoLinkedPlayerError": "لا يوجد لاعب مرتبط في فريق هذه المباراة.",
-  "scanValidationError": "تعذر إكمال عملية المسح."
+  "scanValidationError": "تعذر إكمال عملية المسح.",
+  "themeLabel": "المظهر",
+  "memberLabel": "عضو",
+  "staffRole": "موظف",
+  "loginTagline": "أكاديميتك. نقاطك. يوم مباراتك."
 }
