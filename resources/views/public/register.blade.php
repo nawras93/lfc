@@ -34,9 +34,9 @@
                     @endphp
                     <a class="lfc-language-switch"
                         href="{{ route($languageRoute[0], $languageRoute[1] + ['lang' => $targetLang]) }}"
-                        aria-label="{{ __('public-registration.nav.language') }}: {{ $targetLabel }}">
-                        <img class="lfc-flag" src="{{ asset('images/flags/' . $targetFlag . '.png') }}" alt="">
-                        <span>{{ $targetLabel }}</span>
+                        aria-label="{{ __('public-registration.nav.language') }}: {{ $targetLabel }}"
+                        title="{{ $targetLabel }}">
+                        <img class="lfc-flag" src="{{ asset('images/flags/' . $targetFlag . '.png') }}" alt="{{ $targetLabel }}">
                     </a>
                 </div>
             </header>

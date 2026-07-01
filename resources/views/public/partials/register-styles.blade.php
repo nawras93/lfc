@@ -88,16 +88,13 @@
         backdrop-filter: blur(12px);
     }
 
-    /* Flag language toggle — shows the target language (mirrors the mobile app). */
+    /* Flag-only language toggle — shows the target language (mirrors the mobile app). */
     .lfc-language-switch {
         display: inline-flex;
         align-items: center;
-        gap: .5rem;
-        padding: .4rem .7rem .4rem .5rem;
+        justify-content: center;
+        padding: .4rem;
         border-radius: 999px;
-        font-weight: 700;
-        font-size: .9rem;
-        color: #fff;
         background: rgb(255 255 255 / 8%);
         border: 1px solid rgb(255 255 255 / 16%);
         backdrop-filter: blur(12px);
@@ -110,9 +107,10 @@
     }
 
     .lfc-flag {
-        width: 1.6rem;
-        height: 1.1rem;
-        border-radius: .2rem;
+        display: block;
+        width: 1.9rem;
+        height: 1.3rem;
+        border-radius: .25rem;
         object-fit: cover;
         box-shadow: 0 1px 3px rgb(0 0 0 / 35%);
     }

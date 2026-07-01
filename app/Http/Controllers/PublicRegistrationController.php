@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StorePublicRegistrationRequest;
+use App\Models\Season;
+use App\Services\PublicRegistrationService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+
+class PublicRegistrationController extends Controller
+{
+    public function __construct(
+        private readonly PublicRegistrationService $publicRegistrationService,
+    ) {}
+
+    public function landing(): View
+    {
+        // Surface the registration form on the home page when the active season
+        // has a live registration window; otherwise keep the invite-only notice.
+        $season = Season::query()
+            ->where('is_active', true)
+            ->orderByDesc('id')
+            ->first();
+
+        $registrationOpen = $season?->registrationIsOpen() ?? false;
+
+        if (! $registrationOpen) {
+            $season = null;
+        }
+
+        return view('public.register', [
+            'season' => $season,
+            'registrationOpen' => $registrationOpen,
+            'registrationSlug' => $season?->registration_slug,
+            'seasonSlug' => $season?->registrationSeasonSlug(),
+            'isRtl' => app()->getLocale() === 'ar',
+            'locale' => app()->getLocale(),
+            'positionOptions' => [
+                'goalkeeper' => __('public-registration.positions.goalkeeper'),
+                'defender' => __('public-registration.positions.defender'),
+                'midfielder' => __('public-registration.positions.midfielder'),
+                'attacker' => __('public-registration.positions.attacker'),
+            ],
+        ]);
+    }
+
+    public function create(string $seasonSlug, string $registrationSlug): View
+    {
+        $season = $this->publicRegistrationService->resolveSeasonFromRegistrationLink($seasonSlug, $registrationSlug);
+
+        return view('public.register', [
+            'season' => $season,
+            'registrationOpen' => $season->registrationIsOpen(),
+            'registrationSlug' => $registrationSlug,
+            'seasonSlug' => $seasonSlug,
+            'isRtl' => app()->getLocale() === 'ar',
+            'locale' => app()->getLocale(),
+            'positionOptions' => [
+                'goalkeeper' => __('public-registration.positions.goalkeeper'),
+                'defender' => __('public-registration.positions.defender'),
+                'midfielder' => __('public-registration.positions.midfielder'),
+                'attacker' => __('public-registration.positions.attacker'),
+            ],
+        ]);
+    }
+
+    public function store(StorePublicRegistrationRequest $request, string $seasonSlug, string $registrationSlug): RedirectResponse
+    {
+        $season = $this->publicRegistrationService->resolveSeasonFromRegistrationLink($seasonSlug, $registrationSlug);
+
+        if (! $season->registrationIsOpen()) {
+            return redirect()
+                ->route('public.register.show', compact('seasonSlug', 'registrationSlug') + ['lang' => app()->getLocale()])
+                ->withErrors([
+                    'registration' => __('public-registration.closed.body'),
+                ]);
+        }
+
+        $candidate = $this->publicRegistrationService->create($season, $request->validated());
+
+        return redirect()
+            ->route('public.register.show', compact('seasonSlug', 'registrationSlug') + ['lang' => app()->getLocale()])
+            ->with('registration_submitted', true)
+            ->with('candidate_name', $candidate->full_name);
+    }
+}
