@@ -36,7 +36,7 @@
   "acceptInviteTitle": "Accept invitation",
   "acceptInviteSubtitle": "Set a password to activate your account.",
   "savePasswordButton": "Save password",
-  "demoApiHint": "Demo API URL is configured with --dart-define=API_BASE_URL.",
+  "demoApiHint": "Demo API URL auto-defaults to localhost on iOS and 10.0.2.2 on Android. Override it with --dart-define=API_BASE_URL.",
   "notAvailableValue": "Not available",
   "playersTab": "Players",
   "qrTab": "QR",

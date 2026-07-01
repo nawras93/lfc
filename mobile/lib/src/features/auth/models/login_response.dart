@@ -1,10 +1,7 @@
 import 'account.dart';
 
 class LoginResponse {
-  const LoginResponse({
-    required this.token,
-    required this.account,
-  });
+  const LoginResponse({required this.token, required this.account});
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(

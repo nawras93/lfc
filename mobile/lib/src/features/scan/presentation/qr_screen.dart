@@ -15,7 +15,8 @@ class QrScreen extends ConsumerStatefulWidget {
   ConsumerState<QrScreen> createState() => _QrScreenState();
 }
 
-class _QrScreenState extends ConsumerState<QrScreen> with WidgetsBindingObserver {
+class _QrScreenState extends ConsumerState<QrScreen>
+    with WidgetsBindingObserver {
   ScanToken? _token;
   Timer? _timer;
   bool _loading = true;
@@ -49,7 +50,9 @@ class _QrScreenState extends ConsumerState<QrScreen> with WidgetsBindingObserver
     });
 
     try {
-      final token = await ref.read(parentScanRepositoryProvider).fetchParentToken();
+      final token = await ref
+          .read(parentScanRepositoryProvider)
+          .fetchParentToken();
       if (mounted) {
         setState(() {
           _token = token;
@@ -89,7 +92,11 @@ class _QrScreenState extends ConsumerState<QrScreen> with WidgetsBindingObserver
     final token = _token;
     final remaining = token == null
         ? 0
-        : token.expiresAt.toLocal().difference(DateTime.now()).inSeconds.clamp(0, 999);
+        : token.expiresAt
+              .toLocal()
+              .difference(DateTime.now())
+              .inSeconds
+              .clamp(0, 999);
 
     if (_loading) {
       return Center(child: Text(l10n.loadingText));
@@ -127,10 +134,7 @@ class _QrScreenState extends ConsumerState<QrScreen> with WidgetsBindingObserver
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    l10n.qrScreenSubtitle,
-                    textAlign: TextAlign.center,
-                  ),
+                  Text(l10n.qrScreenSubtitle, textAlign: TextAlign.center),
                   const SizedBox(height: 24),
                   if (token != null)
                     QrImageView(

@@ -6,7 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MemorySecureStorage extends FlutterSecureStorage {
-  MemorySecureStorage([Map<String, String>? seed]) : _values = seed ?? <String, String>{};
+  MemorySecureStorage([Map<String, String>? seed])
+    : _values = seed ?? <String, String>{};
 
   final Map<String, String> _values;
 
@@ -55,7 +56,8 @@ class MemorySecureStorage extends FlutterSecureStorage {
   }
 }
 
-typedef HandlerCallback = FutureOr<ResponseBody> Function(RequestOptions options);
+typedef HandlerCallback =
+    FutureOr<ResponseBody> Function(RequestOptions options);
 
 class FakeHttpClientAdapter implements HttpClientAdapter {
   FakeHttpClientAdapter(this._handler);

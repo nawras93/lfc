@@ -12,7 +12,8 @@ class RedemptionHistoryItem {
   });
 
   factory RedemptionHistoryItem.fromJson(Map<String, dynamic> json) {
-    final item = json['item'] as Map<String, dynamic>? ?? const <String, dynamic>{};
+    final item =
+        json['item'] as Map<String, dynamic>? ?? const <String, dynamic>{};
 
     return RedemptionHistoryItem(
       id: json['id'] as int,

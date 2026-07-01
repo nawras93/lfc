@@ -12,10 +12,7 @@ import '../models/redemption_item_summary.dart';
 import '../models/redemption_voucher.dart';
 
 class RewardsScreen extends ConsumerStatefulWidget {
-  const RewardsScreen({
-    super.key,
-    required this.account,
-  });
+  const RewardsScreen({super.key, required this.account});
 
   final Account account;
 
@@ -42,7 +39,7 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
     final historyFuture = ref.read(redemptionRepositoryProvider).fetchHistory();
     final playersFuture = _isVvipClient
         ? Future.value(const <PlayerSummary>[])
-        : ref.read(playerRepositoryProvider).fetchPlayers();
+        : ref.read(playersProvider.future);
 
     final results = await Future.wait<dynamic>([
       itemsFuture,
@@ -65,7 +62,9 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
 
   Future<void> _refresh() async {
     final next = _load();
-    setState(() => _future = next);
+    setState(() {
+      _future = next;
+    });
     await next;
   }
 
@@ -83,7 +82,9 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
     });
 
     try {
-      final voucher = await ref.read(redemptionRepositoryProvider).redeem(
+      final voucher = await ref
+          .read(redemptionRepositoryProvider)
+          .redeem(
             redemptionItemId: item.id,
             playerId: _isVvipClient ? null : _selectedPlayerId,
           );
@@ -96,6 +97,8 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
         context: context,
         builder: (context) => _VoucherDialog(voucher: voucher),
       );
+      ref.invalidate(playersProvider);
+      await ref.read(sessionControllerProvider.notifier).refreshAccount();
       await _refresh();
     } on ApiException catch (error) {
       if (mounted) {
@@ -134,7 +137,9 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                   child: Text(
                     _error!,
-                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
               if (!_isVvipClient)
@@ -143,7 +148,9 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                   child: DropdownButtonFormField<int>(
                     key: const Key('reward-player-select'),
                     initialValue: _selectedPlayerId,
-                    decoration: InputDecoration(labelText: l10n.redeemForPlayerLabel),
+                    decoration: InputDecoration(
+                      labelText: l10n.redeemForPlayerLabel,
+                    ),
                     items: data.players
                         .map(
                           (player) => DropdownMenuItem<int>(
@@ -152,13 +159,17 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                           ),
                         )
                         .toList(),
-                    onChanged: (value) => setState(() => _selectedPlayerId = value),
+                    onChanged: (value) =>
+                        setState(() => _selectedPlayerId = value),
                   ),
                 ),
               TabBar(
                 tabs: [
                   Tab(icon: const Icon(Icons.redeem), text: l10n.catalogTab),
-                  Tab(icon: const Icon(Icons.confirmation_number), text: l10n.vouchersTab),
+                  Tab(
+                    icon: const Icon(Icons.confirmation_number),
+                    text: l10n.vouchersTab,
+                  ),
                 ],
               ),
               Expanded(
@@ -183,10 +194,16 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                                       Expanded(
                                         child: Text(
                                           item.name,
-                                          style: Theme.of(context).textTheme.titleLarge,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleLarge,
                                         ),
                                       ),
-                                      Chip(label: Text('${item.pointsCost} ${l10n.pointsUnit}')),
+                                      Chip(
+                                        label: Text(
+                                          '${item.pointsCost} ${l10n.pointsUnit}',
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   if (item.description?.isNotEmpty == true) ...[
@@ -198,9 +215,13 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                                   const SizedBox(height: 16),
                                   FilledButton(
                                     key: Key('redeem-item-${item.id}'),
-                                    onPressed: !item.inStock || _submitting ? null : () => _redeem(item),
+                                    onPressed: !item.inStock || _submitting
+                                        ? null
+                                        : () => _redeem(item),
                                     child: Text(
-                                      item.inStock ? l10n.redeemButton : l10n.outOfStockLabel,
+                                      item.inStock
+                                          ? l10n.redeemButton
+                                          : l10n.outOfStockLabel,
                                     ),
                                   ),
                                 ],
@@ -250,9 +271,7 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
 }
 
 class _VoucherHistoryList extends StatelessWidget {
-  const _VoucherHistoryList({
-    required this.history,
-  });
+  const _VoucherHistoryList({required this.history});
 
   final List<RedemptionHistoryItem> history;
 
@@ -292,9 +311,7 @@ class _VoucherHistoryList extends StatelessWidget {
 }
 
 class _VoucherDialog extends StatelessWidget {
-  const _VoucherDialog({
-    required this.voucher,
-  });
+  const _VoucherDialog({required this.voucher});
 
   final RedemptionVoucher voucher;
 
@@ -313,7 +330,8 @@ class _VoucherDialog extends StatelessWidget {
           Text('${l10n.voucherCodeLabel}: ${voucher.voucherCode}'),
           Text('${l10n.pointsSpentLabel}: ${voucher.pointsSpent}'),
           Text('${l10n.statusLabel}: ${voucher.status}'),
-          if (voucher.playerName != null) Text('${l10n.playerLabel}: ${voucher.playerName}'),
+          if (voucher.playerName != null)
+            Text('${l10n.playerLabel}: ${voucher.playerName}'),
         ],
       ),
       actions: [

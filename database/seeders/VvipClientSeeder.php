@@ -4,8 +4,11 @@ namespace Database\Seeders;
 
 use App\Enums\AccountType;
 use App\Enums\PointTransactionType;
+use App\Enums\RedemptionStatus;
 use App\Models\ParentAccount;
 use App\Models\PointTransaction;
+use App\Models\Redemption;
+use App\Models\RedemptionItem;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -37,7 +40,40 @@ class VvipClientSeeder extends Seeder
                 'reason' => 'Demo account — starting points',
             ],
             [
-                'points' => 500,
+                'points' => 520,
+                'created_by' => $admin?->id,
+            ],
+        );
+
+        $item = RedemptionItem::query()->where('name', 'Water Bottle')->first();
+
+        if ($item === null) {
+            return;
+        }
+
+        $redemption = Redemption::query()->updateOrCreate(
+            ['voucher_code' => 'DEMO-VVIP-FULFILLED'],
+            [
+                'parent_account_id' => $vvip->id,
+                'candidate_id' => null,
+                'redemption_item_id' => $item->id,
+                'points_spent' => $item->points_cost,
+                'status' => RedemptionStatus::Fulfilled,
+                'fulfilled_at' => now()->subDay(),
+                'fulfilled_by' => $admin?->id,
+            ],
+        );
+
+        PointTransaction::query()->firstOrCreate(
+            [
+                'parent_account_id' => $vvip->id,
+                'type' => PointTransactionType::Redeem,
+                'source_type' => $redemption->getMorphClass(),
+                'source_id' => $redemption->id,
+            ],
+            [
+                'points' => -1 * $item->points_cost,
+                'reason' => 'Voucher issued',
                 'created_by' => $admin?->id,
             ],
         );

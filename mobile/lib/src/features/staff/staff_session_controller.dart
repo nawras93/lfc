@@ -82,17 +82,17 @@ class StaffSessionController extends Notifier<StaffSessionState> {
     state = const StaffSessionState.hidden();
   }
 
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     state = state.copyWith(status: StaffSessionStatus.login, isBusy: true);
 
     final repository = ref.read(authRepositoryProvider);
     final storage = ref.read(staffSessionStorageProvider);
 
     try {
-      final response = await repository.staffLogin(email: email, password: password);
+      final response = await repository.staffLogin(
+        email: email,
+        password: password,
+      );
       await storage.writeSession(token: response.token, user: response.user);
       state = StaffSessionState(
         status: StaffSessionStatus.authenticated,

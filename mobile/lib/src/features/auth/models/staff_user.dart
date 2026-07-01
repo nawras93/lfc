@@ -1,9 +1,5 @@
 class StaffUser {
-  const StaffUser({
-    required this.id,
-    required this.name,
-    required this.email,
-  });
+  const StaffUser({required this.id, required this.name, required this.email});
 
   factory StaffUser.fromJson(Map<String, dynamic> json) {
     return StaffUser(

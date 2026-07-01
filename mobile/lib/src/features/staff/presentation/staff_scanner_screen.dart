@@ -40,7 +40,9 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
   }
 
   Future<List<FixtureSummary>> _loadFixtures() async {
-    final fixtures = await ref.read(staffScanRepositoryProvider).fetchOpenFixtures();
+    final fixtures = await ref
+        .read(staffScanRepositoryProvider)
+        .fetchOpenFixtures();
     if (_selectedFixtureId == null && fixtures.isNotEmpty) {
       _selectedFixtureId = fixtures.first.id;
     }
@@ -62,12 +64,12 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
     });
 
     try {
-      final result = await ref.read(staffScanRepositoryProvider).submitScan(
-            fixtureId: _selectedFixtureId!,
-            token: token,
-          );
+      final result = await ref
+          .read(staffScanRepositoryProvider)
+          .submitScan(fixtureId: _selectedFixtureId!, token: token);
 
       if (mounted) {
+        ref.invalidate(playersProvider);
         setState(() => _result = result);
       }
     } on ApiException catch (error) {
@@ -97,7 +99,8 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
         actions: [
           const LanguageToggleButton(),
           IconButton(
-            onPressed: () => ref.read(staffSessionControllerProvider.notifier).logout(),
+            onPressed: () =>
+                ref.read(staffSessionControllerProvider.notifier).logout(),
             icon: const Icon(Icons.logout),
             tooltip: l10n.logoutButton,
           ),
@@ -119,7 +122,9 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               final next = _loadFixtures();
-              setState(() => _fixturesFuture = next);
+              setState(() {
+                _fixturesFuture = next;
+              });
               await next;
             },
             child: ListView(
@@ -139,25 +144,33 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                         DropdownButtonFormField<int>(
                           key: const Key('staff-fixture-select'),
                           initialValue: _selectedFixtureId,
-                          decoration: InputDecoration(labelText: l10n.fixtureLabel),
+                          decoration: InputDecoration(
+                            labelText: l10n.fixtureLabel,
+                          ),
                           items: fixtures
                               .map(
                                 (fixture) => DropdownMenuItem<int>(
                                   value: fixture.id,
-                                  child: Text('${fixture.teamName ?? ''} vs ${fixture.opponent}'),
+                                  child: Text(
+                                    '${fixture.teamName ?? ''} vs ${fixture.opponent}',
+                                  ),
                                 ),
                               )
                               .toList(),
-                          onChanged: (value) => setState(() => _selectedFixtureId = value),
+                          onChanged: (value) =>
+                              setState(() => _selectedFixtureId = value),
                         ),
                         if (_selectedFixture(fixtures) case final fixture?)
                           Padding(
                             padding: const EdgeInsets.only(top: 12),
                             child: Text(
                               [
-                                if (fixture.venue?.isNotEmpty == true) fixture.venue!,
+                                if (fixture.venue?.isNotEmpty == true)
+                                  fixture.venue!,
                                 if (fixture.kickoffAt != null)
-                                  formatter.format(fixture.kickoffAt!.toLocal()),
+                                  formatter.format(
+                                    fixture.kickoffAt!.toLocal(),
+                                  ),
                               ].join(' • '),
                             ),
                           ),
@@ -192,15 +205,19 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                           key: const Key('manual-scan-submit'),
                           onPressed: _submitting
                               ? null
-                              : () => _submitToken(_tokenController.text.trim()),
+                              : () =>
+                                    _submitToken(_tokenController.text.trim()),
                           child: Text(l10n.submitScanButton),
                         ),
                         const SizedBox(height: 16),
                         OutlinedButton.icon(
-                          onPressed: () => setState(() => _cameraEnabled = !_cameraEnabled),
+                          onPressed: () =>
+                              setState(() => _cameraEnabled = !_cameraEnabled),
                           icon: const Icon(Icons.qr_code_scanner),
                           label: Text(
-                            _cameraEnabled ? l10n.hideCameraButton : l10n.openCameraButton,
+                            _cameraEnabled
+                                ? l10n.hideCameraButton
+                                : l10n.openCameraButton,
                           ),
                         ),
                         if (_cameraEnabled) ...[
@@ -236,7 +253,9 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                   const SizedBox(height: 16),
                   Text(
                     _error!,
-                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ],
                 if (_result != null) ...[
@@ -256,11 +275,15 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                           ..._result!.credited.map(
                             (credit) => Padding(
                               padding: const EdgeInsets.only(bottom: 8),
-                              child: Text('${credit.playerName}: ${credit.points}'),
+                              child: Text(
+                                '${credit.playerName}: ${credit.points}',
+                              ),
                             ),
                           ),
                           const Divider(),
-                          Text('${l10n.totalPointsLabel}: ${_result!.totalPoints}'),
+                          Text(
+                            '${l10n.totalPointsLabel}: ${_result!.totalPoints}',
+                          ),
                         ],
                       ),
                     ),

@@ -16,9 +16,7 @@ ThemeData buildAppTheme() {
     ),
     cardTheme: const CardThemeData(margin: EdgeInsets.zero),
     filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        minimumSize: const Size.fromHeight(48),
-      ),
+      style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
     ),
   );
 }

@@ -14,10 +14,12 @@ class OfferSummary {
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
       audience: json['audience'] as String? ?? '',
-      validFrom:
-          json['valid_from'] == null ? null : DateTime.parse(json['valid_from'] as String),
-      validUntil:
-          json['valid_until'] == null ? null : DateTime.parse(json['valid_until'] as String),
+      validFrom: json['valid_from'] == null
+          ? null
+          : DateTime.parse(json['valid_from'] as String),
+      validUntil: json['valid_until'] == null
+          ? null
+          : DateTime.parse(json['valid_until'] as String),
     );
   }
 

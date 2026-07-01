@@ -18,7 +18,8 @@ class PointsHistoryScreen extends ConsumerStatefulWidget {
   final bool accountHistory;
 
   @override
-  ConsumerState<PointsHistoryScreen> createState() => _PointsHistoryScreenState();
+  ConsumerState<PointsHistoryScreen> createState() =>
+      _PointsHistoryScreenState();
 }
 
 class _PointsHistoryScreenState extends ConsumerState<PointsHistoryScreen> {
@@ -68,7 +69,9 @@ class _PointsHistoryScreenState extends ConsumerState<PointsHistoryScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               final next = _load();
-              setState(() => _future = next);
+              setState(() {
+                _future = next;
+              });
               await next;
             },
             child: ListView.separated(
@@ -88,7 +91,9 @@ class _PointsHistoryScreenState extends ConsumerState<PointsHistoryScreen> {
                       child: Text(
                         positive ? '+' : '-',
                         style: TextStyle(
-                          color: positive ? Colors.green.shade700 : Colors.red.shade700,
+                          color: positive
+                              ? Colors.green.shade700
+                              : Colors.red.shade700,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -97,16 +102,19 @@ class _PointsHistoryScreenState extends ConsumerState<PointsHistoryScreen> {
                     subtitle: Text(
                       [
                         if (entry.reason?.isNotEmpty == true) entry.reason!,
-                        if (entry.source != null) _sourceLabel(l10n, entry.source!),
+                        if (entry.source != null)
+                          _sourceLabel(l10n, entry.source!),
                         formatter.format(entry.createdAt.toLocal()),
                       ].join(' • '),
                     ),
                     trailing: Text(
                       '${positive ? '+' : ''}${entry.points}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: positive ? Colors.green.shade700 : Colors.red.shade700,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        color: positive
+                            ? Colors.green.shade700
+                            : Colors.red.shade700,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 );

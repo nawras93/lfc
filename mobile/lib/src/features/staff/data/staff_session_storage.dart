@@ -23,10 +23,7 @@ class StaffSessionStorage {
     };
 
     await _storage.write(key: _tokenKey, value: token);
-    await _storage.write(
-      key: _userKey,
-      value: jsonEncode(payload),
-    );
+    await _storage.write(key: _userKey, value: jsonEncode(payload));
   }
 
   Future<String?> readToken() => _storage.read(key: _tokenKey);

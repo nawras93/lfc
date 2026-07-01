@@ -15,15 +15,19 @@ class FixtureSeeder extends Seeder
         $season = Season::where('is_active', true)->first() ?? Season::query()->first();
         $team = Team::where('name', 'LFC U12')->first() ?? Team::query()->first();
 
+        if ($season === null || $team === null) {
+            return;
+        }
+
         Fixture::query()->updateOrCreate(
             ['opponent' => 'Al Sadd SC'],
             [
                 'team_id' => $team->id,
-                'season_id' => $team->season_id,
+                'season_id' => $season->id,
                 'venue' => 'Lusail Stadium',
                 'kickoff_at' => now()->addDays(7),
-                'scan_opens_at' => now()->subHour(),
-                'scan_closes_at' => now()->addHours(3),
+                'scan_opens_at' => now()->subDay(),
+                'scan_closes_at' => now()->addDays(7),
                 'status' => FixtureStatus::OpenForScanning,
             ],
         );
@@ -32,7 +36,7 @@ class FixtureSeeder extends Seeder
             ['opponent' => 'Al Rayyan SC'],
             [
                 'team_id' => $team->id,
-                'season_id' => $team->season_id,
+                'season_id' => $season->id,
                 'venue' => 'Lusail Stadium',
                 'kickoff_at' => now()->addDays(14),
                 'scan_opens_at' => null,

@@ -17,7 +17,9 @@ class LocaleController extends Notifier<Locale> {
   }
 
   Future<void> toggle() async {
-    final next = state.languageCode == 'ar' ? const Locale('en') : const Locale('ar');
+    final next = state.languageCode == 'ar'
+        ? const Locale('en')
+        : const Locale('ar');
     await setLocale(next);
   }
 

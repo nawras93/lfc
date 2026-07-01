@@ -40,10 +40,7 @@ class ScanRepository {
     try {
       final response = await _dio.post<Map<String, dynamic>>(
         '/scan',
-        data: {
-          'fixture_id': fixtureId,
-          'token': token,
-        },
+        data: {'fixture_id': fixtureId, 'token': token},
       );
       return ScanResult.fromJson(response.data ?? const <String, dynamic>{});
     } catch (error) {
