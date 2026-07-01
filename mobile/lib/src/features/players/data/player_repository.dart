@@ -26,8 +26,12 @@ class PlayerRepository {
 
   Future<PlayerSummary> fetchPlayer(int playerId) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('/players/$playerId');
-      return PlayerSummary.fromJson(unwrapData(response.data ?? const <String, dynamic>{}));
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/players/$playerId',
+      );
+      return PlayerSummary.fromJson(
+        unwrapData(response.data ?? const <String, dynamic>{}),
+      );
     } catch (error) {
       throw ApiException.fromObject(error);
     }

@@ -25,10 +25,10 @@ class LfcApp extends ConsumerWidget {
       StaffSessionStatus.authenticated => const StaffScannerScreen(),
       StaffSessionStatus.login => const StaffLoginScreen(),
       StaffSessionStatus.hidden => switch (session.status) {
-          SessionStatus.authenticated => const HomeShell(),
-          SessionStatus.unauthenticated => const LoginScreen(),
-          SessionStatus.unknown => const _SplashScreen(),
-        },
+        SessionStatus.authenticated => const HomeShell(),
+        SessionStatus.unauthenticated => const LoginScreen(),
+        SessionStatus.unknown => const _SplashScreen(),
+      },
     };
 
     return MaterialApp(
@@ -55,10 +55,6 @@ class _SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      body: Center(
-        child: Text(l10n.loadingText),
-      ),
-    );
+    return Scaffold(body: Center(child: Text(l10n.loadingText)));
   }
 }

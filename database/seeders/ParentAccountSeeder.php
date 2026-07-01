@@ -2,13 +2,18 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AccountType;
 use App\Enums\DocumentStatus;
 use App\Enums\JoiningStatus;
 use App\Enums\PointTransactionType;
+use App\Enums\RedemptionStatus;
 use App\Enums\RecruitmentStage;
 use App\Models\Candidate;
+use App\Models\Fixture;
 use App\Models\ParentAccount;
 use App\Models\PointTransaction;
+use App\Models\Redemption;
+use App\Models\RedemptionItem;
 use App\Models\Season;
 use App\Models\Team;
 use Illuminate\Database\Seeder;
@@ -18,7 +23,12 @@ class ParentAccountSeeder extends Seeder
     public function run(): void
     {
         $season = Season::query()->first();
-        $team = Team::query()->first();
+        $team = Team::query()->where('name', 'LFC U12')->first();
+        $openFixture = Fixture::query()->where('opponent', 'Al Sadd SC')->first();
+
+        if ($openFixture?->team_id !== null) {
+            $team = Team::query()->find($openFixture->team_id) ?? $team;
+        }
 
         if (! $season || ! $team) {
             return;
@@ -60,6 +70,8 @@ class ParentAccountSeeder extends Seeder
                 'password' => env('LFC_DEMO_PARENT_PASSWORD', 'password'),
                 'phone' => '555100100',
                 'whatsapp' => '555100101',
+                'is_vvip' => false,
+                'account_type' => AccountType::Parent,
                 'accepted_at' => now(),
                 'invitation_token' => null,
                 'invited_at' => now(),
@@ -68,7 +80,7 @@ class ParentAccountSeeder extends Seeder
 
         $parent->players()->syncWithoutDetaching([$candidate->id]);
 
-        // Give the demo player starting points so they can redeem items
+        // Keep Omar's live balance at 150 while leaving one seeded issued redemption for the dashboard.
         PointTransaction::query()->firstOrCreate(
             [
                 'candidate_id' => $candidate->id,
@@ -76,7 +88,39 @@ class ParentAccountSeeder extends Seeder
                 'reason' => 'Demo account — starting points',
             ],
             [
-                'points' => 150,
+                'points' => 200,
+            ],
+        );
+
+        $item = RedemptionItem::query()->where('name', 'LFC Backpack')->first();
+
+        if ($item === null) {
+            return;
+        }
+
+        $redemption = Redemption::query()->updateOrCreate(
+            ['voucher_code' => 'DEMO-OMAR-ISSUED'],
+            [
+                'parent_account_id' => $parent->id,
+                'candidate_id' => $candidate->id,
+                'redemption_item_id' => $item->id,
+                'points_spent' => $item->points_cost,
+                'status' => RedemptionStatus::Issued,
+                'fulfilled_at' => null,
+                'fulfilled_by' => null,
+            ],
+        );
+
+        PointTransaction::query()->firstOrCreate(
+            [
+                'candidate_id' => $candidate->id,
+                'type' => PointTransactionType::Redeem,
+                'source_type' => $redemption->getMorphClass(),
+                'source_id' => $redemption->id,
+            ],
+            [
+                'points' => -1 * $item->points_cost,
+                'reason' => 'Voucher issued',
             ],
         );
     }

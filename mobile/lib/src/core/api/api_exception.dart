@@ -31,18 +31,23 @@ class ApiException implements Exception {
 
   factory ApiException.fromDioException(DioException error) {
     final responseData = error.response?.data;
-    final message = responseData is Map<String, dynamic> && responseData['message'] is String
+    final message =
+        responseData is Map<String, dynamic> &&
+            responseData['message'] is String
         ? responseData['message'] as String
         : error.message ?? 'Something went wrong. Please try again.';
     final statusCode = error.response?.statusCode;
     final fieldErrors = <String, List<String>>{};
 
-    if (responseData is Map<String, dynamic> && responseData['errors'] is Map<String, dynamic>) {
+    if (responseData is Map<String, dynamic> &&
+        responseData['errors'] is Map<String, dynamic>) {
       final rawErrors = responseData['errors'] as Map<String, dynamic>;
       for (final entry in rawErrors.entries) {
         final value = entry.value;
         if (value is List) {
-          fieldErrors[entry.key] = value.map((item) => item.toString()).toList();
+          fieldErrors[entry.key] = value
+              .map((item) => item.toString())
+              .toList();
         }
       }
     }
@@ -97,4 +102,7 @@ class ApiException implements Exception {
   final Map<String, List<String>> fieldErrors;
 
   String? firstErrorFor(String field) => fieldErrors[field]?.first;
+
+  @override
+  String toString() => message;
 }

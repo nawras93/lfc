@@ -11,7 +11,8 @@ class RedemptionVoucher {
   });
 
   factory RedemptionVoucher.fromJson(Map<String, dynamic> json) {
-    final item = json['item'] as Map<String, dynamic>? ?? const <String, dynamic>{};
+    final item =
+        json['item'] as Map<String, dynamic>? ?? const <String, dynamic>{};
 
     return RedemptionVoucher(
       id: json['id'] as int,

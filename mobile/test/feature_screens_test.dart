@@ -31,38 +31,41 @@ import 'package:mobile/src/providers.dart';
 import 'helpers/fakes.dart';
 
 void main() {
-  testWidgets('players list shows balances and remains RTL after switching to Arabic', (tester) async {
-    final playerRepository = FakePlayerRepository(
-      players: const [
-        PlayerSummary(
-          id: 1,
-          fullName: 'Ahmed Ali',
-          teamName: 'LFC U12',
-          playingPosition: 'Forward',
-          pointsBalance: 120,
-          progress: 'Joined',
-          isPlayer: true,
-        ),
-      ],
-    );
+  testWidgets(
+    'players list shows balances and remains RTL after switching to Arabic',
+    (tester) async {
+      final playerRepository = FakePlayerRepository(
+        players: const [
+          PlayerSummary(
+            id: 1,
+            fullName: 'Ahmed Ali',
+            teamName: 'LFC U12',
+            playingPosition: 'Forward',
+            pointsBalance: 120,
+            progress: 'Joined',
+            isPlayer: true,
+          ),
+        ],
+      );
 
-    await tester.pumpWidget(
-      _testApp(
-        session: _parentState(),
-        playerRepository: playerRepository,
-      ),
-    );
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        _testApp(session: _parentState(), playerRepository: playerRepository),
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('player-balance-1')), findsOneWidget);
-    expect(find.text('120 pts'), findsOneWidget);
+      expect(find.byKey(const Key('player-balance-1')), findsOneWidget);
+      expect(find.text('120 pts'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('language-toggle')).first);
-    await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('language-toggle')).first);
+      await tester.pumpAndSettle();
 
-    expect(find.text('اللاعبون'), findsWidgets);
-    expect(Directionality.of(tester.element(find.text('Ahmed Ali'))), TextDirection.rtl);
-  });
+      expect(find.text('اللاعبون'), findsWidgets);
+      expect(
+        Directionality.of(tester.element(find.text('Ahmed Ali'))),
+        TextDirection.rtl,
+      );
+    },
+  );
 
   testWidgets('redeem success renders a voucher dialog', (tester) async {
     final redemptionRepository = FakeRedemptionRepository(
@@ -109,7 +112,9 @@ void main() {
     expect(find.textContaining('LFC-123'), findsOneWidget);
   });
 
-  testWidgets('redeem validation error shows localized message', (tester) async {
+  testWidgets('redeem validation error shows localized message', (
+    tester,
+  ) async {
     final redemptionRepository = FakeRedemptionRepository(
       items: const [
         RedemptionItemSummary(
@@ -212,10 +217,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      _testApp(
-        session: _vvipState(),
-        offersRepository: offersRepository,
-      ),
+      _testApp(session: _vvipState(), offersRepository: offersRepository),
     );
     await tester.pumpAndSettle();
 
@@ -226,19 +228,24 @@ void main() {
     expect(find.text('VVIP'), findsAtLeastNWidgets(1));
   });
 
-  testWidgets('QR screen renders and refetches when token expires', (tester) async {
+  testWidgets('QR screen renders and refetches when token expires', (
+    tester,
+  ) async {
     final scanRepository = FakeScanRepository(
       parentTokens: [
-        ScanToken(token: 'first-token', expiresAt: DateTime.now().add(const Duration(seconds: 1))),
-        ScanToken(token: 'second-token', expiresAt: DateTime.now().add(const Duration(seconds: 30))),
+        ScanToken(
+          token: 'first-token',
+          expiresAt: DateTime.now().add(const Duration(seconds: 1)),
+        ),
+        ScanToken(
+          token: 'second-token',
+          expiresAt: DateTime.now().add(const Duration(seconds: 30)),
+        ),
       ],
     );
 
     await tester.pumpWidget(
-      _testApp(
-        session: _parentState(),
-        parentScanRepository: scanRepository,
-      ),
+      _testApp(session: _parentState(), parentScanRepository: scanRepository),
     );
     await tester.pumpAndSettle();
 
@@ -294,7 +301,10 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('manual-token-field')), 'scan-token');
+    await tester.enterText(
+      find.byKey(const Key('manual-token-field')),
+      'scan-token',
+    );
     await tester.tap(find.byKey(const Key('manual-scan-submit')));
     await tester.pumpAndSettle();
 
@@ -302,6 +312,86 @@ void main() {
     expect(find.text('Ahmed Ali: 25'), findsOneWidget);
     expect(find.text('Total points: 25'), findsOneWidget);
   });
+
+  testWidgets(
+    'players list refreshes after a redeem invalidates the shared provider',
+    (tester) async {
+      final playerRepository = FakePlayerRepository(
+        playersResponses: const [
+          [
+            PlayerSummary(
+              id: 1,
+              fullName: 'Ahmed Ali',
+              teamName: 'LFC U12',
+              playingPosition: 'Forward',
+              pointsBalance: 150,
+              progress: 'Joined',
+              isPlayer: true,
+            ),
+          ],
+          [
+            PlayerSummary(
+              id: 1,
+              fullName: 'Ahmed Ali',
+              teamName: 'LFC U12',
+              playingPosition: 'Forward',
+              pointsBalance: 140,
+              progress: 'Joined',
+              isPlayer: true,
+            ),
+          ],
+        ],
+      );
+      final redemptionRepository = FakeRedemptionRepository(
+        items: const [
+          RedemptionItemSummary(
+            id: 22,
+            name: 'LFC Water Bottle',
+            description: null,
+            type: 'merch',
+            pointsCost: 10,
+            inStock: true,
+          ),
+        ],
+        voucher: RedemptionVoucher(
+          id: 4,
+          voucherCode: 'LFC-789',
+          pointsSpent: 10,
+          status: 'issued',
+          itemName: 'LFC Water Bottle',
+          itemType: 'merch',
+          playerName: 'Ahmed Ali',
+          createdAt: DateTime(2026, 7, 1),
+        ),
+      );
+
+      await tester.pumpWidget(
+        _testApp(
+          session: _parentState(),
+          playerRepository: playerRepository,
+          redemptionRepository: redemptionRepository,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('150 pts'), findsOneWidget);
+
+      await tester.tap(find.text('Rewards'));
+      await tester.pumpAndSettle();
+      final redeemButton = tester.widget<FilledButton>(
+        find.byKey(const Key('redeem-item-22')),
+      );
+      redeemButton.onPressed!.call();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Players'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('140 pts'), findsOneWidget);
+    },
+  );
 }
 
 Widget _testApp({
@@ -313,7 +403,7 @@ Widget _testApp({
   FakeScanRepository? parentScanRepository,
   FakeScanRepository? staffScanRepository,
 }) {
-  final authRepository = _FakeAuthRepository();
+  final authRepository = _FakeAuthRepository(account: session.account);
 
   return ProviderScope(
     overrides: [
@@ -328,10 +418,12 @@ Widget _testApp({
       staffSessionControllerProvider.overrideWith(
         () => _FakeStaffSessionController(staffSession),
       ),
-      if (playerRepository != null) playerRepositoryProvider.overrideWithValue(playerRepository),
+      if (playerRepository != null)
+        playerRepositoryProvider.overrideWithValue(playerRepository),
       if (redemptionRepository != null)
         redemptionRepositoryProvider.overrideWithValue(redemptionRepository),
-      if (offersRepository != null) offersRepositoryProvider.overrideWithValue(offersRepository),
+      if (offersRepository != null)
+        offersRepositoryProvider.overrideWithValue(offersRepository),
       if (parentScanRepository != null)
         parentScanRepositoryProvider.overrideWithValue(parentScanRepository),
       if (staffScanRepository != null)
@@ -388,22 +480,36 @@ const _players = [
 class FakePlayerRepository extends PlayerRepository {
   FakePlayerRepository({
     this.players = const [],
+    this.playersResponses = const [],
     this.playerTransactions = const [],
     this.accountTransactions = const [],
   }) : super(Dio());
 
   final List<PlayerSummary> players;
+  final List<List<PlayerSummary>> playersResponses;
   final List<PointHistoryEntry> playerTransactions;
   final List<PointHistoryEntry> accountTransactions;
+  int fetchPlayersCount = 0;
 
   @override
-  Future<List<PlayerSummary>> fetchPlayers() async => players;
+  Future<List<PlayerSummary>> fetchPlayers() async {
+    if (playersResponses.isEmpty) {
+      return players;
+    }
+
+    final index = fetchPlayersCount.clamp(0, playersResponses.length - 1);
+    fetchPlayersCount += 1;
+
+    return playersResponses[index];
+  }
 
   @override
-  Future<List<PointHistoryEntry>> fetchPlayerTransactions(int playerId) async => playerTransactions;
+  Future<List<PointHistoryEntry>> fetchPlayerTransactions(int playerId) async =>
+      playerTransactions;
 
   @override
-  Future<List<PointHistoryEntry>> fetchAccountTransactions() async => accountTransactions;
+  Future<List<PointHistoryEntry>> fetchAccountTransactions() async =>
+      accountTransactions;
 }
 
 class FakeRedemptionRepository extends RedemptionRepository {
@@ -480,24 +586,33 @@ class FakeScanRepository extends ScanRepository {
 }
 
 class _FakeAuthRepository extends AuthRepository {
-  _FakeAuthRepository()
-      : super(
-          dio: Dio(),
-          tokenStorage: TokenStorage(MemorySecureStorage()),
-        );
+  _FakeAuthRepository({this.account})
+    : super(dio: Dio(), tokenStorage: TokenStorage(MemorySecureStorage()));
+
+  final Account? account;
 
   @override
-  Future<LoginResponse> login({required String email, required String password}) async {
+  Future<LoginResponse> login({
+    required String email,
+    required String password,
+  }) async {
     throw UnimplementedError();
   }
 
   @override
   Future<Account> getMe() async {
-    throw UnimplementedError();
+    if (account == null) {
+      throw UnimplementedError();
+    }
+
+    return account!;
   }
 
   @override
-  Future<StaffLoginResponse> staffLogin({required String email, required String password}) async {
+  Future<StaffLoginResponse> staffLogin({
+    required String email,
+    required String password,
+  }) async {
     throw UnimplementedError();
   }
 

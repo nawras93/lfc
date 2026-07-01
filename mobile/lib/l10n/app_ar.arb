@@ -36,7 +36,7 @@
   "acceptInviteTitle": "قبول الدعوة",
   "acceptInviteSubtitle": "عيّن كلمة مرور لتفعيل حسابك.",
   "savePasswordButton": "حفظ كلمة المرور",
-  "demoApiHint": "يتم ضبط عنوان الـ API التجريبي عبر --dart-define=API_BASE_URL.",
+  "demoApiHint": "يُضبط عنوان الـ API التجريبي تلقائياً إلى localhost على iOS وإلى 10.0.2.2 على Android. ويمكن تجاوزه عبر --dart-define=API_BASE_URL.",
   "notAvailableValue": "غير متوفر",
   "playersTab": "اللاعبون",
   "qrTab": "الرمز",

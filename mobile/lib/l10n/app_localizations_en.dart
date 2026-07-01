@@ -107,7 +107,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get demoApiHint =>
-      'Demo API URL is configured with --dart-define=API_BASE_URL.';
+      'Demo API URL auto-defaults to localhost on iOS and 10.0.2.2 on Android. Override it with --dart-define=API_BASE_URL.';
 
   @override
   String get notAvailableValue => 'Not available';

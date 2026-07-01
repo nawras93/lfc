@@ -22,7 +22,8 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
     _future = _load();
   }
 
-  Future<List<OfferSummary>> _load() => ref.read(offersRepositoryProvider).fetchOffers();
+  Future<List<OfferSummary>> _load() =>
+      ref.read(offersRepositoryProvider).fetchOffers();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,9 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
         return RefreshIndicator(
           onRefresh: () async {
             final next = _load();
-            setState(() => _future = next);
+            setState(() {
+              _future = next;
+            });
             await next;
           },
           child: ListView.separated(
@@ -100,9 +103,12 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
     DateFormat formatter,
     OfferSummary offer,
   ) {
-    final from = offer.validFrom == null ? l10n.notAvailableValue : formatter.format(offer.validFrom!);
-    final until =
-        offer.validUntil == null ? l10n.notAvailableValue : formatter.format(offer.validUntil!);
+    final from = offer.validFrom == null
+        ? l10n.notAvailableValue
+        : formatter.format(offer.validFrom!);
+    final until = offer.validUntil == null
+        ? l10n.notAvailableValue
+        : formatter.format(offer.validUntil!);
     return l10n.offerValidity(from, until);
   }
 }

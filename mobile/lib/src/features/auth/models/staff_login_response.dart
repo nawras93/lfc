@@ -1,10 +1,7 @@
 import 'staff_user.dart';
 
 class StaffLoginResponse {
-  const StaffLoginResponse({
-    required this.token,
-    required this.user,
-  });
+  const StaffLoginResponse({required this.token, required this.user});
 
   factory StaffLoginResponse.fromJson(Map<String, dynamic> json) {
     return StaffLoginResponse(

@@ -8,10 +8,7 @@ import '../models/login_response.dart';
 import '../models/staff_login_response.dart';
 
 class AuthRepository {
-  AuthRepository({
-    required this.dio,
-    required this.tokenStorage,
-  });
+  AuthRepository({required this.dio, required this.tokenStorage});
 
   final Dio dio;
   final TokenStorage tokenStorage;
@@ -23,10 +20,7 @@ class AuthRepository {
     try {
       final response = await dio.post<Map<String, dynamic>>(
         '/auth/login',
-        data: {
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
       final payload = response.data ?? const <String, dynamic>{};
       final result = LoginResponse.fromJson(payload);
@@ -44,10 +38,7 @@ class AuthRepository {
     try {
       final response = await dio.post<Map<String, dynamic>>(
         '/auth/accept-invite',
-        data: {
-          'token': token,
-          'password': password,
-        },
+        data: {'token': token, 'password': password},
       );
       final payload = response.data ?? const <String, dynamic>{};
       final result = LoginResponse.fromJson(payload);
@@ -75,12 +66,11 @@ class AuthRepository {
     try {
       final response = await dio.post<Map<String, dynamic>>(
         '/staff/login',
-        data: {
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
-      return StaffLoginResponse.fromJson(response.data ?? const <String, dynamic>{});
+      return StaffLoginResponse.fromJson(
+        response.data ?? const <String, dynamic>{},
+      );
     } catch (error) {
       throw ApiException.fromObject(error);
     }

@@ -34,7 +34,9 @@ class _AcceptInviteScreenState extends ConsumerState<AcceptInviteScreen> {
     setState(() => _error = null);
 
     try {
-      await ref.read(sessionControllerProvider.notifier).acceptInvite(
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .acceptInvite(
             token: _tokenController.text.trim(),
             password: _passwordController.text,
           );
@@ -54,9 +56,7 @@ class _AcceptInviteScreenState extends ConsumerState<AcceptInviteScreen> {
     final session = ref.watch(sessionControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.acceptInviteTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.acceptInviteTitle)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -108,12 +108,15 @@ class _AcceptInviteScreenState extends ConsumerState<AcceptInviteScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        if (_error != null && _error!.kind != ApiErrorKind.validation)
+                        if (_error != null &&
+                            _error!.kind != ApiErrorKind.validation)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: Text(
                               _error!.message,
-                              style: TextStyle(color: Theme.of(context).colorScheme.error),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
                             ),
                           ),
                         FilledButton(

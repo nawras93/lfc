@@ -107,7 +107,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get demoApiHint =>
-      'يتم ضبط عنوان الـ API التجريبي عبر --dart-define=API_BASE_URL.';
+      'يُضبط عنوان الـ API التجريبي تلقائياً إلى localhost على iOS وإلى 10.0.2.2 على Android. ويمكن تجاوزه عبر --dart-define=API_BASE_URL.';
 
   @override
   String get notAvailableValue => 'غير متوفر';

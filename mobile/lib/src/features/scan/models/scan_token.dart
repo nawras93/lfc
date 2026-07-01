@@ -1,8 +1,5 @@
 class ScanToken {
-  const ScanToken({
-    required this.token,
-    required this.expiresAt,
-  });
+  const ScanToken({required this.token, required this.expiresAt});
 
   factory ScanToken.fromJson(Map<String, dynamic> json) {
     return ScanToken(

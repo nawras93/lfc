@@ -7,7 +7,8 @@ class TokenStorage {
 
   final FlutterSecureStorage _storage;
 
-  Future<void> writeToken(String token) => _storage.write(key: tokenKey, value: token);
+  Future<void> writeToken(String token) =>
+      _storage.write(key: tokenKey, value: token);
 
   Future<String?> readToken() => _storage.read(key: tokenKey);
 

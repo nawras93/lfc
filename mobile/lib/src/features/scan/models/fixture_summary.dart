@@ -14,8 +14,9 @@ class FixtureSummary {
       teamName: json['team_name'] as String?,
       opponent: json['opponent'] as String? ?? '',
       venue: json['venue'] as String?,
-      kickoffAt:
-          json['kickoff_at'] == null ? null : DateTime.parse(json['kickoff_at'] as String),
+      kickoffAt: json['kickoff_at'] == null
+          ? null
+          : DateTime.parse(json['kickoff_at'] as String),
       scanClosesAt: json['scan_closes_at'] == null
           ? null
           : DateTime.parse(json['scan_closes_at'] as String),

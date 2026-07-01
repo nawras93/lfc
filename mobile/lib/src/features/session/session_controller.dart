@@ -87,10 +87,7 @@ class SessionController extends Notifier<SessionState> {
     }
   }
 
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     state = state.copyWith(isBusy: true);
     final repository = ref.read(authRepositoryProvider);
 
@@ -116,7 +113,10 @@ class SessionController extends Notifier<SessionState> {
     final repository = ref.read(authRepositoryProvider);
 
     try {
-      final result = await repository.acceptInvite(token: token, password: password);
+      final result = await repository.acceptInvite(
+        token: token,
+        password: password,
+      );
       final account = await repository.getMe();
       state = SessionState(
         status: SessionStatus.authenticated,
@@ -133,6 +133,26 @@ class SessionController extends Notifier<SessionState> {
     state = state.copyWith(isBusy: true);
     await ref.read(authRepositoryProvider).logout();
     state = const SessionState(status: SessionStatus.unauthenticated);
+  }
+
+  Future<void> refreshAccount() async {
+    if (state.status != SessionStatus.authenticated || state.token == null) {
+      return;
+    }
+
+    final repository = ref.read(authRepositoryProvider);
+
+    try {
+      final account = await repository.getMe();
+      state = state.copyWith(account: account);
+    } on ApiException catch (error) {
+      if (error.kind == ApiErrorKind.unauthorized) {
+        await clearSession();
+        return;
+      }
+
+      rethrow;
+    }
   }
 
   Future<void> clearSession() async {

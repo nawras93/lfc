@@ -30,7 +30,10 @@ void main() {
     await tester.pumpWidget(_testApp());
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('login-email')), 'parent.demo@lfc.test');
+    await tester.enterText(
+      find.byKey(const Key('login-email')),
+      'parent.demo@lfc.test',
+    );
     await tester.enterText(find.byKey(const Key('login-password')), 'password');
     await tester.tap(find.byKey(const Key('login-submit')));
     await tester.pumpAndSettle();
@@ -38,7 +41,9 @@ void main() {
     expect(find.text('Enter a valid email address.'), findsNothing);
   });
 
-  testWidgets('language toggle switches locale and home shell becomes RTL', (tester) async {
+  testWidgets('language toggle switches locale and home shell becomes RTL', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _testApp(
         sessionOverride: const SessionState(
@@ -58,13 +63,19 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(Directionality.of(tester.element(find.text('Players').first)), TextDirection.ltr);
+    expect(
+      Directionality.of(tester.element(find.text('Players').first)),
+      TextDirection.ltr,
+    );
 
     await tester.tap(find.byKey(const Key('language-toggle')).first);
     await tester.pumpAndSettle();
 
     expect(find.text('اللاعبون'), findsWidgets);
-    expect(Directionality.of(tester.element(find.text('اللاعبون').first)), TextDirection.rtl);
+    expect(
+      Directionality.of(tester.element(find.text('اللاعبون').first)),
+      TextDirection.rtl,
+    );
   });
 }
 
@@ -89,10 +100,7 @@ Widget _testApp({SessionState? sessionOverride}) {
 
 class _FakeAuthRepository extends AuthRepository {
   _FakeAuthRepository()
-      : super(
-          dio: Dio(),
-          tokenStorage: TokenStorage(MemorySecureStorage()),
-        );
+    : super(dio: Dio(), tokenStorage: TokenStorage(MemorySecureStorage()));
 
   Account account = const Account(
     id: 1,
@@ -106,7 +114,10 @@ class _FakeAuthRepository extends AuthRepository {
   );
 
   @override
-  Future<LoginResponse> login({required String email, required String password}) async {
+  Future<LoginResponse> login({
+    required String email,
+    required String password,
+  }) async {
     return LoginResponse(token: 'token', account: account);
   }
 
@@ -114,7 +125,10 @@ class _FakeAuthRepository extends AuthRepository {
   Future<Account> getMe() async => account;
 
   @override
-  Future<StaffLoginResponse> staffLogin({required String email, required String password}) async {
+  Future<StaffLoginResponse> staffLogin({
+    required String email,
+    required String password,
+  }) async {
     return const StaffLoginResponse(
       token: 'staff-token',
       user: StaffUser(id: 1, name: 'Staff', email: 'staff@example.com'),
@@ -156,7 +170,10 @@ class _FakeSessionController extends SessionController {
   }
 
   @override
-  Future<void> acceptInvite({required String token, required String password}) async {}
+  Future<void> acceptInvite({
+    required String token,
+    required String password,
+  }) async {}
 
   @override
   Future<void> logout() async {

@@ -13,7 +13,9 @@ class RedemptionRepository {
 
   Future<List<RedemptionItemSummary>> fetchItems() async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('/redemption-items');
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/redemption-items',
+      );
       final data = response.data?['data'] as List<dynamic>? ?? const [];
 
       return data
@@ -30,15 +32,18 @@ class RedemptionRepository {
     int? playerId,
   }) async {
     try {
-      final payload = <String, dynamic>{
-        'redemption_item_id': redemptionItemId,
-      };
+      final payload = <String, dynamic>{'redemption_item_id': redemptionItemId};
       if (playerId != null) {
         payload['player_id'] = playerId;
       }
 
-      final response = await _dio.post<Map<String, dynamic>>('/redemptions', data: payload);
-      return RedemptionVoucher.fromJson(unwrapData(response.data ?? const <String, dynamic>{}));
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/redemptions',
+        data: payload,
+      );
+      return RedemptionVoucher.fromJson(
+        unwrapData(response.data ?? const <String, dynamic>{}),
+      );
     } catch (error) {
       throw ApiException.fromObject(error);
     }

@@ -13,13 +13,16 @@ import 'features/locale/locale_controller.dart';
 import 'features/locale/data/locale_storage.dart';
 import 'features/offers/data/offers_repository.dart';
 import 'features/players/data/player_repository.dart';
+import 'features/players/models/player_summary.dart';
 import 'features/redemptions/data/redemption_repository.dart';
 import 'features/scan/data/scan_repository.dart';
 import 'features/session/session_controller.dart';
 import 'features/staff/data/staff_session_storage.dart';
 import 'features/staff/staff_session_controller.dart';
 
-final appConfigProvider = Provider<AppConfig>((ref) => AppConfig.fromEnvironment());
+final appConfigProvider = Provider<AppConfig>(
+  (ref) => AppConfig.fromEnvironment(),
+);
 
 final secureStorageProvider = Provider<FlutterSecureStorage>(
   (ref) => const FlutterSecureStorage(),
@@ -43,8 +46,9 @@ final sessionEventsProvider = Provider<SessionEvents>((ref) {
   return events;
 });
 
-final localeControllerProvider =
-    NotifierProvider<LocaleController, Locale>(LocaleController.new);
+final localeControllerProvider = NotifierProvider<LocaleController, Locale>(
+  LocaleController.new,
+);
 
 final staffSessionEventsProvider = Provider<SessionEvents>((ref) {
   final events = SessionEvents();
@@ -120,6 +124,10 @@ final sessionControllerProvider =
 
 final playerRepositoryProvider = Provider<PlayerRepository>(
   (ref) => PlayerRepository(ref.watch(dioProvider)),
+);
+
+final playersProvider = FutureProvider.autoDispose<List<PlayerSummary>>(
+  (ref) => ref.watch(playerRepositoryProvider).fetchPlayers(),
 );
 
 final redemptionRepositoryProvider = Provider<RedemptionRepository>(
@@ -200,7 +208,8 @@ final staffScanRepositoryProvider = Provider<ScanRepository>(
 );
 
 class SessionEvents {
-  final StreamController<void> _unauthorizedController = StreamController<void>.broadcast();
+  final StreamController<void> _unauthorizedController =
+      StreamController<void>.broadcast();
 
   Stream<void> get unauthorizedStream => _unauthorizedController.stream;
 

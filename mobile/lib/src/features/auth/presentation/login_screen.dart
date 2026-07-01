@@ -36,7 +36,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _error = null);
 
     try {
-      await ref.read(sessionControllerProvider.notifier).login(
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .login(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
@@ -89,7 +91,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             if (text.isEmpty) {
                               return l10n.requiredField;
                             }
-                            final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+                            final emailPattern = RegExp(
+                              r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                            );
                             if (!emailPattern.hasMatch(text)) {
                               return l10n.invalidEmail;
                             }
@@ -113,12 +117,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        if (_error != null && _error!.kind != ApiErrorKind.validation)
+                        if (_error != null &&
+                            _error!.kind != ApiErrorKind.validation)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: Text(
                               _friendlyErrorMessage(l10n, _error!),
-                              style: TextStyle(color: Theme.of(context).colorScheme.error),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
                             ),
                           ),
                         FilledButton(
@@ -139,8 +146,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 8),
                         TextButton(
-                          onPressed: () =>
-                              ref.read(staffSessionControllerProvider.notifier).showLogin(),
+                          onPressed: () => ref
+                              .read(staffSessionControllerProvider.notifier)
+                              .showLogin(),
                           child: Text(l10n.staffScannerEntry),
                         ),
                         const SizedBox(height: 12),

@@ -287,7 +287,7 @@ abstract class AppLocalizations {
   /// No description provided for @demoApiHint.
   ///
   /// In en, this message translates to:
-  /// **'Demo API URL is configured with --dart-define=API_BASE_URL.'**
+  /// **'Demo API URL auto-defaults to localhost on iOS and 10.0.2.2 on Android. Override it with --dart-define=API_BASE_URL.'**
   String get demoApiHint;
 
   /// No description provided for @notAvailableValue.
