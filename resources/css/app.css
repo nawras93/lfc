@@ -85,7 +85,12 @@ body.lfc-page {
 }
 
 .lfc-season {
-    padding: .55rem .9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Tajawal reserves descender space below the baseline, so with symmetric
+       padding an all-ascender label rides high; nudge it down to optical center. */
+    padding: .64rem .9rem .46rem;
     border-radius: 999px;
     font-size: .85rem;
     color: var(--lfc-gold-bright);
