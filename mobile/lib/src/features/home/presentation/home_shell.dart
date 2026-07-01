@@ -25,6 +25,17 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final l10n = AppLocalizations.of(context)!;
     final session = ref.watch(sessionControllerProvider);
     final account = session.account;
+    final playersAsync = ref.watch(playersProvider);
+
+    final isVvipClient = account?.accountType == 'vvip_client';
+    final pointsLabel = isVvipClient ? l10n.balanceLabel : l10n.totalPointsLabel;
+    final pointsValue = isVvipClient
+        ? '${account!.accountBalance} ${l10n.pointsUnit}'
+        : playersAsync.maybeWhen(
+            data: (players) =>
+                '${players.fold<int>(0, (sum, p) => sum + p.pointsBalance)} ${l10n.pointsUnit}',
+            orElse: () => '...',
+          );
 
     final titles = [
       l10n.playersTab,
@@ -53,7 +64,12 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           padding: const EdgeInsets.all(24),
           child: account == null
               ? Center(child: Text(l10n.loadingText))
-              : _Body(index: _index, account: account),
+              : _Body(
+                  index: _index,
+                  account: account,
+                  pointsLabel: pointsLabel,
+                  pointsValue: pointsValue,
+                ),
         ),
       ),
       bottomNavigationBar: NavigationBar(
@@ -83,10 +99,17 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.index, required this.account});
+  const _Body({
+    required this.index,
+    required this.account,
+    required this.pointsLabel,
+    required this.pointsValue,
+  });
 
   final int index;
   final Account account;
+  final String pointsLabel;
+  final String pointsValue;
 
   @override
   Widget build(BuildContext context) {
@@ -123,14 +146,12 @@ class _Body extends StatelessWidget {
                       label: l10n.accountTypeLabel,
                       value: account.accountType ?? l10n.notAvailableValue,
                     ),
-                    _InfoChip(
-                      label: l10n.vvipStatusLabel,
-                      value: account.isVvip ? l10n.yesText : l10n.noText,
-                    ),
-                    _InfoChip(
-                      label: l10n.balanceLabel,
-                      value: '${account.accountBalance} ${l10n.pointsUnit}',
-                    ),
+                    if (account.isVvip)
+                      _InfoChip(
+                        label: l10n.vvipStatusLabel,
+                        value: l10n.yesText,
+                      ),
+                    _InfoChip(label: pointsLabel, value: pointsValue),
                   ],
                 ),
               ],

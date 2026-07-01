@@ -237,6 +237,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Account redemption requires a VVIP client account.';
 
   @override
+  String get redeemInsufficientError =>
+      'You don\'t have enough points for this reward.';
+
+  @override
   String get redeemUnavailableError => 'This reward is unavailable right now.';
 
   @override

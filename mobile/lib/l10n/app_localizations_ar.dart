@@ -236,6 +236,9 @@ class AppLocalizationsAr extends AppLocalizations {
       'الاستبدال على مستوى الحساب يتطلب حساب كبار الشخصيات.';
 
   @override
+  String get redeemInsufficientError => 'لا تملك نقاطًا كافية لهذه المكافأة.';
+
+  @override
   String get redeemUnavailableError => 'هذه المكافأة غير متاحة الآن.';
 
   @override

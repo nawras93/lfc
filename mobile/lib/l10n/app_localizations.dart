@@ -524,6 +524,12 @@ abstract class AppLocalizations {
   /// **'Account redemption requires a VVIP client account.'**
   String get redeemVvipOnlyError;
 
+  /// No description provided for @redeemInsufficientError.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have enough points for this reward.'**
+  String get redeemInsufficientError;
+
   /// No description provided for @redeemUnavailableError.
   ///
   /// In en, this message translates to:

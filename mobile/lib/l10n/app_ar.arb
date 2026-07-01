@@ -94,6 +94,7 @@
   "outOfStockLabel": "غير متوفر",
   "redeemLinkedPlayerError": "هذا اللاعب غير مرتبط بحسابك.",
   "redeemVvipOnlyError": "الاستبدال على مستوى الحساب يتطلب حساب كبار الشخصيات.",
+  "redeemInsufficientError": "لا تملك نقاطًا كافية لهذه المكافأة.",
   "redeemUnavailableError": "هذه المكافأة غير متاحة الآن.",
   "redemptionTypeFeeDiscount": "خصم رسوم",
   "redemptionTypeEvent": "فعالية",

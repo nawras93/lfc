@@ -54,7 +54,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('player-balance-1')), findsOneWidget);
-      expect(find.text('120 pts'), findsOneWidget);
+      expect(find.text('120 pts'), findsAtLeastNWidgets(1));
 
       await tester.tap(find.byKey(const Key('language-toggle')).first);
       await tester.pumpAndSettle();
@@ -374,7 +374,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('150 pts'), findsOneWidget);
+      expect(find.text('150 pts'), findsAtLeastNWidgets(1));
 
       await tester.tap(find.text('Rewards'));
       await tester.pumpAndSettle();
@@ -389,7 +389,7 @@ void main() {
       await tester.tap(find.text('Players'));
       await tester.pumpAndSettle();
 
-      expect(find.text('140 pts'), findsOneWidget);
+      expect(find.text('140 pts'), findsAtLeastNWidgets(1));
     },
   );
 }
