@@ -23,17 +23,15 @@
                         <span class="lfc-season">{{ __('public-registration.nav.season') }}: {{ $season->name }}</span>
                     @endif
                     @php
-                        $languageRoute = $season
-                            ? ['public.register.show', ['seasonSlug' => $seasonSlug, 'registrationSlug' => $registrationSlug]]
-                            : ['public.home', []];
                         // Show the target language's flag, like the mobile toggle:
                         // Qatar flag (→ Arabic) while in English, GB flag (→ English) while in Arabic.
                         $targetLang = $locale === 'ar' ? 'en' : 'ar';
                         $targetFlag = $locale === 'ar' ? 'gb' : 'qa';
                         $targetLabel = $locale === 'ar' ? 'English' : 'العربية';
                     @endphp
+                    {{-- Stay on the current page; just flip the lang query param. --}}
                     <a class="lfc-language-switch"
-                        href="{{ route($languageRoute[0], $languageRoute[1] + ['lang' => $targetLang]) }}"
+                        href="{{ request()->fullUrlWithQuery(['lang' => $targetLang]) }}"
                         aria-label="{{ __('public-registration.nav.language') }}: {{ $targetLabel }}"
                         title="{{ $targetLabel }}">
                         <img class="lfc-flag" src="{{ asset('images/flags/' . $targetFlag . '.png') }}" alt="{{ $targetLabel }}">
