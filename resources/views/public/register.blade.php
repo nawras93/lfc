@@ -48,7 +48,6 @@
                     @if ($season && $registrationOpen)
                         <div class="lfc-hero-actions">
                             <a href="#registration-form" class="lfc-button lfc-button-primary">{{ __('public-registration.hero.primary_cta') }}</a>
-                            <a href="#registration-form" class="lfc-button lfc-button-secondary">{{ __('public-registration.hero.secondary_cta') }}</a>
                         </div>
                     @endif
 

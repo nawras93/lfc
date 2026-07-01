@@ -165,16 +165,21 @@
     }
 
     .lfc-hero-card h2 {
-        max-width: 12ch;
         margin: .75rem 0 0;
         font-family: "Changa", "Tajawal", ui-sans-serif, system-ui, sans-serif;
         font-weight: 700;
-        font-size: clamp(2.2rem, 4.6vw, 4rem);
-        line-height: .98;
+        /* Full-width hero now has room — keep the title on one line.
+           max-width:none overrides the built app.css (.lfc-* @layer) leftover. */
+        max-width: none;
+        font-size: clamp(1.5rem, 3.2vw, 2.9rem);
+        line-height: 1.05;
+        white-space: nowrap;
     }
 
     .lfc-hero-copy {
-        max-width: 36rem;
+        /* max-width:none overrides the built app.css (.lfc-* @layer) leftover
+           so the copy runs on one line where there is room. */
+        max-width: none;
         margin-top: 1.2rem;
         font-size: 1.05rem;
         line-height: 1.8;
@@ -411,7 +416,7 @@
         }
 
         .lfc-hero-card h2 {
-            max-width: none;
+            white-space: normal;
         }
     }
 </style>
