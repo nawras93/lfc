@@ -553,6 +553,22 @@ body.lfc-page {
     outline: none;
 }
 
+/* flatpickr (date picker) — nudge the calendar accents onto the brand palette. */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus {
+    background: var(--lfc-navy-700);
+    border-color: var(--lfc-navy-700);
+}
+
+.flatpickr-day.today {
+    border-color: var(--lfc-gold);
+}
+
+.flatpickr-day:hover {
+    background: var(--lfc-light-bg);
+}
+
 /* Summary of every error at the top of the form card. */
 .lfc-alert-list {
     margin: .5rem 0 0;

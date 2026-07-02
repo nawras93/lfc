@@ -134,7 +134,7 @@
 
                                 <label class="lfc-field @error('date_of_birth') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.date_of_birth') }}</span>
-                                    <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" @error('date_of_birth') aria-invalid="true" @enderror required>
+                                    <input type="text" name="date_of_birth" class="js-date-input" value="{{ old('date_of_birth') }}" placeholder="dd-mm-yyyy" @error('date_of_birth') aria-invalid="true" @enderror required>
                                     @error('date_of_birth')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 

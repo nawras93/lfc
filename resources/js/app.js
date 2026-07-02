@@ -10,6 +10,8 @@
 
 import TomSelect from 'tom-select';
 import 'tom-select/dist/css/tom-select.css';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 // Arabic script blocks (U+0600–06FF, 0750–077F, 08A0–08FF, FB50–FDFF,
 // FE70–FEFF). Keep in sync with App\Rules\LatinText.
@@ -115,10 +117,26 @@ function initSearchableSelects(form) {
     });
 }
 
+// Show dates as dd-mm-yyyy while still POSTing an ISO Y-m-d value (via
+// flatpickr's altInput), so the server contract is identical to the native
+// date input it replaces. maxDate mirrors the `before_or_equal:today` rule.
+function initDatePickers(form) {
+    form.querySelectorAll('.js-date-input').forEach((input) => {
+        flatpickr(input, {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'd-m-Y',
+            allowInput: true,
+            maxDate: 'today',
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.lfc-form');
     if (form) {
         initSearchableSelects(form);
+        initDatePickers(form);
         initLatinInputs(form);
     }
 
