@@ -140,7 +140,7 @@
 
                                 <label class="lfc-field @error('country_of_birth') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.country_of_birth') }}</span>
-                                    <select name="country_of_birth" dir="ltr" lang="en" @error('country_of_birth') aria-invalid="true" @enderror required>
+                                    <select name="country_of_birth" @error('country_of_birth') aria-invalid="true" @enderror required>
                                         <option value="" disabled @selected(old('country_of_birth') === null)></option>
                                         @foreach ($countryOptions as $value => $label)
                                             <option value="{{ $value }}" @selected(old('country_of_birth') === $value)>{{ $label }}</option>
@@ -151,7 +151,7 @@
 
                                 <label class="lfc-field @error('citizenship') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.citizenship') }}</span>
-                                    <select name="citizenship" dir="ltr" lang="en" @error('citizenship') aria-invalid="true" @enderror required>
+                                    <select name="citizenship" @error('citizenship') aria-invalid="true" @enderror required>
                                         <option value="" disabled @selected(old('citizenship') === null)></option>
                                         @foreach ($nationalityOptions as $value => $label)
                                             <option value="{{ $value }}" @selected(old('citizenship') === $value)>{{ $label }}</option>

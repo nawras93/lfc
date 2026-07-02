@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Country;
+use App\Enums\Nationality;
 use App\Http\Requests\StorePublicRegistrationRequest;
 use App\Models\Season;
 use App\Services\PublicRegistrationService;
-use App\Support\Countries;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -38,8 +39,8 @@ class PublicRegistrationController extends Controller
             'isRtl' => app()->getLocale() === 'ar',
             'locale' => app()->getLocale(),
             'positionOptions' => $this->positionOptions(),
-            'countryOptions' => Countries::countries(),
-            'nationalityOptions' => Countries::nationalities(),
+            'countryOptions' => Country::options(),
+            'nationalityOptions' => Nationality::options(),
         ]);
     }
 
@@ -67,8 +68,8 @@ class PublicRegistrationController extends Controller
             'isRtl' => app()->getLocale() === 'ar',
             'locale' => app()->getLocale(),
             'positionOptions' => $this->positionOptions(),
-            'countryOptions' => Countries::countries(),
-            'nationalityOptions' => Countries::nationalities(),
+            'countryOptions' => Country::options(),
+            'nationalityOptions' => Nationality::options(),
         ]);
     }
 

@@ -41,6 +41,30 @@ class CandidateResourceTest extends TestCase
 
         $this->assertTrue($candidate->consent_given);
         $this->assertNotNull($candidate->consent_at);
+        $this->assertSame(2014, $candidate->year_of_birth);
+    }
+
+    public function test_year_of_birth_is_rederived_when_candidate_date_of_birth_is_edited(): void
+    {
+        $this->actingAsAdmin();
+
+        $candidate = Candidate::factory()->create([
+            'season_id' => Season::query()->firstOrFail()->id,
+            'team_id' => Team::query()->firstOrFail()->id,
+            'date_of_birth' => '2014-05-10',
+            'year_of_birth' => 2014,
+        ]);
+
+        Livewire::test(EditCandidate::class, ['record' => $candidate->getRouteKey()])
+            ->fillForm([
+                'date_of_birth' => '2012-03-01',
+            ])
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $candidate->refresh();
+
+        $this->assertSame(2012, $candidate->year_of_birth);
     }
 
     public function test_invalid_recruitment_transition_is_rejected(): void
@@ -221,7 +245,6 @@ class CandidateResourceTest extends TestCase
         return array_merge([
             'full_name' => 'Candidate One',
             'playing_position' => 'midfielder',
-            'year_of_birth' => 2014,
             'date_of_birth' => '2014-05-10',
             'country_of_birth' => 'Qatar',
             'citizenship' => 'Qatari',

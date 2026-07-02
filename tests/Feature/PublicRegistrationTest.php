@@ -37,6 +37,7 @@ class PublicRegistrationTest extends TestCase
         $arabic->assertOk();
         $arabic->assertSee('dir="rtl"', false);
         $arabic->assertSeeText('بيانات اللاعب');
+        $arabic->assertSee('🇶🇦 قطر', false);
     }
 
     public function test_successful_submission_creates_candidate_for_the_linked_season_with_default_workflow_values(): void

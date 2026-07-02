@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+
 class CandidateDataNormalizer
 {
     /**
@@ -10,6 +12,10 @@ class CandidateDataNormalizer
      */
     public function normalize(array $data): array
     {
+        if (! empty($data['date_of_birth'])) {
+            $data['year_of_birth'] = Carbon::parse($data['date_of_birth'])->year;
+        }
+
         $consentGiven = (bool) ($data['consent_given'] ?? false);
 
         if ($consentGiven) {

@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\Candidates\Schemas;
 
+use App\Enums\Country;
 use App\Enums\DocumentStatus;
 use App\Enums\FederationStatus;
 use App\Enums\JoiningStatus;
+use App\Enums\Nationality;
 use App\Enums\PlayingPosition;
 use App\Enums\RecruitmentStage;
+use App\Models\Candidate;
 use App\Models\Season;
 use App\Models\Team;
 use App\Rules\LatinText;
@@ -63,13 +66,6 @@ class CandidateForm
                 DatePicker::make('date_of_birth')
                     ->label(__('admin.resources.candidates.fields.date_of_birth'))
                     ->required(),
-                TextInput::make('year_of_birth')
-                    ->label(__('admin.resources.candidates.fields.year_of_birth'))
-                    ->numeric()
-                    ->required()
-                    ->minValue(1990)
-                    ->maxValue((int) now()->format('Y'))
-                    ->placeholder('2015'),
                 TextInput::make('year_arrived_qatar')
                     ->label(__('admin.resources.candidates.fields.year_arrived_qatar'))
                     ->numeric()
@@ -77,17 +73,19 @@ class CandidateForm
                     ->minValue(1990)
                     ->maxValue((int) now()->format('Y'))
                     ->placeholder(now()->format('Y')),
-                TextInput::make('country_of_birth')
+                Select::make('country_of_birth')
                     ->label(__('admin.resources.candidates.fields.country_of_birth'))
+                    ->options(fn (?Candidate $record): array => Country::options() + ($record?->country_of_birth ? [$record->country_of_birth => $record->country_of_birth] : []))
+                    ->searchable()
                     ->required()
-                    ->maxLength(255)
-                    ->rule(new LatinText)
+                    ->native(false)
                     ->prefixIcon(Heroicon::OutlinedGlobeAlt),
-                TextInput::make('citizenship')
+                Select::make('citizenship')
                     ->label(__('admin.resources.candidates.fields.citizenship'))
+                    ->options(fn (?Candidate $record): array => Nationality::options() + ($record?->citizenship ? [$record->citizenship => $record->citizenship] : []))
+                    ->searchable()
                     ->required()
-                    ->maxLength(255)
-                    ->rule(new LatinText)
+                    ->native(false)
                     ->prefixIcon(Heroicon::OutlinedFlag),
                 TextInput::make('school')
                     ->label(__('admin.resources.candidates.fields.school'))

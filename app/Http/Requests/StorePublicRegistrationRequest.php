@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Country;
+use App\Enums\Nationality;
 use App\Enums\PlayingPosition;
 use App\Rules\LatinText;
-use App\Support\Countries;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -21,15 +22,13 @@ class StorePublicRegistrationRequest extends FormRequest
     public function rules(): array
     {
         $currentYear = (int) now()->format('Y');
-        $countryOptions = Countries::countries();
-        $nationalityOptions = Countries::nationalities();
 
         return [
             'full_name' => ['required', 'string', 'max:255', new LatinText],
             'playing_position' => ['required', Rule::enum(PlayingPosition::class)],
             'date_of_birth' => ['required', 'date', 'before_or_equal:today'],
-            'country_of_birth' => ['required', Rule::in(array_keys($countryOptions))],
-            'citizenship' => ['required', Rule::in(array_keys($nationalityOptions))],
+            'country_of_birth' => ['required', Rule::enum(Country::class)],
+            'citizenship' => ['required', Rule::enum(Nationality::class)],
             'year_arrived_qatar' => ['required', 'integer', 'min:1990', "max:{$currentYear}"],
             'school' => ['required', 'string', 'max:255', new LatinText],
             'previous_club' => ['required', 'string', 'max:255', new LatinText],
