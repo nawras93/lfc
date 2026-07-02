@@ -42,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.25rem')
             ->favicon(asset('images/favicon.png'))
             ->font('Tajawal')
+            ->sidebarCollapsibleOnDesktop()
             ->defaultThemeMode(ThemeMode::Dark)
             ->colors([
                 // Exact navy ramp from the mobile app's LfcColors (muted crest
