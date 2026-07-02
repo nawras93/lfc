@@ -1,26 +1,32 @@
-# LFC Mobile
+# LFC Mobile Workspace
 
-Flutter scaffold for the LFC parent and VVIP demo app.
+Flutter pub-workspace for the LFC demo apps.
 
 ## Demo API config
 
 Set the API base URL with `--dart-define=API_BASE_URL=...`.
 
-- iOS simulator with `php artisan serve`: `http://localhost:8000/api/v1`
-- Android emulator with `php artisan serve`: `http://10.0.2.2:8000/api/v1`
+- `demo_app_one` defaults to:
+  - iOS simulator with `php artisan serve`: `http://localhost:8000/api/v1`
+  - Android emulator with `php artisan serve`: `http://10.0.2.2:8000/api/v1`
 
 Examples:
 
 ```bash
+cd apps/demo_app_one
 flutter run --dart-define=API_BASE_URL=http://localhost:8000/api/v1
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000/api/v1
 ```
 
-The single config point is [lib/src/config/app_config.dart](/Users/imahmoud/Sites/lfc/mobile/lib/src/config/app_config.dart:1).
+The shared config seam lives in [app_config.dart](/Users/imahmoud/Sites/lfc/mobile/packages/lfc_core/lib/src/config/app_config.dart:1), and each thin app shell overrides its default base URL from its own `lib/config.dart`.
 
 ## Getting Started
 
-This project is a starting point for the demo mobile application.
+Workspace layout:
+
+- `packages/lfc_core` — shared app code, l10n, fonts, flags, tests
+- `apps/demo_app_one` — Lusail SC app shell
+- `apps/demo_app_two` — placeholder second demo app
+- `apps/demo_app_three` — placeholder third demo app
 
 A few resources to get you started if this is your first Flutter project:
 

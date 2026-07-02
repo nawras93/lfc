@@ -7,7 +7,7 @@ php artisan migrate:fresh --seed
 php artisan serve --host=0.0.0.0 --port=8000
 ```
 
-Run the Flutter app from `mobile/`.
+Run the Flutter app from `mobile/apps/demo_app_one`.
 
 - Android emulator: no extra flag needed. The app defaults to `http://10.0.2.2:8000/api/v1`.
 - iOS simulator: no extra flag needed. The app defaults to `http://localhost:8000/api/v1`.

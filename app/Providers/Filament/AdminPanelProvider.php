@@ -35,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             // Lusail SC identity — mirrors the mobile app (navy #113F71 crest
-            // colour + Lusail gold accent). See mobile/lib/src/theme/app_theme.dart.
+            // colour + Lusail gold accent). See mobile/packages/lfc_core/lib/src/theme/app_theme.dart.
             ->brandName('Lusail SC')
             ->brandLogo(asset('images/lusail-logo.png'))
             ->darkModeBrandLogo(asset('images/lusail-logo-light.png'))
