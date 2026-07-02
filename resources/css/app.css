@@ -145,12 +145,27 @@ body.lfc-page {
 /* ---- Hero card ---- */
 .lfc-hero-card {
     min-height: 100%;
-    padding: 2.25rem;
     color: #fff;
     background:
         linear-gradient(140deg, rgb(255 255 255 / 8%), transparent 46%),
         linear-gradient(180deg, var(--lfc-navy-800) 0%, var(--lfc-navy-900) 100%);
     border: 1px solid rgb(200 162 74 / 22%);
+}
+
+/* Recruitment banner from the club: bleeds across the top and its dark
+   lower edge is masked so it dissolves seamlessly into the navy card. */
+.lfc-hero-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+}
+
+.lfc-hero-body {
+    padding: 2.25rem;
+    /* pull the copy up into the banner's faded edge so there's no dead gap */
+    margin-top: -2.25rem;
 }
 
 .lfc-hero-kicker {
@@ -173,11 +188,28 @@ body.lfc-page {
     white-space: nowrap;
 }
 
+.lfc-hero-greeting {
+    margin: 1.4rem 0 0;
+    font-weight: 600;
+    color: #fff;
+}
+
 .lfc-hero-copy {
-    margin-top: 1.2rem;
-    font-size: 1.05rem;
-    line-height: 1.8;
+    margin-top: .9rem;
+    font-size: 1.02rem;
+    line-height: 1.75;
     color: rgb(234 242 250 / 82%);
+}
+
+.lfc-hero-signoff {
+    margin-top: 1.3rem;
+    line-height: 1.7;
+    color: rgb(234 242 250 / 72%);
+}
+
+.lfc-hero-signoff strong {
+    color: var(--lfc-gold-bright);
+    font-family: 'Changa', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
 }
 
 .lfc-hero-actions {
@@ -395,8 +427,16 @@ body.lfc-page {
 
     .lfc-hero-card,
     .lfc-form-card {
-        padding: 1.25rem;
         border-radius: 1.35rem;
+    }
+
+    .lfc-form-card {
+        padding: 1.25rem;
+    }
+
+    .lfc-hero-body {
+        padding: 1.25rem;
+        margin-top: -1.25rem;
     }
 
     .lfc-form-grid {

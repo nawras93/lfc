@@ -10,16 +10,19 @@ return [
         'language' => 'Language',
     ],
     'hero' => [
-        'eyebrow' => 'Lusail Football Academy',
-        'title' => 'Register your child with the academy.',
-        'body' => 'Share a few details about your player and our coaches will review the application. It only takes a couple of minutes.',
+        'eyebrow' => 'Lusail Sports Club',
+        'title' => 'Player Recruitment',
+        'greeting' => 'Dear Players,',
+        'body' => [
+            'Lusail Sports Club is excited to announce our recruitment drive for the upcoming 2026/27 season. We are looking for talented players who are ready to take their game to the next level and join our team of dedicated teams.',
+            'If you are passionate about football and are committed to achieving excellence, we invite you to come and get assessed for our team. Our coaches and staff are experienced in developing players, and we are dedicated to helping you reach your full potential on and off the pitch.',
+            'Whether you are a seasoned player or just starting out, we welcome you to join our club and be a part of our journey towards success. With your skills and our support, we believe that we can achieve great things together.',
+            'So, don’t hesitate to fill out the form and our admin will contact you in August for your assessment.',
+        ],
+        'signoff' => 'Best regards,',
+        'signoff_org' => 'Lusail Sports Club',
         'primary_cta' => 'Register now',
         'secondary_cta' => 'View form',
-        'highlights' => [
-            'review' => 'Reviewed by our academy coaches',
-            'bilingual' => 'Available in Arabic and English',
-            'demo' => 'Quick and simple — done in minutes',
-        ],
     ],
     'sections' => [
         'candidate' => 'Candidate details',

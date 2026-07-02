@@ -40,21 +40,28 @@
 
             <main class="lfc-grid">
                 <section class="lfc-hero-card">
-                    <p class="lfc-hero-kicker">{{ __('public-registration.hero.eyebrow') }}</p>
-                    <h2>{{ __('public-registration.hero.title') }}</h2>
-                    <p class="lfc-hero-copy">{{ __('public-registration.hero.body') }}</p>
+                    <img class="lfc-hero-banner" src="{{ asset('images/registration-hero.png') }}" alt="{{ __('public-registration.hero.eyebrow') }}">
 
-                    @if ($season && $registrationOpen)
-                        <div class="lfc-hero-actions">
-                            <a href="#registration-form" class="lfc-button lfc-button-primary">{{ __('public-registration.hero.primary_cta') }}</a>
-                        </div>
-                    @endif
+                    <div class="lfc-hero-body">
+                        <p class="lfc-hero-kicker">{{ __('public-registration.hero.eyebrow') }}</p>
+                        <h2>{{ __('public-registration.hero.title') }}</h2>
 
-                    <ul class="lfc-highlights">
-                        <li>{{ __('public-registration.hero.highlights.review') }}</li>
-                        <li>{{ __('public-registration.hero.highlights.bilingual') }}</li>
-                        <li>{{ __('public-registration.hero.highlights.demo') }}</li>
-                    </ul>
+                        <p class="lfc-hero-greeting">{{ __('public-registration.hero.greeting') }}</p>
+                        @foreach (__('public-registration.hero.body') as $paragraph)
+                            <p class="lfc-hero-copy">{{ $paragraph }}</p>
+                        @endforeach
+
+                        <p class="lfc-hero-signoff">
+                            {{ __('public-registration.hero.signoff') }}<br>
+                            <strong>{{ __('public-registration.hero.signoff_org') }}</strong>
+                        </p>
+
+                        @if ($season && $registrationOpen)
+                            <div class="lfc-hero-actions">
+                                <a href="#registration-form" class="lfc-button lfc-button-primary">{{ __('public-registration.hero.primary_cta') }}</a>
+                            </div>
+                        @endif
+                    </div>
                 </section>
 
                 <section class="lfc-form-card" id="registration-form">
