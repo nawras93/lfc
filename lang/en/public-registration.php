@@ -46,8 +46,13 @@ return [
         'consent' => 'I confirm that I am the parent/guardian and consent to Lusail Football Academy reviewing this registration for recruitment purposes.',
         'submit' => 'Submit registration',
         'season_hint' => 'Applications are automatically attached to the active season: :season',
-        'email_hint' => 'Optional, but recommended for follow-up.',
+        'email_hint' => 'We use this to follow up on the application.',
         'duplicate_hint' => 'Please submit only one registration per player and parent phone number.',
+        'latin_note' => 'Enter names & places in English (Latin) letters',
+    ],
+    'errors' => [
+        'title' => 'Please check your registration',
+        'intro' => 'A few fields need attention. Correct the highlighted fields below and submit again.',
     ],
     'positions' => [
         'goalkeeper' => 'Goalkeeper',

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'latin_only' => 'Please enter this in Latin (English) characters.',
+    'latin_only' => 'Please enter :attribute in Latin (English) characters.',
 ];

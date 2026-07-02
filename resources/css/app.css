@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -9,6 +9,18 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
     --font-display: 'Changa', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
 }
+
+/* Self-hosted Tajawal with balanced vertical metrics. Stock Tajawal reserves
+   descender space for Arabic marks, so Latin text rides high in any centered
+   box (buttons, pills, badges); these overrides recenter it globally — the
+   same root-cause fix used in the Filament admin (AdminPanelProvider). This
+   replaces the Bunny/Google Tajawal so no per-element padding nudges are
+   needed. Bold.ttf covers 600+700; 800 uses the ExtraBold cut. */
+@font-face { font-family: 'Tajawal'; font-weight: 400; font-style: normal; src: url('/fonts/tajawal/Tajawal-Regular.ttf') format('truetype'); ascent-override: 80%; descent-override: 22%; line-gap-override: 0%; }
+@font-face { font-family: 'Tajawal'; font-weight: 500; font-style: normal; src: url('/fonts/tajawal/Tajawal-Medium.ttf') format('truetype'); ascent-override: 80%; descent-override: 22%; line-gap-override: 0%; }
+@font-face { font-family: 'Tajawal'; font-weight: 600; font-style: normal; src: url('/fonts/tajawal/Tajawal-Bold.ttf') format('truetype'); ascent-override: 80%; descent-override: 22%; line-gap-override: 0%; }
+@font-face { font-family: 'Tajawal'; font-weight: 700; font-style: normal; src: url('/fonts/tajawal/Tajawal-Bold.ttf') format('truetype'); ascent-override: 80%; descent-override: 22%; line-gap-override: 0%; }
+@font-face { font-family: 'Tajawal'; font-weight: 800; font-style: normal; src: url('/fonts/tajawal/Tajawal-ExtraBold.ttf') format('truetype'); ascent-override: 80%; descent-override: 22%; line-gap-override: 0%; }
 
 /* ============================================================================
    Public registration page — Lusail SC design system (navy + gold, fanar
@@ -31,6 +43,8 @@
     --lfc-ink: #0D1E30;
     --lfc-ink-muted: #5A6E84;
     --lfc-success: #2E7D5B;
+    --lfc-danger: #B42318;
+    --lfc-danger-soft: #FCA5A5;
 }
 
 body.lfc-page {
@@ -88,9 +102,7 @@ body.lfc-page {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    /* Tajawal reserves descender space below the baseline, so with symmetric
-       padding an all-ascender label rides high; nudge it down to optical center. */
-    padding: .64rem .9rem .46rem;
+    padding: .55rem .9rem;
     border-radius: 999px;
     font-size: .85rem;
     color: var(--lfc-gold-bright);
@@ -288,6 +300,7 @@ body.lfc-page {
     padding: 1.75rem;
     background: var(--lfc-light-bg);
     border: 1px solid var(--lfc-outline);
+    scroll-margin-top: 1rem;
 }
 
 .lfc-alert {
@@ -336,11 +349,30 @@ body.lfc-page {
     margin-bottom: 1rem;
 }
 
+.lfc-section-heading-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem .75rem;
+}
+
 .lfc-section-heading h3 {
     margin: 0;
     font-family: 'Changa', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
     font-size: 1.3rem;
     color: var(--lfc-navy-700);
+}
+
+/* Clear "use English (Latin) letters" note beside the section title. */
+.lfc-section-note {
+    font-size: .78rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--lfc-gold-deep);
+    background: rgb(200 162 74 / 12%);
+    border: 1px solid rgb(200 162 74 / 35%);
+    border-radius: 999px;
+    padding: .24rem .7rem;
 }
 
 .lfc-section-heading p {
@@ -364,10 +396,19 @@ body.lfc-page {
     grid-column: 1 / -1;
 }
 
-.lfc-field span {
+.lfc-field-label {
     font-size: .95rem;
     font-weight: 700;
     color: var(--lfc-navy-700);
+}
+
+/* Every visible field is required, so mark each label with a red asterisk.
+   (Decorative — the inputs also carry the `required` attribute for a11y.) */
+.lfc-field-label::after {
+    content: '*';
+    margin-inline-start: .2rem;
+    color: var(--lfc-danger);
+    font-weight: 700;
 }
 
 .lfc-field input,
@@ -388,6 +429,42 @@ body.lfc-page {
 .lfc-field select:focus {
     border-color: var(--lfc-gold);
     box-shadow: 0 0 0 4px rgb(200 162 74 / 18%);
+}
+
+/* Inline validation error state + message (server- or client-rendered). */
+.lfc-field-error input,
+.lfc-field-error select {
+    border-color: var(--lfc-danger);
+    background: #fff5f5;
+}
+
+.lfc-field-error input:focus,
+.lfc-field-error select:focus {
+    border-color: var(--lfc-danger);
+    box-shadow: 0 0 0 4px rgb(180 35 24 / 15%);
+}
+
+.lfc-field-message {
+    font-size: .82rem;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--lfc-danger);
+}
+
+.lfc-checkbox.lfc-field-error span {
+    color: var(--lfc-danger);
+}
+
+.lfc-checkbox.lfc-field-error input {
+    outline: 2px solid var(--lfc-danger);
+    outline-offset: 2px;
+}
+
+/* Summary of every error at the top of the form card. */
+.lfc-alert-list {
+    margin: .5rem 0 0;
+    padding-inline-start: 1.15rem;
+    line-height: 1.7;
 }
 
 .lfc-checkbox {

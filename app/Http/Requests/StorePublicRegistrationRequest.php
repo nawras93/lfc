@@ -35,9 +35,20 @@ class StorePublicRegistrationRequest extends FormRequest
             'parent_name' => ['required', 'string', 'max:255', new LatinText],
             'parent_phone' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\\-\\s]{7,25}$/'],
             'parent_whatsapp' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\\-\\s]{7,25}$/'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
             'consent_given' => ['accepted'],
         ];
+    }
+
+    /**
+     * TEMP: the Consent checkbox is hidden in the public form, so auto-fill
+     * consent here to satisfy the 'accepted' rule. Consent is still recorded
+     * (PublicRegistrationService stores consent_given = true). Remove this
+     * shim when the consent section is restored in the view.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge(['consent_given' => '1']);
     }
 
     /**

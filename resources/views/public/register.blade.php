@@ -90,9 +90,14 @@
                     @endif
 
                     @if ($errors->any())
-                        <div class="lfc-alert lfc-alert-error">
-                            <strong>{{ __('public-registration.nav.home') }}</strong>
-                            <p>{{ $errors->first() }}</p>
+                        <div class="lfc-alert lfc-alert-error" role="alert">
+                            <strong>{{ __('public-registration.errors.title') }}</strong>
+                            <p>{{ __('public-registration.errors.intro') }}</p>
+                            <ul class="lfc-alert-list">
+                                @foreach ($errors->all() as $message)
+                                    <li>{{ $message }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                     @endif
 
@@ -102,103 +107,129 @@
 
                         <div class="lfc-form-section">
                             <div class="lfc-section-heading">
-                                <h3>{{ __('public-registration.sections.candidate') }}</h3>
+                                <div class="lfc-section-heading-top">
+                                    <h3>{{ __('public-registration.sections.candidate') }}</h3>
+                                    <span class="lfc-section-note">{{ __('public-registration.form.latin_note') }}</span>
+                                </div>
                                 <p>{{ __('public-registration.form.season_hint', ['season' => $season->name]) }}</p>
                             </div>
 
                             <div class="lfc-form-grid">
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.full_name') }}</span>
-                                    <input type="text" name="full_name" value="{{ old('full_name') }}" required>
+                                <label class="lfc-field @error('full_name') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.full_name') }}</span>
+                                    <input type="text" name="full_name" value="{{ old('full_name') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.full_name')]) }}" @error('full_name') aria-invalid="true" @enderror required>
+                                    @error('full_name')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.playing_position') }}</span>
-                                    <select name="playing_position" required>
+                                <label class="lfc-field @error('playing_position') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.playing_position') }}</span>
+                                    <select name="playing_position" @error('playing_position') aria-invalid="true" @enderror required>
                                         <option value="" disabled @selected(old('playing_position') === null)></option>
                                         @foreach ($positionOptions as $value => $label)
                                             <option value="{{ $value }}" @selected(old('playing_position') === $value)>{{ $label }}</option>
                                         @endforeach
                                     </select>
+                                    @error('playing_position')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.year_of_birth') }}</span>
-                                    <input type="number" name="year_of_birth" value="{{ old('year_of_birth') }}" min="1990" max="{{ now()->format('Y') }}" required>
+                                <label class="lfc-field @error('year_of_birth') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.year_of_birth') }}</span>
+                                    <input type="number" name="year_of_birth" value="{{ old('year_of_birth') }}" min="1990" max="{{ now()->format('Y') }}" @error('year_of_birth') aria-invalid="true" @enderror required>
+                                    @error('year_of_birth')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.date_of_birth') }}</span>
-                                    <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
+                                <label class="lfc-field @error('date_of_birth') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.date_of_birth') }}</span>
+                                    <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" @error('date_of_birth') aria-invalid="true" @enderror required>
+                                    @error('date_of_birth')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.country_of_birth') }}</span>
-                                    <input type="text" name="country_of_birth" value="{{ old('country_of_birth') }}" required>
+                                <label class="lfc-field @error('country_of_birth') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.country_of_birth') }}</span>
+                                    <input type="text" name="country_of_birth" value="{{ old('country_of_birth') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.country_of_birth')]) }}" @error('country_of_birth') aria-invalid="true" @enderror required>
+                                    @error('country_of_birth')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.citizenship') }}</span>
-                                    <input type="text" name="citizenship" value="{{ old('citizenship') }}" required>
+                                <label class="lfc-field @error('citizenship') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.citizenship') }}</span>
+                                    <input type="text" name="citizenship" value="{{ old('citizenship') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.citizenship')]) }}" @error('citizenship') aria-invalid="true" @enderror required>
+                                    @error('citizenship')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.year_arrived_qatar') }}</span>
-                                    <input type="number" name="year_arrived_qatar" value="{{ old('year_arrived_qatar') }}" min="1990" max="{{ now()->format('Y') }}" required>
+                                <label class="lfc-field @error('year_arrived_qatar') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.year_arrived_qatar') }}</span>
+                                    <input type="number" name="year_arrived_qatar" value="{{ old('year_arrived_qatar') }}" min="1990" max="{{ now()->format('Y') }}" @error('year_arrived_qatar') aria-invalid="true" @enderror required>
+                                    @error('year_arrived_qatar')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.school') }}</span>
-                                    <input type="text" name="school" value="{{ old('school') }}" required>
+                                <label class="lfc-field @error('school') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.school') }}</span>
+                                    <input type="text" name="school" value="{{ old('school') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.school')]) }}" @error('school') aria-invalid="true" @enderror required>
+                                    @error('school')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field lfc-field-full">
-                                    <span>{{ __('public-registration.form.previous_club') }}</span>
-                                    <input type="text" name="previous_club" value="{{ old('previous_club') }}" required>
+                                <label class="lfc-field lfc-field-full @error('previous_club') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.previous_club') }}</span>
+                                    <input type="text" name="previous_club" value="{{ old('previous_club') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.previous_club')]) }}" @error('previous_club') aria-invalid="true" @enderror required>
+                                    @error('previous_club')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
                             </div>
                         </div>
 
                         <div class="lfc-form-section">
                             <div class="lfc-section-heading">
-                                <h3>{{ __('public-registration.sections.parent') }}</h3>
+                                <div class="lfc-section-heading-top">
+                                    <h3>{{ __('public-registration.sections.parent') }}</h3>
+                                    <span class="lfc-section-note">{{ __('public-registration.form.latin_note') }}</span>
+                                </div>
                                 <p>{{ __('public-registration.form.email_hint') }}</p>
                             </div>
 
                             <div class="lfc-form-grid">
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.parent_name') }}</span>
-                                    <input type="text" name="parent_name" value="{{ old('parent_name') }}" required>
+                                <label class="lfc-field @error('parent_name') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.parent_name') }}</span>
+                                    <input type="text" name="parent_name" value="{{ old('parent_name') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.parent_name')]) }}" @error('parent_name') aria-invalid="true" @enderror required>
+                                    @error('parent_name')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.parent_phone') }}</span>
-                                    <input type="text" name="parent_phone" value="{{ old('parent_phone') }}" inputmode="tel" required>
+                                <label class="lfc-field @error('parent_phone') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.parent_phone') }}</span>
+                                    <input type="text" name="parent_phone" value="{{ old('parent_phone') }}" inputmode="tel" dir="ltr" @error('parent_phone') aria-invalid="true" @enderror required>
+                                    @error('parent_phone')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.parent_whatsapp') }}</span>
-                                    <input type="text" name="parent_whatsapp" value="{{ old('parent_whatsapp') }}" inputmode="tel" required>
+                                <label class="lfc-field @error('parent_whatsapp') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.parent_whatsapp') }}</span>
+                                    <input type="text" name="parent_whatsapp" value="{{ old('parent_whatsapp') }}" inputmode="tel" dir="ltr" @error('parent_whatsapp') aria-invalid="true" @enderror required>
+                                    @error('parent_whatsapp')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field">
-                                    <span>{{ __('public-registration.form.email') }}</span>
-                                    <input type="email" name="email" value="{{ old('email') }}">
+                                <label class="lfc-field @error('email') lfc-field-error @enderror">
+                                    <span class="lfc-field-label">{{ __('public-registration.form.email') }}</span>
+                                    <input type="email" name="email" value="{{ old('email') }}" dir="ltr" @error('email') aria-invalid="true" @enderror required>
+                                    @error('email')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
                             </div>
                         </div>
 
+                        {{-- TEMP: Consent section hidden by request. Consent is still
+                             recorded server-side (PublicRegistrationService sets consent_given=true,
+                             StorePublicRegistrationRequest auto-fills it). Restore this block and
+                             remove those two temporary shims to bring the checkbox back. --}}
+                        {{--
                         <div class="lfc-form-section">
                             <div class="lfc-section-heading">
                                 <h3>{{ __('public-registration.sections.consent') }}</h3>
                                 <p>{{ __('public-registration.form.duplicate_hint') }}</p>
                             </div>
 
-                            <label class="lfc-checkbox">
-                                <input type="checkbox" name="consent_given" value="1" @checked(old('consent_given')) required>
+                            <label class="lfc-checkbox @error('consent_given') lfc-field-error @enderror">
+                                <input type="checkbox" name="consent_given" value="1" @checked(old('consent_given')) @error('consent_given') aria-invalid="true" @enderror required>
                                 <span>{{ __('public-registration.form.consent') }}</span>
                             </label>
+                            @error('consent_given')<span class="lfc-field-message">{{ $message }}</span>@enderror
                         </div>
+                        --}}
 
                         <button type="submit" class="lfc-button lfc-button-primary lfc-submit">
                             {{ __('public-registration.form.submit') }}

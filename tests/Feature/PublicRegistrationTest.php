@@ -66,7 +66,10 @@ class PublicRegistrationTest extends TestCase
         $this->assertTrue(CandidateResource::getEloquentQuery()->whereKey($candidate->id)->exists());
     }
 
-    public function test_consent_is_required(): void
+    // TEMP: the consent section is hidden in the public form, so consent is
+    // auto-applied server-side rather than required from a checkbox. When the
+    // section is restored, revert this to assert consent is required.
+    public function test_consent_is_auto_applied_while_section_is_hidden(): void
     {
         $season = Season::factory()->create();
 
@@ -76,7 +79,21 @@ class PublicRegistrationTest extends TestCase
         ));
 
         $response->assertRedirect($this->registrationUrl($season));
-        $response->assertSessionHasErrors('consent_given');
+        $response->assertSessionHasNoErrors();
+        $this->assertTrue(Candidate::query()->firstOrFail()->consent_given);
+    }
+
+    public function test_email_is_required(): void
+    {
+        $season = Season::factory()->create();
+
+        $response = $this->from($this->registrationUrl($season))->post($this->registrationUrl($season), array_merge(
+            $this->payload(),
+            ['email' => ''],
+        ));
+
+        $response->assertRedirect($this->registrationUrl($season));
+        $response->assertSessionHasErrors('email');
         $this->assertDatabaseCount('candidates', 0);
     }
 
@@ -109,6 +126,26 @@ class PublicRegistrationTest extends TestCase
         $response->assertRedirect($this->registrationUrl($season));
         $response->assertSessionHasErrors('full_name');
         $this->assertDatabaseCount('candidates', 0);
+    }
+
+    public function test_validation_errors_render_summary_and_highlight_offending_field(): void
+    {
+        $season = Season::factory()->create();
+
+        $response = $this->from($this->registrationUrl($season))
+            ->followingRedirects()
+            ->post($this->registrationUrl($season), array_merge(
+                $this->payload(),
+                ['full_name' => 'يوسف'],
+            ));
+
+        $response->assertOk();
+        // Summary alert copy at the top of the form card.
+        $response->assertSeeText('Please check your registration');
+        // Field-aware message names the field (injected :attribute).
+        $response->assertSeeText('Please enter Player full name in Latin (English) characters.');
+        // The offending field is visually highlighted.
+        $response->assertSee('lfc-field-error', false);
     }
 
     public function test_registration_link_is_closed_outside_configured_window(): void
