@@ -97,12 +97,20 @@ function initLatinInputs(form) {
 // text caret sitting next to it after selection.
 function initSearchableSelects(form) {
     form.querySelectorAll('.js-searchable-select').forEach((select) => {
+        const noResults = select.dataset.noResults || 'No results found';
+
         new TomSelect(select, {
             plugins: ['dropdown_input'],
             create: false,
             allowEmptyOption: false,
             placeholder: select.dataset.placeholder || '',
             maxOptions: null,
+            render: {
+                // Localized empty-search message (Tom Select's built-in text is
+                // English only); string comes from the server-rendered locale.
+                no_results: (data, escape) =>
+                    `<div class="no-results">${escape(noResults)}</div>`,
+            },
         });
     });
 }

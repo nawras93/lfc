@@ -33,6 +33,7 @@ return [
         'full_name' => 'Player full name',
         'playing_position' => 'Playing position',
         'select_placeholder' => 'Select…',
+        'no_results' => 'No matches found',
         'date_of_birth' => 'Date of birth',
         'country_of_birth' => 'Country of birth',
         'citizenship' => 'Citizenship',
