@@ -56,7 +56,7 @@
                             <strong>{{ __('public-registration.hero.signoff_org') }}</strong>
                         </p>
 
-                        @if ($season && $registrationOpen)
+                        @if ($season && $registrationOpen && $registrationSlug)
                             <div class="lfc-hero-actions">
                                 <a href="#registration-form" class="lfc-button lfc-button-primary">{{ __('public-registration.hero.primary_cta') }}</a>
                             </div>
@@ -75,6 +75,11 @@
                             <strong>{{ __('public-registration.closed.title') }}</strong>
                             <p>{{ __('public-registration.closed.body') }}</p>
                         </div>
+                    @elseif (! $registrationSlug)
+                        <div class="lfc-alert lfc-alert-info">
+                            <strong>{{ __('public-registration.unavailable.title') }}</strong>
+                            <p>{{ __('public-registration.unavailable.body') }}</p>
+                        </div>
                     @endif
 
                     @if (session('registration_submitted'))
@@ -91,7 +96,7 @@
                         </div>
                     @endif
 
-                    @if ($season && $registrationOpen)
+                    @if ($season && $registrationOpen && $registrationSlug)
                     <form method="POST" action="{{ route('public.register.store', ['seasonSlug' => $seasonSlug, 'registrationSlug' => $registrationSlug, 'lang' => $locale]) }}" class="lfc-form">
                         @csrf
 

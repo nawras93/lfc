@@ -15,8 +15,14 @@ class Season extends Model
 
     protected static function booted(): void
     {
-        static::creating(function (Season $season): void {
-            $season->registration_slug ??= Str::lower(Str::random(16));
+        // Generate the public registration token on any save when it's missing,
+        // so a season can't end up without one (a null token breaks the public
+        // registration link). `saving` (not `creating`) means an existing
+        // token-less season self-heals the next time it's saved in the admin.
+        static::saving(function (Season $season): void {
+            if (blank($season->registration_slug)) {
+                $season->registration_slug = Str::lower(Str::random(16));
+            }
         });
     }
 

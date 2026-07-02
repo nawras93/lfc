@@ -67,6 +67,10 @@ return [
         'title' => 'Registration is closed',
         'body' => 'This season link is not accepting submissions right now. Please contact the academy for the correct registration window.',
     ],
+    'unavailable' => [
+        'title' => 'Registration is not available yet',
+        'body' => 'This season’s registration link is still being set up. Please check back shortly or contact the academy.',
+    ],
     'validation' => [
         'duplicate' => 'A registration for this player and parent phone already exists.',
         'consent_required' => 'Parent consent is required before submitting this registration.',
