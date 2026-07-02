@@ -1,9 +1,15 @@
 // Public registration form enhancements:
+//  - searchable dropdowns (Tom Select) for the position/country/nationality
+//    selects — the country lists have ~97 options, so a type-to-filter menu is
+//    far easier than scrolling a native <select>
 //  - live client-side "Latin (English) letters only" validation on flagged
 //    fields, mirroring the server-side App\Rules\LatinText rule
 //  - inline error highlighting + messages per field
 //  - on load, when the server returned errors, scroll to the form card and
 //    focus the first invalid field (so the page opens at the form, not the top)
+
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.css';
 
 // Arabic script blocks (U+0600–06FF, 0750–077F, 08A0–08FF, FB50–FDFF,
 // FE70–FEFF). Keep in sync with App\Rules\LatinText.
@@ -81,9 +87,27 @@ function initLatinInputs(form) {
     });
 }
 
+// Enhance the flagged native <select>s into type-to-filter dropdowns. Tom Select
+// keeps the original <select> in sync, so server-side validation + graceful
+// no-JS fallback still work. Direction is inherited from <html dir>, so the
+// dropdown reads RTL under the Arabic locale automatically.
+function initSearchableSelects(form) {
+    form.querySelectorAll('.js-searchable-select').forEach((select) => {
+        new TomSelect(select, {
+            create: false,
+            allowEmptyOption: false,
+            placeholder: select.dataset.placeholder || '',
+            maxOptions: null,
+            controlInput:
+                '<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">',
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.lfc-form');
     if (form) {
+        initSearchableSelects(form);
         initLatinInputs(form);
     }
 

@@ -32,6 +32,7 @@ return [
     'form' => [
         'full_name' => 'الاسم الكامل للاعب',
         'playing_position' => 'المركز',
+        'select_placeholder' => 'اختر…',
         'date_of_birth' => 'تاريخ الميلاد',
         'country_of_birth' => 'بلد الميلاد',
         'citizenship' => 'الجنسية',

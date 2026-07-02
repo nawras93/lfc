@@ -460,6 +460,77 @@ body.lfc-page {
     outline-offset: 2px;
 }
 
+/* Tom Select (searchable dropdowns) — restyle the enhanced control + menu to
+   match the native .lfc-field inputs. Scoped under .lfc-field so it beats Tom
+   Select's base styles by specificity regardless of stylesheet order. */
+.lfc-field .ts-wrapper {
+    width: 100%;
+}
+
+.lfc-field .ts-control {
+    min-height: 3rem;
+    padding: .58rem .95rem;
+    border: 1px solid var(--lfc-outline);
+    border-radius: .95rem;
+    background: #fff;
+    color: var(--lfc-ink);
+    font: inherit;
+    box-shadow: none;
+}
+
+.lfc-field .ts-control input {
+    font: inherit;
+    color: var(--lfc-ink);
+}
+
+.lfc-field .ts-control input::placeholder {
+    color: var(--lfc-ink-muted);
+    opacity: 1;
+}
+
+.lfc-field .ts-wrapper.focus .ts-control {
+    border-color: var(--lfc-gold);
+    box-shadow: 0 0 0 4px rgb(200 162 74 / 18%);
+}
+
+.lfc-field .ts-wrapper.disabled .ts-control {
+    opacity: .6;
+}
+
+.lfc-field-error .ts-control {
+    border-color: var(--lfc-danger);
+    background: #fff5f5;
+}
+
+.lfc-field-error .ts-wrapper.focus .ts-control {
+    border-color: var(--lfc-danger);
+    box-shadow: 0 0 0 4px rgb(180 35 24 / 15%);
+}
+
+.lfc-field .ts-dropdown {
+    margin-top: .35rem;
+    border: 1px solid var(--lfc-outline);
+    border-radius: .85rem;
+    box-shadow: 0 14px 34px rgb(11 48 89 / 14%);
+    overflow: hidden;
+    z-index: 40;
+}
+
+.lfc-field .ts-dropdown .option {
+    padding: .62rem .85rem;
+    color: var(--lfc-ink);
+}
+
+.lfc-field .ts-dropdown .active {
+    background: rgb(17 63 113 / 9%);
+    color: var(--lfc-navy-700);
+}
+
+.lfc-field .ts-dropdown .no-results {
+    padding: .62rem .85rem;
+    color: var(--lfc-ink-muted);
+}
+
 /* Summary of every error at the top of the form card. */
 .lfc-alert-list {
     margin: .5rem 0 0;

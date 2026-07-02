@@ -123,7 +123,7 @@
 
                                 <label class="lfc-field @error('playing_position') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.playing_position') }}</span>
-                                    <select name="playing_position" @error('playing_position') aria-invalid="true" @enderror required>
+                                    <select name="playing_position" class="js-searchable-select" data-placeholder="{{ __('public-registration.form.select_placeholder') }}" @error('playing_position') aria-invalid="true" @enderror required>
                                         <option value="" disabled @selected(old('playing_position') === null)></option>
                                         @foreach ($positionOptions as $value => $label)
                                             <option value="{{ $value }}" @selected(old('playing_position') === $value)>{{ $label }}</option>
@@ -140,7 +140,7 @@
 
                                 <label class="lfc-field @error('country_of_birth') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.country_of_birth') }}</span>
-                                    <select name="country_of_birth" @error('country_of_birth') aria-invalid="true" @enderror required>
+                                    <select name="country_of_birth" class="js-searchable-select" data-placeholder="{{ __('public-registration.form.select_placeholder') }}" @error('country_of_birth') aria-invalid="true" @enderror required>
                                         <option value="" disabled @selected(old('country_of_birth') === null)></option>
                                         @foreach ($countryOptions as $value => $label)
                                             <option value="{{ $value }}" @selected(old('country_of_birth') === $value)>{{ $label }}</option>
@@ -151,7 +151,7 @@
 
                                 <label class="lfc-field @error('citizenship') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.citizenship') }}</span>
-                                    <select name="citizenship" @error('citizenship') aria-invalid="true" @enderror required>
+                                    <select name="citizenship" class="js-searchable-select" data-placeholder="{{ __('public-registration.form.select_placeholder') }}" @error('citizenship') aria-invalid="true" @enderror required>
                                         <option value="" disabled @selected(old('citizenship') === null)></option>
                                         @foreach ($nationalityOptions as $value => $label)
                                             <option value="{{ $value }}" @selected(old('citizenship') === $value)>{{ $label }}</option>
@@ -172,7 +172,7 @@
                                     @error('school')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field lfc-field-full @error('previous_club') lfc-field-error @enderror">
+                                <label class="lfc-field @error('previous_club') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.previous_club') }}</span>
                                     <input type="text" name="previous_club" value="{{ old('previous_club') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.previous_club')]) }}" @error('previous_club') aria-invalid="true" @enderror required>
                                     @error('previous_club')<span class="lfc-field-message">{{ $message }}</span>@enderror
