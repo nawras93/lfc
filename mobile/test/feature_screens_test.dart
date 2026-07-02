@@ -273,6 +273,53 @@ void main() {
     expect(find.text('VVIP'), findsAtLeastNWidgets(1));
   });
 
+  testWidgets('offers tab refetches content after locale toggle', (
+    tester,
+  ) async {
+    final offersRepository = FakeOffersRepository(
+      offersResponses: const [
+        [
+          OfferSummary(
+            id: 1,
+            title: 'Summer Camp',
+            body: 'English body',
+            audience: 'all',
+            validFrom: null,
+            validUntil: null,
+          ),
+        ],
+        [
+          OfferSummary(
+            id: 1,
+            title: 'المعسكر الصيفي',
+            body: 'نص عربي',
+            audience: 'all',
+            validFrom: null,
+            validUntil: null,
+          ),
+        ],
+      ],
+    );
+
+    await tester.pumpWidget(
+      _testApp(session: _parentState(), offersRepository: offersRepository),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Offers'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Summer Camp'), findsOneWidget);
+    expect(offersRepository.fetchOffersCount, 1);
+
+    await tester.tap(find.byKey(const Key('language-toggle')).first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('المعسكر الصيفي'), findsOneWidget);
+    expect(find.text('Summer Camp'), findsNothing);
+    expect(offersRepository.fetchOffersCount, 2);
+  });
+
   testWidgets('QR screen renders and refetches when token expires', (
     tester,
   ) async {
@@ -463,16 +510,21 @@ Widget _testApp({
       staffSessionControllerProvider.overrideWith(
         () => _FakeStaffSessionController(staffSession),
       ),
-      if (playerRepository != null)
-        playerRepositoryProvider.overrideWithValue(playerRepository),
-      if (redemptionRepository != null)
-        redemptionRepositoryProvider.overrideWithValue(redemptionRepository),
-      if (offersRepository != null)
-        offersRepositoryProvider.overrideWithValue(offersRepository),
-      if (parentScanRepository != null)
-        parentScanRepositoryProvider.overrideWithValue(parentScanRepository),
-      if (staffScanRepository != null)
-        staffScanRepositoryProvider.overrideWithValue(staffScanRepository),
+      playerRepositoryProvider.overrideWithValue(
+        playerRepository ?? FakePlayerRepository(),
+      ),
+      redemptionRepositoryProvider.overrideWithValue(
+        redemptionRepository ?? FakeRedemptionRepository(),
+      ),
+      offersRepositoryProvider.overrideWithValue(
+        offersRepository ?? FakeOffersRepository(),
+      ),
+      parentScanRepositoryProvider.overrideWithValue(
+        parentScanRepository ?? FakeScanRepository(),
+      ),
+      staffScanRepositoryProvider.overrideWithValue(
+        staffScanRepository ?? FakeScanRepository(),
+      ),
     ],
     child: const LfcApp(),
   );
@@ -591,12 +643,26 @@ class FakeRedemptionRepository extends RedemptionRepository {
 }
 
 class FakeOffersRepository extends OffersRepository {
-  FakeOffersRepository({this.offers = const []}) : super(Dio());
+  FakeOffersRepository({
+    this.offers = const [],
+    this.offersResponses = const [],
+  }) : super(Dio());
 
   final List<OfferSummary> offers;
+  final List<List<OfferSummary>> offersResponses;
+  int fetchOffersCount = 0;
 
   @override
-  Future<List<OfferSummary>> fetchOffers() async => offers;
+  Future<List<OfferSummary>> fetchOffers() async {
+    if (offersResponses.isEmpty) {
+      fetchOffersCount += 1;
+      return offers;
+    }
+
+    final index = fetchOffersCount.clamp(0, offersResponses.length - 1);
+    fetchOffersCount += 1;
+    return offersResponses[index];
+  }
 }
 
 class FakeScanRepository extends ScanRepository {

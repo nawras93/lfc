@@ -87,6 +87,9 @@ final dioProvider = Provider<Dio>((ref) {
           options.headers['Authorization'] = 'Bearer $token';
         }
         options.headers['Accept'] = 'application/json';
+        options.headers['Accept-Language'] = ref
+            .read(localeControllerProvider)
+            .languageCode;
         handler.next(options);
       },
       onResponse: (response, handler) async {
@@ -173,6 +176,9 @@ final staffDioProvider = Provider<Dio>((ref) {
           options.headers['Authorization'] = 'Bearer $token';
         }
         options.headers['Accept'] = 'application/json';
+        options.headers['Accept-Language'] = ref
+            .read(localeControllerProvider)
+            .languageCode;
         handler.next(options);
       },
       onResponse: (response, handler) async {

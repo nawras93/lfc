@@ -572,6 +572,24 @@ abstract class AppLocalizations {
   /// **'Voucher code'**
   String get voucherCodeLabel;
 
+  /// No description provided for @voucherStatusIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued'**
+  String get voucherStatusIssued;
+
+  /// No description provided for @voucherStatusFulfilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Fulfilled'**
+  String get voucherStatusFulfilled;
+
+  /// No description provided for @voucherStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get voucherStatusCancelled;
+
   /// No description provided for @pointsSpentLabel.
   ///
   /// In en, this message translates to:

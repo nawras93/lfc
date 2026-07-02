@@ -139,6 +139,15 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<Locale>(localeControllerProvider, (previous, next) {
+      if (previous?.languageCode != next.languageCode) {
+        final nextFuture = _load();
+        setState(() {
+          _future = nextFuture;
+        });
+      }
+    });
+
     final l10n = AppLocalizations.of(context)!;
 
     return FutureBuilder<_RewardsData>(
@@ -232,12 +241,14 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                                           children: [
                                             Text(
                                               item.name,
-                                              style: theme.textTheme.titleMedium,
+                                              style:
+                                                  theme.textTheme.titleMedium,
                                             ),
                                             const SizedBox(height: 2),
                                             Text(
                                               _typeLabel(l10n, item.type),
-                                              style: theme.textTheme.labelMedium,
+                                              style:
+                                                  theme.textTheme.labelMedium,
                                             ),
                                           ],
                                         ),
@@ -255,8 +266,9 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
                                       item.description!,
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
-                                            color:
-                                                theme.colorScheme.onSurfaceVariant,
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                     ),
                                   ],
@@ -448,7 +460,7 @@ class _StatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        status,
+        _voucherStatusLabel(AppLocalizations.of(context)!, status),
         style: Theme.of(context).textTheme.labelSmall,
       ),
     );
@@ -547,7 +559,10 @@ class _VoucherDialog extends StatelessWidget {
             label: l10n.pointsSpentLabel,
             value: '${voucher.pointsSpent} ${l10n.pointsUnit}',
           ),
-          _VoucherRow(label: l10n.statusLabel, value: voucher.status),
+          _VoucherRow(
+            label: l10n.statusLabel,
+            value: _voucherStatusLabel(l10n, voucher.status),
+          ),
           if (voucher.playerName != null)
             _VoucherRow(label: l10n.playerLabel, value: voucher.playerName!),
         ],
@@ -576,9 +591,7 @@ class _VoucherRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(label, style: theme.textTheme.labelMedium),
-          ),
+          Expanded(child: Text(label, style: theme.textTheme.labelMedium)),
           const SizedBox(width: 12),
           Flexible(
             child: Text(
@@ -603,4 +616,13 @@ class _RewardsData {
   final List<RedemptionItemSummary> items;
   final List<RedemptionHistoryItem> history;
   final List<PlayerSummary> players;
+}
+
+String _voucherStatusLabel(AppLocalizations l10n, String status) {
+  return switch (status) {
+    'issued' => l10n.voucherStatusIssued,
+    'fulfilled' => l10n.voucherStatusFulfilled,
+    'cancelled' => l10n.voucherStatusCancelled,
+    _ => status,
+  };
 }

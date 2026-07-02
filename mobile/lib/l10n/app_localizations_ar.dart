@@ -260,6 +260,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get voucherCodeLabel => 'رمز القسيمة';
 
   @override
+  String get voucherStatusIssued => 'صادرة';
+
+  @override
+  String get voucherStatusFulfilled => 'مستوفاة';
+
+  @override
+  String get voucherStatusCancelled => 'ملغاة';
+
+  @override
   String get pointsSpentLabel => 'النقاط المصروفة';
 
   @override

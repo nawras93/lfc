@@ -26,13 +26,21 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<Locale>(localeControllerProvider, (previous, next) {
+      if (previous?.languageCode != next.languageCode) {
+        ref.invalidate(playersProvider);
+      }
+    });
+
     final l10n = AppLocalizations.of(context)!;
     final session = ref.watch(sessionControllerProvider);
     final account = session.account;
     final playersAsync = ref.watch(playersProvider);
 
     final isVvipClient = account?.accountType == 'vvip_client';
-    final pointsLabel = isVvipClient ? l10n.balanceLabel : l10n.totalPointsLabel;
+    final pointsLabel = isVvipClient
+        ? l10n.balanceLabel
+        : l10n.totalPointsLabel;
     final pointsValue = isVvipClient
         ? '${account!.accountBalance}'
         : playersAsync.maybeWhen(
@@ -41,12 +49,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             orElse: () => '…',
           );
 
-    final tabs = [
-      l10n.playersTab,
-      l10n.qrTab,
-      l10n.rewardsTab,
-      l10n.offersTab,
-    ];
+    final tabs = [l10n.playersTab, l10n.qrTab, l10n.rewardsTab, l10n.offersTab];
 
     return Scaffold(
       appBar: BrandAppBar(

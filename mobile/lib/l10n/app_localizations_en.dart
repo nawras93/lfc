@@ -262,6 +262,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voucherCodeLabel => 'Voucher code';
 
   @override
+  String get voucherStatusIssued => 'Issued';
+
+  @override
+  String get voucherStatusFulfilled => 'Fulfilled';
+
+  @override
+  String get voucherStatusCancelled => 'Cancelled';
+
+  @override
   String get pointsSpentLabel => 'Points spent';
 
   @override

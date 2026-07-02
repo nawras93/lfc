@@ -29,6 +29,15 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<Locale>(localeControllerProvider, (previous, next) {
+      if (previous?.languageCode != next.languageCode) {
+        final nextFuture = _load();
+        setState(() {
+          _future = nextFuture;
+        });
+      }
+    });
+
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final dateFormat = DateFormat.yMMMd(locale);
