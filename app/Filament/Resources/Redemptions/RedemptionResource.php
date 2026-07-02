@@ -32,15 +32,20 @@ class RedemptionResource extends Resource
         return $schema
             ->components([
                 Section::make(__('admin.resources.redemptions.sections.redemption'))
+                    ->icon(Heroicon::OutlinedTicket)
+                    ->iconColor('primary')
                     ->columns(2)
                     ->schema([
                         TextInput::make('voucher_code')
-                            ->label(__('admin.resources.redemptions.fields.voucher_code')),
+                            ->label(__('admin.resources.redemptions.fields.voucher_code'))
+                            ->prefixIcon(Heroicon::OutlinedTicket),
                         Select::make('status')
                             ->label(__('admin.resources.redemptions.fields.status'))
+                            ->native(false)
                             ->options(EnumOptions::for(RedemptionStatus::class)),
                         DateTimePicker::make('fulfilled_at')
-                            ->label(__('admin.resources.redemptions.fields.fulfilled_at')),
+                            ->label(__('admin.resources.redemptions.fields.fulfilled_at'))
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                     ]),
             ]);
     }

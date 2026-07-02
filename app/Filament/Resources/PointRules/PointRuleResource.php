@@ -37,21 +37,29 @@ class PointRuleResource extends Resource
         return $schema
             ->components([
                 Section::make(__('admin.resources.point_rules.sections.rule'))
+                    ->description(__('admin.resources.point_rules.descriptions.rule'))
+                    ->icon(Heroicon::OutlinedStar)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
                             ->label(__('admin.resources.point_rules.fields.name'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->columnSpanFull(),
                         Radio::make('type')
                             ->label(__('admin.resources.point_rules.fields.type'))
                             ->options(EnumOptions::for(PointRuleType::class))
                             ->required()
-                            ->live(),
+                            ->live()
+                            ->columnSpanFull(),
                         TextInput::make('points')
                             ->label(__('admin.resources.point_rules.fields.points'))
                             ->numeric()
                             ->minValue(1)
+                            ->prefixIcon(Heroicon::OutlinedStar)
+                            ->suffix(__('admin.common.points'))
                             ->required(fn ($get): bool => $get('type') === PointRuleType::Fixed->value)
                             ->visible(fn ($get): bool => $get('type') === PointRuleType::Fixed->value),
                         TextInput::make('percentage')
@@ -59,14 +67,24 @@ class PointRuleResource extends Resource
                             ->numeric()
                             ->minValue(0.01)
                             ->maxValue(999.99)
+                            ->suffix('%')
                             ->required(fn ($get): bool => $get('type') === PointRuleType::Percentage->value)
                             ->visible(fn ($get): bool => $get('type') === PointRuleType::Percentage->value),
                         TextInput::make('base_amount')
                             ->label(__('admin.resources.point_rules.fields.base_amount'))
                             ->numeric()
                             ->minValue(0.01)
+                            ->prefix('QAR')
                             ->required(fn ($get): bool => $get('type') === PointRuleType::Percentage->value)
                             ->visible(fn ($get): bool => $get('type') === PointRuleType::Percentage->value),
+                    ]),
+                Section::make(__('admin.resources.point_rules.sections.scope'))
+                    ->description(__('admin.resources.point_rules.descriptions.scope'))
+                    ->icon(Heroicon::OutlinedFlag)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
+                    ->columns(2)
+                    ->schema([
                         Select::make('team_id')
                             ->label(__('admin.common.team'))
                             ->options(fn (): array => Team::query()->orderBy('name')->pluck('name', 'id')->all())
@@ -88,11 +106,13 @@ class PointRuleResource extends Resource
                             ->default(true),
                         DateTimePicker::make('starts_at')
                             ->label(__('admin.resources.point_rules.fields.starts_at'))
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                         DateTimePicker::make('ends_at')
                             ->label(__('admin.resources.point_rules.fields.ends_at'))
                             ->seconds(false)
-                            ->after('starts_at'),
+                            ->after('starts_at')
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                     ]),
             ]);
     }

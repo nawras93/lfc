@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class SeasonForm
 {
@@ -18,26 +19,35 @@ class SeasonForm
             ->components([
                 Section::make(__('admin.resources.seasons.sections.details'))
                     ->description(__('admin.resources.seasons.descriptions.details'))
+                    ->icon(Heroicon::OutlinedCalendarDays)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
                             ->label(__('admin.resources.seasons.fields.name'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->placeholder('2025/26'),
                         Toggle::make('is_active')
                             ->label(__('admin.resources.seasons.fields.is_active')),
                     ]),
                 Section::make(__('admin.resources.seasons.sections.public_registration'))
                     ->description(__('admin.resources.seasons.descriptions.public_registration'))
+                    ->icon(Heroicon::OutlinedLink)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         DateTimePicker::make('registration_starts_at')
                             ->label(__('admin.resources.seasons.fields.registration_starts_at'))
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                         DateTimePicker::make('registration_ends_at')
                             ->label(__('admin.resources.seasons.fields.registration_ends_at'))
                             ->seconds(false)
-                            ->after('registration_starts_at'),
+                            ->after('registration_starts_at')
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                         TextInput::make('registration_slug')
                             ->label(__('admin.resources.seasons.fields.registration_slug'))
                             ->disabled()
@@ -60,6 +70,7 @@ class SeasonForm
                             ->disabled()
                             ->dehydrated(false)
                             ->columnSpanFull()
+                            ->prefixIcon(Heroicon::OutlinedLink)
                             ->formatStateUsing(fn (?Season $record): string => $record?->publicRegistrationUrl() ?? __('admin.resources.seasons.messages.save_to_generate_url'))
                             ->helperText(__('admin.resources.seasons.helper.public_registration_url')),
                     ]),

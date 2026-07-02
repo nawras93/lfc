@@ -33,27 +33,57 @@ class ParentAccountResource extends Resource
     {
         return $schema
             ->components([
-                Section::make(__('admin.resources.parent_accounts.sections.account'))
+                Section::make(__('admin.resources.parent_accounts.sections.contact'))
+                    ->description(__('admin.resources.parent_accounts.descriptions.contact'))
+                    ->icon(Heroicon::OutlinedUser)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
                             ->label(__('admin.resources.parent_accounts.fields.name'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon(Heroicon::OutlinedUser),
                         TextInput::make('email')
                             ->label(__('admin.resources.parent_accounts.fields.email'))
                             ->email()
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon(Heroicon::OutlinedEnvelope),
                         TextInput::make('phone')
                             ->label(__('admin.resources.parent_accounts.fields.phone'))
                             ->tel()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon(Heroicon::OutlinedPhone),
                         TextInput::make('whatsapp')
                             ->label(__('admin.resources.parent_accounts.fields.whatsapp'))
                             ->tel()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon(Heroicon::OutlinedChatBubbleLeftRight),
+                    ]),
+                Section::make(__('admin.resources.parent_accounts.sections.membership'))
+                    ->description(__('admin.resources.parent_accounts.descriptions.membership'))
+                    ->icon(Heroicon::OutlinedIdentification)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
+                    ->columns(2)
+                    ->schema([
+                        Select::make('account_type')
+                            ->label(__('admin.resources.parent_accounts.fields.account_type'))
+                            ->options(AccountType::class)
+                            ->native(false)
+                            ->default(AccountType::Parent->value)
+                            ->afterStateUpdated(function ($set, $state): void {
+                                if ($state === AccountType::VvipClient->value) {
+                                    $set('is_vvip', true);
+                                }
+                            })
+                            ->live(),
+                        Toggle::make('is_vvip')
+                            ->label(__('admin.resources.parent_accounts.fields.is_vvip'))
+                            ->visible(fn (): bool => auth()->user()?->hasRole('Admin') ?? false),
                         Select::make('player_ids')
                             ->label(__('admin.resources.parent_accounts.fields.linked_players'))
                             ->options(fn (): array => Candidate::query()
@@ -65,34 +95,24 @@ class ParentAccountResource extends Resource
                             ->searchable()
                             ->preload()
                             ->helperText(__('admin.resources.parent_accounts.helper.linked_players'))
-                            ->visible(fn (?ParentAccount $record, $get): bool => $get('account_type') !== AccountType::VvipClient->value && ($record === null || ! $record->isVvipClient())),
+                            ->visible(fn (?ParentAccount $record, $get): bool => $get('account_type') !== AccountType::VvipClient->value && ($record === null || ! $record->isVvipClient()))
+                            ->columnSpanFull(),
                         Placeholder::make('account_status')
                             ->label(__('admin.resources.parent_accounts.fields.account_status'))
                             ->content(fn (?ParentAccount $record): string => $record?->accepted_at
                                 ? __('admin.resources.parent_accounts.status.accepted')
                                 : ($record?->invited_at ? __('admin.resources.parent_accounts.status.invited') : __('admin.resources.parent_accounts.status.draft'))),
-                        Select::make('account_type')
-                            ->label(__('admin.resources.parent_accounts.fields.account_type'))
-                            ->options(AccountType::class)
-                            ->default(AccountType::Parent->value)
-                            ->afterStateUpdated(function ($set, $state): void {
-                                if ($state === AccountType::VvipClient->value) {
-                                    $set('is_vvip', true);
-                                }
-                            })
-                            ->live(),
-                        Toggle::make('is_vvip')
-                            ->label(__('admin.resources.parent_accounts.fields.is_vvip'))
-                            ->visible(fn (): bool => auth()->user()?->hasRole('Admin') ?? false),
-                        DateTimePicker::make('invited_at')
-                            ->label(__('admin.resources.parent_accounts.fields.invited_at'))
-                            ->seconds(false),
-                        DateTimePicker::make('accepted_at')
-                            ->label(__('admin.resources.parent_accounts.fields.accepted_at'))
-                            ->seconds(false),
                         Placeholder::make('balance')
                             ->label(__('admin.resources.parent_accounts.fields.balance'))
                             ->content(fn (?ParentAccount $record): string => $record ? (string) $record->pointsBalance() : '0'),
+                        DateTimePicker::make('invited_at')
+                            ->label(__('admin.resources.parent_accounts.fields.invited_at'))
+                            ->seconds(false)
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
+                        DateTimePicker::make('accepted_at')
+                            ->label(__('admin.resources.parent_accounts.fields.accepted_at'))
+                            ->seconds(false)
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                     ]),
             ]);
     }

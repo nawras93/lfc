@@ -35,6 +35,10 @@ class RedemptionItemResource extends Resource
         return $schema
             ->components([
                 Section::make(__('admin.resources.redemption_items.sections.details'))
+                    ->description(__('admin.resources.redemption_items.descriptions.details'))
+                    ->icon(Heroicon::OutlinedGift)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
@@ -43,40 +47,62 @@ class RedemptionItemResource extends Resource
                             ->maxLength(255),
                         TextInput::make('name_ar')
                             ->label(__('admin.resources.redemption_items.fields.name_ar'))
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->hint(__('admin.common.arabic'))
+                            ->extraInputAttributes(['dir' => 'rtl']),
                         Select::make('type')
                             ->label(__('admin.resources.redemption_items.fields.type'))
                             ->required()
-                            ->options(RedemptionType::class),
+                            ->native(false)
+                            ->options(RedemptionType::class)
+                            ->columnSpanFull(),
                         Textarea::make('description')
                             ->label(__('admin.resources.redemption_items.fields.description'))
                             ->maxLength(65535)
+                            ->rows(3)
                             ->columnSpanFull(),
                         Textarea::make('description_ar')
                             ->label(__('admin.resources.redemption_items.fields.description_ar'))
                             ->maxLength(65535)
+                            ->rows(3)
+                            ->hint(__('admin.common.arabic'))
+                            ->extraInputAttributes(['dir' => 'rtl'])
                             ->columnSpanFull(),
+                    ]),
+                Section::make(__('admin.resources.redemption_items.sections.availability'))
+                    ->description(__('admin.resources.redemption_items.descriptions.availability'))
+                    ->icon(Heroicon::OutlinedArchiveBox)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
+                    ->columns(2)
+                    ->schema([
                         TextInput::make('points_cost')
                             ->label(__('admin.resources.redemption_items.fields.points_cost'))
                             ->required()
                             ->numeric()
-                            ->minValue(0),
+                            ->minValue(0)
+                            ->prefixIcon(Heroicon::OutlinedStar)
+                            ->suffix(__('admin.common.points')),
                         TextInput::make('stock')
                             ->label(__('admin.resources.redemption_items.fields.stock'))
                             ->numeric()
                             ->minValue(0)
                             ->nullable()
+                            ->placeholder(__('admin.common.unlimited'))
                             ->helperText(__('admin.resources.redemption_items.helper.stock')),
                         Toggle::make('is_active')
                             ->label(__('admin.resources.redemption_items.fields.is_active'))
-                            ->default(true),
+                            ->default(true)
+                            ->columnSpanFull(),
                         DateTimePicker::make('valid_from')
                             ->label(__('admin.resources.redemption_items.fields.valid_from'))
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                         DateTimePicker::make('valid_until')
                             ->label(__('admin.resources.redemption_items.fields.valid_until'))
                             ->seconds(false)
-                            ->after('valid_from'),
+                            ->after('valid_from')
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                     ]),
             ]);
     }

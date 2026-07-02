@@ -32,7 +32,11 @@ class OfferResource extends Resource
     {
         return $schema
             ->components([
-                Section::make(__('admin.resources.offers.sections.details'))
+                Section::make(__('admin.resources.offers.sections.content'))
+                    ->description(__('admin.resources.offers.descriptions.content'))
+                    ->icon(Heroicon::OutlinedMegaphone)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('title')
@@ -41,29 +45,47 @@ class OfferResource extends Resource
                             ->maxLength(255),
                         TextInput::make('title_ar')
                             ->label(__('admin.resources.offers.fields.title_ar'))
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->hint(__('admin.common.arabic'))
+                            ->extraInputAttributes(['dir' => 'rtl']),
                         Textarea::make('body')
                             ->label(__('admin.resources.offers.fields.body'))
                             ->required()
                             ->maxLength(65535)
+                            ->rows(4)
                             ->columnSpanFull(),
                         Textarea::make('body_ar')
                             ->label(__('admin.resources.offers.fields.body_ar'))
                             ->maxLength(65535)
+                            ->rows(4)
+                            ->hint(__('admin.common.arabic'))
+                            ->extraInputAttributes(['dir' => 'rtl'])
                             ->columnSpanFull(),
+                    ]),
+                Section::make(__('admin.resources.offers.sections.schedule'))
+                    ->description(__('admin.resources.offers.descriptions.schedule'))
+                    ->icon(Heroicon::OutlinedCalendarDays)
+                    ->iconColor('primary')
+                    ->columnSpanFull()
+                    ->columns(2)
+                    ->schema([
                         Radio::make('audience')
                             ->label(__('admin.resources.offers.fields.audience'))
                             ->required()
-                            ->options(OfferAudience::class),
+                            ->options(OfferAudience::class)
+                            ->columnSpanFull(),
                         Toggle::make('is_published')
-                            ->label(__('admin.resources.offers.fields.is_published')),
+                            ->label(__('admin.resources.offers.fields.is_published'))
+                            ->columnSpanFull(),
                         DateTimePicker::make('valid_from')
                             ->label(__('admin.resources.offers.fields.valid_from'))
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                         DateTimePicker::make('valid_until')
                             ->label(__('admin.resources.offers.fields.valid_until'))
                             ->seconds(false)
-                            ->after('valid_from'),
+                            ->after('valid_from')
+                            ->prefixIcon(Heroicon::OutlinedCalendar),
                     ]),
             ]);
     }

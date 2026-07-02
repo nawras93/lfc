@@ -36,6 +36,7 @@ return [
         'unlimited' => 'Unlimited',
         'not_available' => '-',
         'voucher_code_copied' => 'Voucher code copied',
+        'arabic' => 'العربية',
     ],
     'resources' => [
         'candidates' => [
@@ -49,6 +50,15 @@ return [
                 'points' => 'Points',
                 'consent' => 'Consent',
                 'consent_notes' => 'Consent & notes',
+            ],
+            'descriptions' => [
+                'candidate' => 'Player identity, background, and squad placement.',
+                'parent' => 'Primary guardian the club contacts for updates and consent.',
+                'workflow' => 'Where this candidate sits in the recruitment pipeline.',
+                'statuses' => 'Recruitment, document, and federation progress.',
+                'points' => 'Loyalty points earned across the season.',
+                'consent' => 'Parental consent and internal notes.',
+                'consent_notes' => 'Parental consent and internal notes.',
             ],
             'fields' => [
                 'full_name' => 'Full name',
@@ -114,6 +124,12 @@ return [
         'teams' => [
             'singular' => 'Team',
             'plural' => 'Teams',
+            'sections' => [
+                'details' => 'Team details',
+            ],
+            'descriptions' => [
+                'details' => 'Squad name, age group, and the season it plays in.',
+            ],
             'fields' => [
                 'name' => 'Name',
                 'name_ar' => 'Name (Arabic)',
@@ -158,6 +174,14 @@ return [
         'fixtures' => [
             'singular' => 'Fixture',
             'plural' => 'Fixtures',
+            'sections' => [
+                'match' => 'Match details',
+                'scanning' => 'Attendance scanning',
+            ],
+            'descriptions' => [
+                'match' => 'Opponent, venue, and kickoff for this fixture.',
+                'scanning' => 'The window when attendance QR scanning is open.',
+            ],
             'fields' => [
                 'opponent' => 'Opponent',
                 'venue' => 'Venue',
@@ -175,6 +199,12 @@ return [
             'plural' => 'Parent accounts',
             'sections' => [
                 'account' => 'Account',
+                'contact' => 'Contact',
+                'membership' => 'Membership & access',
+            ],
+            'descriptions' => [
+                'contact' => 'How the club reaches this guardian.',
+                'membership' => 'Account type, linked players, and invitation status.',
             ],
             'fields' => [
                 'name' => 'Name',
@@ -211,7 +241,12 @@ return [
             'singular' => 'Point rule',
             'plural' => 'Point rules',
             'sections' => [
-                'rule' => 'Rule',
+                'rule' => 'Earning rule',
+                'scope' => 'Scope & schedule',
+            ],
+            'descriptions' => [
+                'rule' => 'What earns points and how many.',
+                'scope' => 'Limit the rule to a team, season, or date range.',
             ],
             'fields' => [
                 'name' => 'Name',
@@ -240,6 +275,12 @@ return [
             'plural' => 'Offers',
             'sections' => [
                 'details' => 'Offer details',
+                'content' => 'Content',
+                'schedule' => 'Audience & visibility',
+            ],
+            'descriptions' => [
+                'content' => 'Headline and message, with an optional Arabic version.',
+                'schedule' => 'Who sees this offer and when it runs.',
             ],
             'fields' => [
                 'title' => 'Title',
@@ -257,6 +298,11 @@ return [
             'plural' => 'Redemption items',
             'sections' => [
                 'details' => 'Item details',
+                'availability' => 'Cost & availability',
+            ],
+            'descriptions' => [
+                'details' => 'Name, type, and description shown in the rewards catalogue.',
+                'availability' => 'Points price, stock, and the redemption window.',
             ],
             'fields' => [
                 'name' => 'Name',
