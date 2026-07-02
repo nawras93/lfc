@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePublicRegistrationRequest;
 use App\Models\Season;
 use App\Services\PublicRegistrationService;
+use App\Support\Countries;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -36,12 +37,9 @@ class PublicRegistrationController extends Controller
             'seasonSlug' => $season?->registrationSeasonSlug(),
             'isRtl' => app()->getLocale() === 'ar',
             'locale' => app()->getLocale(),
-            'positionOptions' => [
-                'goalkeeper' => __('public-registration.positions.goalkeeper'),
-                'defender' => __('public-registration.positions.defender'),
-                'midfielder' => __('public-registration.positions.midfielder'),
-                'attacker' => __('public-registration.positions.attacker'),
-            ],
+            'positionOptions' => $this->positionOptions(),
+            'countryOptions' => Countries::countries(),
+            'nationalityOptions' => Countries::nationalities(),
         ]);
     }
 
@@ -68,12 +66,9 @@ class PublicRegistrationController extends Controller
             'seasonSlug' => $canonicalSeasonSlug,
             'isRtl' => app()->getLocale() === 'ar',
             'locale' => app()->getLocale(),
-            'positionOptions' => [
-                'goalkeeper' => __('public-registration.positions.goalkeeper'),
-                'defender' => __('public-registration.positions.defender'),
-                'midfielder' => __('public-registration.positions.midfielder'),
-                'attacker' => __('public-registration.positions.attacker'),
-            ],
+            'positionOptions' => $this->positionOptions(),
+            'countryOptions' => Countries::countries(),
+            'nationalityOptions' => Countries::nationalities(),
         ]);
     }
 
@@ -98,5 +93,18 @@ class PublicRegistrationController extends Controller
             ->route('public.register.show', compact('seasonSlug', 'registrationSlug') + ['lang' => app()->getLocale()])
             ->with('registration_submitted', true)
             ->with('candidate_name', $candidate->full_name);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function positionOptions(): array
+    {
+        return [
+            'goalkeeper' => __('public-registration.positions.goalkeeper'),
+            'defender' => __('public-registration.positions.defender'),
+            'midfielder' => __('public-registration.positions.midfielder'),
+            'attacker' => __('public-registration.positions.attacker'),
+        ];
     }
 }

@@ -132,12 +132,6 @@
                                     @error('playing_position')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
-                                <label class="lfc-field @error('year_of_birth') lfc-field-error @enderror">
-                                    <span class="lfc-field-label">{{ __('public-registration.form.year_of_birth') }}</span>
-                                    <input type="number" name="year_of_birth" value="{{ old('year_of_birth') }}" min="1990" max="{{ now()->format('Y') }}" @error('year_of_birth') aria-invalid="true" @enderror required>
-                                    @error('year_of_birth')<span class="lfc-field-message">{{ $message }}</span>@enderror
-                                </label>
-
                                 <label class="lfc-field @error('date_of_birth') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.date_of_birth') }}</span>
                                     <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" @error('date_of_birth') aria-invalid="true" @enderror required>
@@ -146,13 +140,23 @@
 
                                 <label class="lfc-field @error('country_of_birth') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.country_of_birth') }}</span>
-                                    <input type="text" name="country_of_birth" value="{{ old('country_of_birth') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.country_of_birth')]) }}" @error('country_of_birth') aria-invalid="true" @enderror required>
+                                    <select name="country_of_birth" dir="ltr" lang="en" @error('country_of_birth') aria-invalid="true" @enderror required>
+                                        <option value="" disabled @selected(old('country_of_birth') === null)></option>
+                                        @foreach ($countryOptions as $value => $label)
+                                            <option value="{{ $value }}" @selected(old('country_of_birth') === $value)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                     @error('country_of_birth')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 
                                 <label class="lfc-field @error('citizenship') lfc-field-error @enderror">
                                     <span class="lfc-field-label">{{ __('public-registration.form.citizenship') }}</span>
-                                    <input type="text" name="citizenship" value="{{ old('citizenship') }}" dir="ltr" lang="en" class="js-latin-input" data-latin-message="{{ __('validation.latin_only', ['attribute' => __('public-registration.form.citizenship')]) }}" @error('citizenship') aria-invalid="true" @enderror required>
+                                    <select name="citizenship" dir="ltr" lang="en" @error('citizenship') aria-invalid="true" @enderror required>
+                                        <option value="" disabled @selected(old('citizenship') === null)></option>
+                                        @foreach ($nationalityOptions as $value => $label)
+                                            <option value="{{ $value }}" @selected(old('citizenship') === $value)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                     @error('citizenship')<span class="lfc-field-message">{{ $message }}</span>@enderror
                                 </label>
 

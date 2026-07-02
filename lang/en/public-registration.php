@@ -32,7 +32,6 @@ return [
     'form' => [
         'full_name' => 'Player full name',
         'playing_position' => 'Playing position',
-        'year_of_birth' => 'Year of birth',
         'date_of_birth' => 'Date of birth',
         'country_of_birth' => 'Country of birth',
         'citizenship' => 'Citizenship',
@@ -80,7 +79,6 @@ return [
         'duplicate' => 'A registration for this player and parent phone already exists.',
         'consent_required' => 'Parent consent is required before submitting this registration.',
         'phone' => 'Enter a valid phone number using digits and common symbols only.',
-        'birth_year_mismatch' => 'Year of birth must match the selected date of birth.',
         'latin_only' => 'Please enter this in Latin (English) characters.',
     ],
 ];

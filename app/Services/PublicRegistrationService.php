@@ -8,6 +8,7 @@ use App\Enums\JoiningStatus;
 use App\Enums\RecruitmentStage;
 use App\Models\Candidate;
 use App\Models\Season;
+use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -28,7 +29,7 @@ class PublicRegistrationService
             $this->candidateDataNormalizer->normalize([
                 'full_name' => $data['full_name'],
                 'playing_position' => $data['playing_position'],
-                'year_of_birth' => $data['year_of_birth'],
+                'year_of_birth' => Carbon::parse($data['date_of_birth'])->year,
                 'date_of_birth' => $data['date_of_birth'],
                 'country_of_birth' => $data['country_of_birth'],
                 'citizenship' => $data['citizenship'],

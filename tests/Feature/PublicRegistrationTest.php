@@ -29,6 +29,9 @@ class PublicRegistrationTest extends TestCase
         $english->assertOk();
         $english->assertSee('dir="ltr"', false);
         $english->assertSeeText('Candidate details');
+        $english->assertDontSee('name="year_of_birth"', false);
+        $english->assertSee('<select name="country_of_birth"', false);
+        $english->assertSee('<select name="citizenship"', false);
 
         $arabic = $this->get($this->registrationUrl($season, 'ar'));
         $arabic->assertOk();
@@ -56,6 +59,7 @@ class PublicRegistrationTest extends TestCase
 
         $this->assertSame($registrationSeason->id, $candidate->season_id);
         $this->assertNotSame($activeSeason->id, $candidate->season_id);
+        $this->assertSame(2014, $candidate->year_of_birth);
         $this->assertTrue($candidate->consent_given);
         $this->assertNotNull($candidate->consent_at);
         $this->assertSame('new_application', $candidate->recruitment_stage->value);
@@ -128,6 +132,23 @@ class PublicRegistrationTest extends TestCase
         $this->assertDatabaseCount('candidates', 0);
     }
 
+    public function test_invalid_country_and_citizenship_are_rejected(): void
+    {
+        $season = Season::factory()->create();
+
+        $response = $this->from($this->registrationUrl($season))->post($this->registrationUrl($season), array_merge(
+            $this->payload(),
+            [
+                'country_of_birth' => 'Atlantis',
+                'citizenship' => 'Atlantean',
+            ],
+        ));
+
+        $response->assertRedirect($this->registrationUrl($season));
+        $response->assertSessionHasErrors(['country_of_birth', 'citizenship']);
+        $this->assertDatabaseCount('candidates', 0);
+    }
+
     public function test_validation_errors_render_summary_and_highlight_offending_field(): void
     {
         $season = Season::factory()->create();
@@ -183,7 +204,6 @@ class PublicRegistrationTest extends TestCase
         return [
             'full_name' => 'Player One',
             'playing_position' => 'midfielder',
-            'year_of_birth' => 2014,
             'date_of_birth' => '2014-05-10',
             'country_of_birth' => 'Qatar',
             'citizenship' => 'Qatari',

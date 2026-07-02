@@ -4,9 +4,9 @@ namespace App\Http\Requests;
 
 use App\Enums\PlayingPosition;
 use App\Rules\LatinText;
+use App\Support\Countries;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 
 class StorePublicRegistrationRequest extends FormRequest
 {
@@ -21,14 +21,15 @@ class StorePublicRegistrationRequest extends FormRequest
     public function rules(): array
     {
         $currentYear = (int) now()->format('Y');
+        $countryOptions = Countries::countries();
+        $nationalityOptions = Countries::nationalities();
 
         return [
             'full_name' => ['required', 'string', 'max:255', new LatinText],
             'playing_position' => ['required', Rule::enum(PlayingPosition::class)],
-            'year_of_birth' => ['required', 'integer', 'min:1990', "max:{$currentYear}"],
             'date_of_birth' => ['required', 'date', 'before_or_equal:today'],
-            'country_of_birth' => ['required', 'string', 'max:255', new LatinText],
-            'citizenship' => ['required', 'string', 'max:255', new LatinText],
+            'country_of_birth' => ['required', Rule::in(array_keys($countryOptions))],
+            'citizenship' => ['required', Rule::in(array_keys($nationalityOptions))],
             'year_arrived_qatar' => ['required', 'integer', 'min:1990', "max:{$currentYear}"],
             'school' => ['required', 'string', 'max:255', new LatinText],
             'previous_club' => ['required', 'string', 'max:255', new LatinText],
@@ -59,7 +60,6 @@ class StorePublicRegistrationRequest extends FormRequest
         return [
             'full_name' => __('public-registration.form.full_name'),
             'playing_position' => __('public-registration.form.playing_position'),
-            'year_of_birth' => __('public-registration.form.year_of_birth'),
             'date_of_birth' => __('public-registration.form.date_of_birth'),
             'country_of_birth' => __('public-registration.form.country_of_birth'),
             'citizenship' => __('public-registration.form.citizenship'),
@@ -84,17 +84,5 @@ class StorePublicRegistrationRequest extends FormRequest
             'parent_phone.regex' => __('public-registration.validation.phone'),
             'parent_whatsapp.regex' => __('public-registration.validation.phone'),
         ];
-    }
-
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator): void {
-            $yearOfBirth = (int) $this->input('year_of_birth');
-            $dateOfBirth = $this->date('date_of_birth');
-
-            if ($dateOfBirth !== null && $yearOfBirth !== (int) $dateOfBirth->format('Y')) {
-                $validator->errors()->add('year_of_birth', __('public-registration.validation.birth_year_mismatch'));
-            }
-        });
     }
 }
