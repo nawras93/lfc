@@ -531,6 +531,28 @@ body.lfc-page {
     color: var(--lfc-ink-muted);
 }
 
+/* Search box that the dropdown_input plugin adds at the top of the open menu. */
+.lfc-field .ts-dropdown .dropdown-input-wrap {
+    padding: .5rem;
+    border-bottom: 1px solid var(--lfc-outline);
+}
+
+.lfc-field .ts-dropdown .dropdown-input {
+    min-height: 2.5rem;
+    padding: .5rem .75rem;
+    border: 1px solid var(--lfc-outline);
+    border-radius: .7rem;
+    background: #fff;
+    font: inherit;
+    color: var(--lfc-ink);
+}
+
+.lfc-field .ts-dropdown .dropdown-input:focus {
+    border-color: var(--lfc-gold);
+    box-shadow: 0 0 0 3px rgb(200 162 74 / 18%);
+    outline: none;
+}
+
 /* Summary of every error at the top of the form card. */
 .lfc-alert-list {
     margin: .5rem 0 0;

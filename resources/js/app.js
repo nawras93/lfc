@@ -91,15 +91,18 @@ function initLatinInputs(form) {
 // keeps the original <select> in sync, so server-side validation + graceful
 // no-JS fallback still work. Direction is inherited from <html dir>, so the
 // dropdown reads RTL under the Arabic locale automatically.
+//
+// The `dropdown_input` plugin moves the search box into the opened dropdown
+// (select2-style): the control shows only the chosen value with no blinking
+// text caret sitting next to it after selection.
 function initSearchableSelects(form) {
     form.querySelectorAll('.js-searchable-select').forEach((select) => {
         new TomSelect(select, {
+            plugins: ['dropdown_input'],
             create: false,
             allowEmptyOption: false,
             placeholder: select.dataset.placeholder || '',
             maxOptions: null,
-            controlInput:
-                '<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">',
         });
     });
 }
