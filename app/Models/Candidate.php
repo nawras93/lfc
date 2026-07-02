@@ -54,6 +54,7 @@ class Candidate extends Model
             'is_player' => 'boolean',
             'consent_given' => 'boolean',
             'consent_at' => 'datetime',
+            'playing_position' => PlayingPosition::class,
             'recruitment_stage' => RecruitmentStage::class,
             'document_status' => DocumentStatus::class,
             'qfa_status' => FederationStatus::class,
@@ -128,6 +129,6 @@ class Candidate extends Model
 
     public function playingPositionLabel(): string
     {
-        return PlayingPosition::from($this->getAttribute('playing_position'))->getLabel() ?? (string) $this->getAttribute('playing_position');
+        return $this->playing_position?->getLabel() ?? '';
     }
 }
