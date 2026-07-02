@@ -24,8 +24,8 @@ class OfferController extends Controller
             ->get()
             ->map(fn (Offer $offer) => [
                 'id' => $offer->id,
-                'title' => $offer->title,
-                'body' => $offer->body,
+                'title' => $offer->localized('title'),
+                'body' => $offer->localized('body'),
                 'audience' => $offer->audience->value,
                 'valid_from' => $offer->valid_from?->toIso8601String(),
                 'valid_until' => $offer->valid_until?->toIso8601String(),

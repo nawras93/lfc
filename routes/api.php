@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\V1\StaffAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')
-    ->middleware('throttle:api')
+    ->middleware(['throttle:api', 'api.locale'])
     ->group(function (): void {
         Route::post('/auth/login', [AuthController::class, 'login']);
         Route::post('/auth/accept-invite', [AuthController::class, 'acceptInvite']);

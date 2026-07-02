@@ -33,8 +33,8 @@ class RedemptionController extends Controller
             ->get()
             ->map(fn (RedemptionItem $item) => [
                 'id' => $item->id,
-                'name' => $item->name,
-                'description' => $item->description,
+                'name' => $item->localized('name'),
+                'description' => $item->localized('description'),
                 'type' => $item->type->value,
                 'points_cost' => $item->points_cost,
                 'in_stock' => $item->stock === null || $item->stock > 0,
@@ -85,7 +85,7 @@ class RedemptionController extends Controller
                 'points_spent' => $redemption->points_spent,
                 'status' => $redemption->status->value,
                 'item' => [
-                    'name' => $redemption->item->name,
+                    'name' => $redemption->item->localized('name'),
                     'type' => $redemption->item->type->value,
                 ],
                 'player_name' => $redemption->player?->full_name,
@@ -112,7 +112,7 @@ class RedemptionController extends Controller
                 'points_spent' => $r->points_spent,
                 'status' => $r->status->value,
                 'item' => [
-                    'name' => $r->item->name,
+                    'name' => $r->item->localized('name'),
                     'type' => $r->item->type->value,
                 ],
                 'player_name' => $r->player?->full_name,

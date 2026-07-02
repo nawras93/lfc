@@ -58,7 +58,7 @@ class ScanController extends Controller
             ->values()
             ->map(fn (Fixture $fixture) => [
                 'id' => $fixture->id,
-                'team_name' => $fixture->team?->name,
+                'team_name' => $fixture->team?->localized('name'),
                 'opponent' => $fixture->opponent,
                 'venue' => $fixture->venue,
                 'kickoff_at' => $fixture->kickoff_at?->toIso8601String(),
