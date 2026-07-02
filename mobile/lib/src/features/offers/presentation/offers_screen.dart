@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../core/formatting/app_date_format.dart';
 import '../../../providers.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/widgets/pills.dart';
@@ -40,7 +41,7 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
 
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final dateFormat = DateFormat.yMMMd(locale);
+    final dateFormat = AppDateFormat.date(locale);
 
     return FutureBuilder<List<OfferSummary>>(
       future: _future,

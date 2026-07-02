@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../core/formatting/app_date_format.dart';
 import '../../../providers.dart';
 import '../../../theme/app_theme.dart';
 import '../models/player_summary.dart';
@@ -44,7 +44,7 @@ class _PointsHistoryScreenState extends ConsumerState<PointsHistoryScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final formatter = DateFormat.yMMMd(locale).add_jm();
+    final formatter = AppDateFormat.dateTime(locale);
     final title = widget.accountHistory
         ? l10n.accountPointsHistoryTitle
         : l10n.playerPointsHistoryTitle(widget.player!.fullName);

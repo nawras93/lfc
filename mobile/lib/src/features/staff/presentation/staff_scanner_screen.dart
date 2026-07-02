@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/api/api_exception.dart';
+import '../../../core/formatting/app_date_format.dart';
 import '../../../providers.dart';
 import '../../../theme/presentation/theme_toggle_button.dart';
 import '../../../theme/widgets/brand_app_bar.dart';
@@ -111,7 +111,7 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
     final l10n = AppLocalizations.of(context)!;
     final session = ref.watch(staffSessionControllerProvider);
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final formatter = DateFormat.yMMMd(locale).add_jm();
+    final formatter = AppDateFormat.dateTime(locale);
 
     return Scaffold(
       appBar: BrandAppBar(
