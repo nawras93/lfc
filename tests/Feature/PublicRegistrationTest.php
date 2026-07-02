@@ -97,6 +97,20 @@ class PublicRegistrationTest extends TestCase
         $this->assertDatabaseCount('candidates', 1);
     }
 
+    public function test_arabic_full_name_is_rejected_with_validation_error(): void
+    {
+        $season = Season::factory()->create();
+
+        $response = $this->from($this->registrationUrl($season))->post($this->registrationUrl($season), array_merge(
+            $this->payload(),
+            ['full_name' => 'يوسف'],
+        ));
+
+        $response->assertRedirect($this->registrationUrl($season));
+        $response->assertSessionHasErrors('full_name');
+        $this->assertDatabaseCount('candidates', 0);
+    }
+
     public function test_registration_link_is_closed_outside_configured_window(): void
     {
         $season = Season::factory()->create([

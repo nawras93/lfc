@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\PlayingPosition;
+use App\Rules\LatinText;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -22,16 +23,16 @@ class StorePublicRegistrationRequest extends FormRequest
         $currentYear = (int) now()->format('Y');
 
         return [
-            'full_name' => ['required', 'string', 'max:255'],
+            'full_name' => ['required', 'string', 'max:255', new LatinText],
             'playing_position' => ['required', Rule::enum(PlayingPosition::class)],
             'year_of_birth' => ['required', 'integer', 'min:1990', "max:{$currentYear}"],
             'date_of_birth' => ['required', 'date', 'before_or_equal:today'],
-            'country_of_birth' => ['required', 'string', 'max:255'],
-            'citizenship' => ['required', 'string', 'max:255'],
+            'country_of_birth' => ['required', 'string', 'max:255', new LatinText],
+            'citizenship' => ['required', 'string', 'max:255', new LatinText],
             'year_arrived_qatar' => ['required', 'integer', 'min:1990', "max:{$currentYear}"],
-            'school' => ['required', 'string', 'max:255'],
-            'previous_club' => ['required', 'string', 'max:255'],
-            'parent_name' => ['required', 'string', 'max:255'],
+            'school' => ['required', 'string', 'max:255', new LatinText],
+            'previous_club' => ['required', 'string', 'max:255', new LatinText],
+            'parent_name' => ['required', 'string', 'max:255', new LatinText],
             'parent_phone' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\\-\\s]{7,25}$/'],
             'parent_whatsapp' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\\-\\s]{7,25}$/'],
             'email' => ['nullable', 'email', 'max:255'],

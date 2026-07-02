@@ -69,5 +69,6 @@ return [
         'consent_required' => 'Parent consent is required before submitting this registration.',
         'phone' => 'Enter a valid phone number using digits and common symbols only.',
         'birth_year_mismatch' => 'Year of birth must match the selected date of birth.',
+        'latin_only' => 'Please enter this in Latin (English) characters.',
     ],
 ];

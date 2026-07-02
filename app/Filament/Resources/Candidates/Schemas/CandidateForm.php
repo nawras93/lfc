@@ -9,6 +9,7 @@ use App\Enums\PlayingPosition;
 use App\Enums\RecruitmentStage;
 use App\Models\Season;
 use App\Models\Team;
+use App\Rules\LatinText;
 use App\Support\EnumOptions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -30,7 +31,8 @@ class CandidateForm
                         TextInput::make('full_name')
                             ->label(__('admin.resources.candidates.fields.full_name'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->rule(new LatinText),
                         Select::make('playing_position')
                             ->label(__('admin.resources.candidates.fields.playing_position'))
                             ->options(EnumOptions::for(PlayingPosition::class))
@@ -48,11 +50,13 @@ class CandidateForm
                         TextInput::make('country_of_birth')
                             ->label(__('admin.resources.candidates.fields.country_of_birth'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->rule(new LatinText),
                         TextInput::make('citizenship')
                             ->label(__('admin.resources.candidates.fields.citizenship'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->rule(new LatinText),
                         TextInput::make('year_arrived_qatar')
                             ->label(__('admin.resources.candidates.fields.year_arrived_qatar'))
                             ->numeric()
@@ -62,11 +66,13 @@ class CandidateForm
                         TextInput::make('school')
                             ->label(__('admin.resources.candidates.fields.school'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->rule(new LatinText),
                         TextInput::make('previous_club')
                             ->label(__('admin.resources.candidates.fields.previous_club'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->rule(new LatinText),
                         Select::make('season_id')
                             ->label(__('admin.common.season'))
                             ->options(fn (): array => Season::query()->orderByDesc('is_active')->orderBy('name')->pluck('name', 'id')->all())
@@ -85,7 +91,8 @@ class CandidateForm
                         TextInput::make('parent_name')
                             ->label(__('admin.resources.candidates.fields.parent_name'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->rule(new LatinText),
                         TextInput::make('parent_phone')
                             ->label(__('admin.resources.candidates.fields.parent_phone'))
                             ->required()

@@ -300,6 +300,9 @@ return [
             ],
         ],
     ],
+    'validation' => [
+        'latin_only' => 'Please enter this in Latin (English) characters.',
+    ],
     'widgets' => [
         'loyalty_stats' => [
             'points_issued' => 'Points Issued',

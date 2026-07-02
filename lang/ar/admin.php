@@ -300,6 +300,9 @@ return [
             ],
         ],
     ],
+    'validation' => [
+        'latin_only' => 'الرجاء الإدخال بالأحرف اللاتينية (الإنجليزية).',
+    ],
     'widgets' => [
         'loyalty_stats' => [
             'points_issued' => 'النقاط المصدرة',
