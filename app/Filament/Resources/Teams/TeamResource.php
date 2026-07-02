@@ -22,8 +22,6 @@ class TeamResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Recruitment';
-
     public static function form(Schema $schema): Schema
     {
         return TeamForm::configure($schema);
@@ -47,5 +45,25 @@ class TeamResource extends Resource
             'view' => ViewTeam::route('/{record}'),
             'edit' => EditTeam::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.teams.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.teams.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.teams.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.recruitment');
     }
 }

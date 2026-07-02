@@ -14,13 +14,15 @@ class TeamForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('admin.resources.teams.fields.name'))
                     ->required()
                     ->maxLength(255),
                 TextInput::make('age_group')
+                    ->label(__('admin.resources.teams.fields.age_group'))
                     ->required()
                     ->maxLength(255),
                 Select::make('season_id')
-                    ->label('Season')
+                    ->label(__('admin.common.season'))
                     ->options(fn (): array => Season::query()->orderByDesc('is_active')->orderBy('name')->pluck('name', 'id')->all())
                     ->searchable()
                     ->preload(),

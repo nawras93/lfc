@@ -13,11 +13,6 @@ enum FederationStatus: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::NotStarted => 'Not Started',
-            self::Submitted => 'Submitted',
-            self::Approved => 'Approved',
-            self::Returned => 'Returned',
-        };
+        return __('enums.federation_status.'.$this->value);
     }
 }

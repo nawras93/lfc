@@ -63,4 +63,12 @@ class FilamentAdminAccessTest extends TestCase
             ->get('/admin')
             ->assertOk();
     }
+
+    public function test_admin_login_page_renders_rtl_when_locale_is_arabic(): void
+    {
+        $this->get('/admin/login?lang=ar')
+            ->assertOk()
+            ->assertSee('lang="ar"', false)
+            ->assertSee('dir="rtl"', false);
+    }
 }

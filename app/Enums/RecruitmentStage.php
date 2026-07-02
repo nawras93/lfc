@@ -15,13 +15,6 @@ enum RecruitmentStage: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::NewApplication => 'New Application',
-            self::AssessmentScheduled => 'Assessment Scheduled',
-            self::AssessmentCompleted => 'Assessment Completed',
-            self::Accepted => 'Accepted',
-            self::WaitingList => 'Waiting List',
-            self::Rejected => 'Rejected',
-        };
+        return __('enums.recruitment_stage.'.$this->value);
     }
 }

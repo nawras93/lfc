@@ -15,13 +15,7 @@ enum PointTransactionType: string implements HasColor, HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Earn => 'Earn',
-            self::Redeem => 'Redeem',
-            self::Expire => 'Expire',
-            self::Adjust => 'Adjust',
-            self::Reverse => 'Reverse',
-        };
+        return __('enums.point_transaction_type.'.$this->value);
     }
 
     public function getColor(): string|array|null

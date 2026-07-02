@@ -12,27 +12,32 @@ class SeasonInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
+                TextEntry::make('name')
+                    ->label(__('admin.resources.seasons.fields.name')),
                 IconEntry::make('is_active')
+                    ->label(__('admin.resources.seasons.fields.is_active'))
                     ->boolean(),
                 TextEntry::make('registration_starts_at')
+                    ->label(__('admin.resources.seasons.fields.registration_starts_at'))
                     ->dateTime(),
                 TextEntry::make('registration_ends_at')
+                    ->label(__('admin.resources.seasons.fields.registration_ends_at'))
                     ->dateTime(),
                 TextEntry::make('registration_slug')
-                    ->label('Registration token'),
+                    ->label(__('admin.resources.seasons.fields.registration_slug')),
                 TextEntry::make('public_registration_url')
-                    ->label('Public registration URL')
+                    ->label(__('admin.resources.seasons.fields.public_registration_url'))
                     ->state(fn ($record): ?string => $record->publicRegistrationUrl())
                     ->copyable()
                     ->copyableState(fn ($record): ?string => $record->publicRegistrationUrl())
-                    ->placeholder('Save the season to generate the public registration URL.')
+                    ->placeholder(__('admin.resources.seasons.messages.save_to_generate_url'))
                     ->columnSpanFull(),
                 IconEntry::make('registrationIsOpen')
-                    ->label('Registration open')
+                    ->label(__('admin.resources.seasons.fields.registration_is_open'))
                     ->state(fn ($record): bool => $record->registrationIsOpen())
                     ->boolean(),
                 TextEntry::make('created_at')
+                    ->label(__('admin.common.created_at'))
                     ->dateTime(),
             ]);
     }

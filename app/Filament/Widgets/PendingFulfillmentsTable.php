@@ -13,7 +13,12 @@ class PendingFulfillmentsTable extends TableWidget
 {
     protected int | string | array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Pending fulfillments';
+    protected static ?string $heading = null;
+
+    public static function getHeading(): ?string
+    {
+        return __('admin.widgets.pending_fulfillments.heading');
+    }
 
     public function table(Table $table): Table
     {
@@ -23,27 +28,29 @@ class PendingFulfillmentsTable extends TableWidget
             )
             ->columns([
                 TextColumn::make('parent.name')
-                    ->label('Account')
+                    ->label(__('admin.common.account'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('player.full_name')
-                    ->label('Player')
-                    ->formatStateUsing(fn (?string $state): string => $state ?? '—'),
+                    ->label(__('admin.common.player'))
+                    ->formatStateUsing(fn (?string $state): string => $state ?? __('admin.common.not_available')),
                 TextColumn::make('item.name')
-                    ->label('Item')
+                    ->label(__('admin.common.item'))
                     ->sortable(),
                 TextColumn::make('points_spent')
+                    ->label(__('admin.resources.redemptions.fields.points_spent'))
                     ->sortable(),
                 TextColumn::make('voucher_code')
+                    ->label(__('admin.resources.redemptions.fields.voucher_code'))
                     ->searchable()
                     ->copyable()
-                    ->copyMessage('Voucher code copied'),
+                    ->copyMessage(__('admin.common.voucher_code_copied')),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
                 RedemptionResource::markFulfilledAction(),
             ])
-            ->emptyStateHeading('No vouchers awaiting fulfillment')
+            ->emptyStateHeading(__('admin.resources.redemptions.messages.empty_state'))
             ->emptyStateIcon('heroicon-o-check-circle');
     }
 }

@@ -12,10 +12,7 @@ enum OfferAudience: string implements HasColor, HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::All => 'All Parents',
-            self::VVIP => 'VVIP Only',
-        };
+        return __('enums.offer_audience.'.$this->value);
     }
 
     public function getColor(): string|array|null

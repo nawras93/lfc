@@ -55,7 +55,7 @@ class EditCandidate extends EditRecord
         } catch (InvalidRecruitmentStageTransition $exception) {
             Notification::make()
                 ->danger()
-                ->title('Invalid recruitment stage transition')
+                ->title(__('admin.resources.candidates.messages.invalid_transition_title'))
                 ->body($exception->getMessage())
                 ->send();
 

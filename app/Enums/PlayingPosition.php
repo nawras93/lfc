@@ -13,11 +13,6 @@ enum PlayingPosition: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Goalkeeper => 'Goalkeeper',
-            self::Defender => 'Defender',
-            self::Midfielder => 'Midfielder',
-            self::Attacker => 'Attacker',
-        };
+        return __('enums.playing_position.'.$this->value);
     }
 }

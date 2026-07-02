@@ -13,11 +13,7 @@ enum RedemptionType: string implements HasColor, HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Fee => 'Fee',
-            self::Event => 'Event',
-            self::Merch => 'Merchandise',
-        };
+        return __('enums.redemption_type.'.$this->value);
     }
 
     public function getColor(): string|array|null

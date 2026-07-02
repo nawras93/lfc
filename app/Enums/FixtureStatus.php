@@ -13,11 +13,7 @@ enum FixtureStatus: string implements HasColor, HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Scheduled => 'Scheduled',
-            self::OpenForScanning => 'Open for Scanning',
-            self::Closed => 'Closed',
-        };
+        return __('enums.fixture_status.'.$this->value);
     }
 
     public function getColor(): string|array|null

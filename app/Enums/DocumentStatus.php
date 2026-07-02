@@ -12,10 +12,6 @@ enum DocumentStatus: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Pending => 'Pending',
-            self::InProgress => 'In Progress',
-            self::Complete => 'Complete',
-        };
+        return __('enums.document_status.'.$this->value);
     }
 }

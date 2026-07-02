@@ -27,23 +27,20 @@ class RedemptionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedReceiptPercent;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Rewards';
-
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make('Redemption')
+                Section::make(__('admin.resources.redemptions.sections.redemption'))
                     ->columns(2)
                     ->schema([
-                        TextInput::make('voucher_code'),
+                        TextInput::make('voucher_code')
+                            ->label(__('admin.resources.redemptions.fields.voucher_code')),
                         Select::make('status')
-                            ->options([
-                                'issued' => 'Issued',
-                                'fulfilled' => 'Fulfilled',
-                                'cancelled' => 'Cancelled',
-                            ]),
-                        DateTimePicker::make('fulfilled_at'),
+                            ->label(__('admin.resources.redemptions.fields.status'))
+                            ->options(EnumOptions::for(RedemptionStatus::class)),
+                        DateTimePicker::make('fulfilled_at')
+                            ->label(__('admin.resources.redemptions.fields.fulfilled_at')),
                     ]),
             ]);
     }
@@ -53,36 +50,42 @@ class RedemptionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
+                    ->label(__('admin.resources.redemptions.fields.id'))
                     ->sortable(),
                 TextColumn::make('parent.name')
-                    ->label('Account')
+                    ->label(__('admin.common.account'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('player.full_name')
-                    ->label('Player')
-                    ->formatStateUsing(fn (?string $state): string => $state ?? '—'),
+                    ->label(__('admin.common.player'))
+                    ->formatStateUsing(fn (?string $state): string => $state ?? __('admin.common.not_available')),
                 TextColumn::make('item.name')
-                    ->label('Item')
+                    ->label(__('admin.common.item'))
                     ->sortable(),
                 TextColumn::make('points_spent')
+                    ->label(__('admin.resources.redemptions.fields.points_spent'))
                     ->sortable(),
                 TextColumn::make('voucher_code')
+                    ->label(__('admin.resources.redemptions.fields.voucher_code'))
                     ->searchable()
                     ->copyable()
-                    ->copyMessage('Voucher code copied'),
+                    ->copyMessage(__('admin.common.voucher_code_copied')),
                 TextColumn::make('status')
+                    ->label(__('admin.resources.redemptions.fields.status'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('fulfilled_at')
+                    ->label(__('admin.resources.redemptions.fields.fulfilled_at'))
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->label('Redeemed at'),
+                    ->label(__('admin.resources.redemptions.fields.redeemed_at')),
             ])
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('admin.resources.redemptions.fields.status'))
                     ->options(EnumOptions::for(RedemptionStatus::class)),
             ])
             ->defaultSort('created_at', 'desc')
@@ -94,12 +97,12 @@ class RedemptionResource extends Resource
     public static function markFulfilledAction(): Action
     {
         return Action::make('markFulfilled')
-            ->label('Mark fulfilled')
+            ->label(__('admin.resources.redemptions.actions.mark_fulfilled'))
             ->icon(Heroicon::OutlinedCheckCircle)
             ->color('success')
             ->requiresConfirmation()
-            ->modalHeading('Mark voucher fulfilled')
-            ->modalDescription('Confirm the reward has been handed over. This records who fulfilled it and when.')
+            ->modalHeading(__('admin.resources.redemptions.messages.mark_fulfilled_heading'))
+            ->modalDescription(__('admin.resources.redemptions.messages.mark_fulfilled_description'))
             ->visible(fn (Redemption $record): bool => $record->status === RedemptionStatus::Issued
                 && (auth()->user()?->hasRole(['Admin', 'Management']) ?? false))
             ->action(function (Redemption $record): void {
@@ -107,8 +110,8 @@ class RedemptionResource extends Resource
 
                 Notification::make()
                     ->success()
-                    ->title('Voucher marked fulfilled')
-                    ->body("Voucher {$record->voucher_code} is now fulfilled.")
+                    ->title(__('admin.resources.redemptions.messages.fulfilled_title'))
+                    ->body(__('admin.resources.redemptions.messages.fulfilled_body', ['code' => $record->voucher_code]))
                     ->send();
             });
     }
@@ -118,5 +121,25 @@ class RedemptionResource extends Resource
         return [
             'index' => ListRedemptions::route('/'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.redemptions.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.redemptions.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.redemptions.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.rewards');
     }
 }

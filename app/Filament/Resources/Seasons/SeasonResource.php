@@ -22,8 +22,6 @@ class SeasonResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Recruitment';
-
     public static function form(Schema $schema): Schema
     {
         return SeasonForm::configure($schema);
@@ -47,5 +45,25 @@ class SeasonResource extends Resource
             'view' => ViewSeason::route('/{record}'),
             'edit' => EditSeason::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.seasons.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.seasons.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.seasons.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.recruitment');
     }
 }

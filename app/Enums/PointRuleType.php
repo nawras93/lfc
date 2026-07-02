@@ -11,9 +11,6 @@ enum PointRuleType: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Fixed => 'Fixed',
-            self::Percentage => 'Percentage',
-        };
+        return __('enums.point_rule_type.'.$this->value);
     }
 }

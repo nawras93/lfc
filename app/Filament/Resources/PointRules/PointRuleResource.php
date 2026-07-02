@@ -32,58 +32,65 @@ class PointRuleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Loyalty';
-
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make('Rule')
+                Section::make(__('admin.resources.point_rules.sections.rule'))
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
+                            ->label(__('admin.resources.point_rules.fields.name'))
                             ->required()
                             ->maxLength(255),
                         Radio::make('type')
+                            ->label(__('admin.resources.point_rules.fields.type'))
                             ->options(EnumOptions::for(PointRuleType::class))
                             ->required()
                             ->live(),
                         TextInput::make('points')
+                            ->label(__('admin.resources.point_rules.fields.points'))
                             ->numeric()
                             ->minValue(1)
                             ->required(fn ($get): bool => $get('type') === PointRuleType::Fixed->value)
                             ->visible(fn ($get): bool => $get('type') === PointRuleType::Fixed->value),
                         TextInput::make('percentage')
+                            ->label(__('admin.resources.point_rules.fields.percentage'))
                             ->numeric()
                             ->minValue(0.01)
                             ->maxValue(999.99)
                             ->required(fn ($get): bool => $get('type') === PointRuleType::Percentage->value)
                             ->visible(fn ($get): bool => $get('type') === PointRuleType::Percentage->value),
                         TextInput::make('base_amount')
+                            ->label(__('admin.resources.point_rules.fields.base_amount'))
                             ->numeric()
                             ->minValue(0.01)
                             ->required(fn ($get): bool => $get('type') === PointRuleType::Percentage->value)
                             ->visible(fn ($get): bool => $get('type') === PointRuleType::Percentage->value),
                         Select::make('team_id')
-                            ->label('Team')
+                            ->label(__('admin.common.team'))
                             ->options(fn (): array => Team::query()->orderBy('name')->pluck('name', 'id')->all())
                             ->searchable()
                             ->preload()
-                            ->placeholder('All teams'),
+                            ->placeholder(__('admin.common.all_teams')),
                         Select::make('season_id')
-                            ->label('Season')
+                            ->label(__('admin.common.season'))
                             ->options(fn (): array => Season::query()->orderBy('name')->pluck('name', 'id')->all())
                             ->searchable()
                             ->preload()
-                            ->placeholder('All seasons'),
+                            ->placeholder(__('admin.common.all_seasons')),
                         TextInput::make('priority')
+                            ->label(__('admin.resources.point_rules.fields.priority'))
                             ->numeric()
                             ->default(0),
                         Toggle::make('is_active')
+                            ->label(__('admin.resources.point_rules.fields.is_active'))
                             ->default(true),
                         DateTimePicker::make('starts_at')
+                            ->label(__('admin.resources.point_rules.fields.starts_at'))
                             ->seconds(false),
                         DateTimePicker::make('ends_at')
+                            ->label(__('admin.resources.point_rules.fields.ends_at'))
                             ->seconds(false)
                             ->after('starts_at'),
                     ]),
@@ -95,43 +102,50 @@ class PointRuleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('admin.resources.point_rules.fields.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('type')
+                    ->label(__('admin.resources.point_rules.fields.type'))
                     ->badge(),
                 TextColumn::make('details')
-                    ->label('Value')
+                    ->label(__('admin.resources.point_rules.fields.value'))
                     ->getStateUsing(fn (PointRule $record): string => $record->type === PointRuleType::Percentage
-                        ? "{$record->percentage}% × {$record->base_amount} = {$record->pointsValue()} pts"
-                        : "{$record->pointsValue()} pts"),
+                        ? __('admin.resources.point_rules.messages.percentage_value', ['percentage' => $record->percentage, 'base_amount' => $record->base_amount, 'points' => $record->pointsValue()])
+                        : __('admin.resources.point_rules.messages.points_value', ['points' => $record->pointsValue()])),
                 TextColumn::make('team.name')
-                    ->label('Scope (team)')
-                    ->placeholder('All'),
+                    ->label(__('admin.resources.point_rules.fields.scope_team'))
+                    ->placeholder(__('admin.common.all')),
                 TextColumn::make('season.name')
-                    ->label('Scope (season)')
-                    ->placeholder('All'),
+                    ->label(__('admin.resources.point_rules.fields.scope_season'))
+                    ->placeholder(__('admin.common.all')),
                 IconColumn::make('is_active')
+                    ->label(__('admin.resources.point_rules.fields.is_active'))
                     ->boolean()
                     ->sortable(),
                 TextColumn::make('starts_at')
+                    ->label(__('admin.resources.point_rules.fields.starts_at'))
                     ->dateTime()
                     ->sortable()
-                    ->placeholder('Always'),
+                    ->placeholder(__('admin.common.always')),
                 TextColumn::make('ends_at')
+                    ->label(__('admin.resources.point_rules.fields.ends_at'))
                     ->dateTime()
                     ->sortable()
-                    ->placeholder('Always'),
+                    ->placeholder(__('admin.common.always')),
                 TextColumn::make('priority')
+                    ->label(__('admin.resources.point_rules.fields.priority'))
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('type')
+                    ->label(__('admin.resources.point_rules.fields.type'))
                     ->options(EnumOptions::for(PointRuleType::class)),
                 Filter::make('is_active')
                     ->query(fn (Builder $q) => $q->where('is_active', true))
-                    ->label('Active only'),
+                    ->label(__('admin.resources.point_rules.filters.active_only')),
                 SelectFilter::make('team_id')
-                    ->label('Team')
+                    ->label(__('admin.common.team'))
                     ->options(fn (): array => Team::query()->orderBy('name')->pluck('name', 'id')->all()),
             ])
             ->recordActions([
@@ -147,5 +161,25 @@ class PointRuleResource extends Resource
             'create' => PointRules\CreatePointRule::route('/create'),
             'edit' => PointRules\EditPointRule::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.point_rules.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.point_rules.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.point_rules.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.loyalty');
     }
 }

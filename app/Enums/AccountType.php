@@ -12,10 +12,7 @@ enum AccountType: string implements HasColor, HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Parent => 'Parent',
-            self::VvipClient => 'VVIP Client',
-        };
+        return __('enums.account_type.'.$this->value);
     }
 
     public function getColor(): string|array|null

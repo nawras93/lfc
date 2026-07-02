@@ -29,31 +29,33 @@ class ParentAccountResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Accounts';
-
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make('Account')
+                Section::make(__('admin.resources.parent_accounts.sections.account'))
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
+                            ->label(__('admin.resources.parent_accounts.fields.name'))
                             ->required()
                             ->maxLength(255),
                         TextInput::make('email')
+                            ->label(__('admin.resources.parent_accounts.fields.email'))
                             ->email()
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
                         TextInput::make('phone')
+                            ->label(__('admin.resources.parent_accounts.fields.phone'))
                             ->tel()
                             ->maxLength(255),
                         TextInput::make('whatsapp')
+                            ->label(__('admin.resources.parent_accounts.fields.whatsapp'))
                             ->tel()
                             ->maxLength(255),
                         Select::make('player_ids')
-                            ->label('Linked players')
+                            ->label(__('admin.resources.parent_accounts.fields.linked_players'))
                             ->options(fn (): array => Candidate::query()
                                 ->where('is_player', true)
                                 ->orderBy('full_name')
@@ -62,15 +64,15 @@ class ParentAccountResource extends Resource
                             ->multiple()
                             ->searchable()
                             ->preload()
-                            ->helperText('Only candidates already marked as players can be linked.')
+                            ->helperText(__('admin.resources.parent_accounts.helper.linked_players'))
                             ->visible(fn (?ParentAccount $record, $get): bool => $get('account_type') !== AccountType::VvipClient->value && ($record === null || ! $record->isVvipClient())),
                         Placeholder::make('account_status')
-                            ->label('Status')
+                            ->label(__('admin.resources.parent_accounts.fields.account_status'))
                             ->content(fn (?ParentAccount $record): string => $record?->accepted_at
-                                ? 'Accepted'
-                                : ($record?->invited_at ? 'Invited' : 'Draft')),
+                                ? __('admin.resources.parent_accounts.status.accepted')
+                                : ($record?->invited_at ? __('admin.resources.parent_accounts.status.invited') : __('admin.resources.parent_accounts.status.draft'))),
                         Select::make('account_type')
-                            ->label('Account type')
+                            ->label(__('admin.resources.parent_accounts.fields.account_type'))
                             ->options(AccountType::class)
                             ->default(AccountType::Parent->value)
                             ->afterStateUpdated(function ($set, $state): void {
@@ -80,14 +82,16 @@ class ParentAccountResource extends Resource
                             })
                             ->live(),
                         Toggle::make('is_vvip')
-                            ->label('VVIP')
+                            ->label(__('admin.resources.parent_accounts.fields.is_vvip'))
                             ->visible(fn (): bool => auth()->user()?->hasRole('Admin') ?? false),
                         DateTimePicker::make('invited_at')
+                            ->label(__('admin.resources.parent_accounts.fields.invited_at'))
                             ->seconds(false),
                         DateTimePicker::make('accepted_at')
+                            ->label(__('admin.resources.parent_accounts.fields.accepted_at'))
                             ->seconds(false),
                         Placeholder::make('balance')
-                            ->label('Account balance')
+                            ->label(__('admin.resources.parent_accounts.fields.balance'))
                             ->content(fn (?ParentAccount $record): string => $record ? (string) $record->pointsBalance() : '0'),
                     ]),
             ]);
@@ -98,25 +102,30 @@ class ParentAccountResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('admin.resources.parent_accounts.fields.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
+                    ->label(__('admin.resources.parent_accounts.fields.email'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('account_type')
+                    ->label(__('admin.resources.parent_accounts.fields.account_type'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('players_count')
                     ->counts('players')
-                    ->label('Players'),
+                    ->label(__('admin.resources.parent_accounts.fields.players_count')),
                 IconColumn::make('is_vvip')
                     ->boolean()
-                    ->label('VVIP')
+                    ->label(__('admin.resources.parent_accounts.fields.is_vvip'))
                     ->sortable(),
                 TextColumn::make('invited_at')
+                    ->label(__('admin.resources.parent_accounts.fields.invited_at'))
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('accepted_at')
+                    ->label(__('admin.resources.parent_accounts.fields.accepted_at'))
                     ->dateTime()
                     ->sortable(),
             ])
@@ -132,6 +141,26 @@ class ParentAccountResource extends Resource
             'create' => CreateParentAccount::route('/create'),
             'edit' => EditParentAccount::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.parent_accounts.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.parent_accounts.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.parent_accounts.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.accounts');
     }
 
     /**

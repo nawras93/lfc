@@ -11,11 +11,14 @@ class TeamInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
-                TextEntry::make('age_group'),
+                TextEntry::make('name')
+                    ->label(__('admin.resources.teams.fields.name')),
+                TextEntry::make('age_group')
+                    ->label(__('admin.resources.teams.fields.age_group')),
                 TextEntry::make('season.name')
-                    ->label('Season'),
+                    ->label(__('admin.common.season')),
                 TextEntry::make('created_at')
+                    ->label(__('admin.common.created_at'))
                     ->dateTime(),
             ]);
     }

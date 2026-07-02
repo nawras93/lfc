@@ -22,29 +22,35 @@ class FixturesTable
         return $table
             ->columns([
                 TextColumn::make('kickoff_at')
+                    ->label(__('admin.resources.fixtures.fields.kickoff_at'))
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('team.name')
-                    ->label('Team')
+                    ->label(__('admin.common.team'))
                     ->sortable(),
                 TextColumn::make('opponent')
+                    ->label(__('admin.resources.fixtures.fields.opponent'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('admin.common.status'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('scan_opens_at')
+                    ->label(__('admin.resources.fixtures.fields.scan_opens_at'))
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('scan_closes_at')
+                    ->label(__('admin.resources.fixtures.fields.scan_closes_at'))
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('admin.common.status'))
                     ->options(EnumOptions::for(FixtureStatus::class)),
                 SelectFilter::make('team_id')
-                    ->label('Team')
+                    ->label(__('admin.common.team'))
                     ->options(fn (): array => Team::query()->orderBy('name')->pluck('name', 'id')->all()),
             ])
             ->defaultSort('kickoff_at', 'desc')
@@ -64,7 +70,7 @@ class FixturesTable
     public static function openForScanningAction(): Action
     {
         return Action::make('openForScanning')
-            ->label('Open for Scanning')
+            ->label(__('admin.resources.fixtures.actions.open_for_scanning'))
             ->icon('heroicon-o-lock-open')
             ->color('success')
             ->requiresConfirmation()
@@ -74,7 +80,7 @@ class FixturesTable
     public static function closeScanningAction(): Action
     {
         return Action::make('closeScanning')
-            ->label('Close Scanning')
+            ->label(__('admin.resources.fixtures.actions.close_scanning'))
             ->icon('heroicon-o-lock-closed')
             ->color('gray')
             ->requiresConfirmation()

@@ -26,39 +26,44 @@ class CandidatesTable
         return $table
             ->columns([
                 TextColumn::make('full_name')
+                    ->label(__('admin.resources.candidates.fields.full_name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('parent_phone')
+                    ->label(__('admin.resources.candidates.fields.parent_phone'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('recruitment_stage')
+                    ->label(__('admin.resources.candidates.fields.recruitment_stage'))
                     ->badge()
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('playing_position')
+                    ->label(__('admin.resources.candidates.fields.playing_position'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('season.name')
-                    ->label('Season')
+                    ->label(__('admin.common.season'))
                     ->sortable(),
                 TextColumn::make('team.name')
-                    ->label('Team')
+                    ->label(__('admin.common.team'))
                     ->sortable(),
                 IconColumn::make('is_player')
                     ->boolean()
-                    ->label('Player'),
+                    ->label(__('admin.resources.candidates.fields.is_player')),
             ])
             ->filters([
                 SelectFilter::make('recruitment_stage')
+                    ->label(__('admin.resources.candidates.fields.recruitment_stage'))
                     ->options(EnumOptions::for(RecruitmentStage::class)),
                 SelectFilter::make('playing_position')
-                    ->label('Position')
+                    ->label(__('admin.resources.candidates.fields.playing_position'))
                     ->options(EnumOptions::for(PlayingPosition::class)),
                 SelectFilter::make('season_id')
-                    ->label('Season')
+                    ->label(__('admin.common.season'))
                     ->options(fn (): array => Season::query()->orderByDesc('is_active')->orderBy('name')->pluck('name', 'id')->all()),
                 SelectFilter::make('team_id')
-                    ->label('Team')
+                    ->label(__('admin.common.team'))
                     ->options(fn (): array => Team::query()->orderBy('name')->pluck('name', 'id')->all()),
                 TrashedFilter::make(),
             ])

@@ -13,11 +13,6 @@ enum CandidateDocumentStatus: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Pending => 'Pending',
-            self::Received => 'Received',
-            self::Approved => 'Approved',
-            self::Rejected => 'Rejected',
-        };
+        return __('enums.candidate_document_status.'.$this->value);
     }
 }

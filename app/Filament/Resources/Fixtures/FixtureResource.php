@@ -22,8 +22,6 @@ class FixtureResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Attendance';
-
     public static function form(Schema $schema): Schema
     {
         return FixtureForm::configure($schema);
@@ -47,5 +45,25 @@ class FixtureResource extends Resource
             'view' => ViewFixture::route('/{record}'),
             'edit' => EditFixture::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.fixtures.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.fixtures.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.fixtures.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.attendance');
     }
 }

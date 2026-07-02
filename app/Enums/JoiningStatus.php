@@ -12,10 +12,6 @@ enum JoiningStatus: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::NotStarted => 'Not Started',
-            self::ReadyToJoin => 'Ready To Join',
-            self::JoinedTeam => 'Joined Team',
-        };
+        return __('enums.joining_status.'.$this->value);
     }
 }

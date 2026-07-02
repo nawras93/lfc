@@ -28,29 +28,33 @@ class OfferResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Rewards';
-
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make('Offer details')
+                Section::make(__('admin.resources.offers.sections.details'))
                     ->columns(2)
                     ->schema([
                         TextInput::make('title')
+                            ->label(__('admin.resources.offers.fields.title'))
                             ->required()
                             ->maxLength(255),
                         Textarea::make('body')
+                            ->label(__('admin.resources.offers.fields.body'))
                             ->required()
                             ->maxLength(65535)
                             ->columnSpanFull(),
                         Radio::make('audience')
+                            ->label(__('admin.resources.offers.fields.audience'))
                             ->required()
                             ->options(OfferAudience::class),
-                        Toggle::make('is_published'),
+                        Toggle::make('is_published')
+                            ->label(__('admin.resources.offers.fields.is_published')),
                         DateTimePicker::make('valid_from')
+                            ->label(__('admin.resources.offers.fields.valid_from'))
                             ->seconds(false),
                         DateTimePicker::make('valid_until')
+                            ->label(__('admin.resources.offers.fields.valid_until'))
                             ->seconds(false)
                             ->after('valid_from'),
                     ]),
@@ -62,19 +66,24 @@ class OfferResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label(__('admin.resources.offers.fields.title'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('audience')
+                    ->label(__('admin.resources.offers.fields.audience'))
                     ->badge()
                     ->sortable(),
                 IconColumn::make('is_published')
+                    ->label(__('admin.resources.offers.fields.is_published'))
                     ->boolean()
                     ->sortable(),
                 TextColumn::make('valid_from')
+                    ->label(__('admin.resources.offers.fields.valid_from'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('valid_until')
+                    ->label(__('admin.resources.offers.fields.valid_until'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
@@ -91,5 +100,25 @@ class OfferResource extends Resource
             'create' => CreateOffer::route('/create'),
             'edit' => EditOffer::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.offers.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.offers.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.offers.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.rewards');
     }
 }

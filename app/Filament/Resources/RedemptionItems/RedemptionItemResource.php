@@ -30,38 +30,44 @@ class RedemptionItemResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGift;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Rewards';
-
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make('Item details')
+                Section::make(__('admin.resources.redemption_items.sections.details'))
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
+                            ->label(__('admin.resources.redemption_items.fields.name'))
                             ->required()
                             ->maxLength(255),
                         Select::make('type')
+                            ->label(__('admin.resources.redemption_items.fields.type'))
                             ->required()
                             ->options(RedemptionType::class),
                         Textarea::make('description')
+                            ->label(__('admin.resources.redemption_items.fields.description'))
                             ->maxLength(65535)
                             ->columnSpanFull(),
                         TextInput::make('points_cost')
+                            ->label(__('admin.resources.redemption_items.fields.points_cost'))
                             ->required()
                             ->numeric()
                             ->minValue(0),
                         TextInput::make('stock')
+                            ->label(__('admin.resources.redemption_items.fields.stock'))
                             ->numeric()
                             ->minValue(0)
                             ->nullable()
-                            ->helperText('Leave empty for unlimited stock.'),
+                            ->helperText(__('admin.resources.redemption_items.helper.stock')),
                         Toggle::make('is_active')
+                            ->label(__('admin.resources.redemption_items.fields.is_active'))
                             ->default(true),
                         DateTimePicker::make('valid_from')
+                            ->label(__('admin.resources.redemption_items.fields.valid_from'))
                             ->seconds(false),
                         DateTimePicker::make('valid_until')
+                            ->label(__('admin.resources.redemption_items.fields.valid_until'))
                             ->seconds(false)
                             ->after('valid_from'),
                     ]),
@@ -73,24 +79,31 @@ class RedemptionItemResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('admin.resources.redemption_items.fields.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('type')
+                    ->label(__('admin.resources.redemption_items.fields.type'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('points_cost')
+                    ->label(__('admin.resources.redemption_items.fields.points_cost'))
                     ->sortable(),
                 TextColumn::make('stock')
-                    ->formatStateUsing(fn (?int $state): string => $state === null ? 'Unlimited' : (string) $state)
+                    ->label(__('admin.resources.redemption_items.fields.stock'))
+                    ->formatStateUsing(fn (?int $state): string => $state === null ? __('admin.common.unlimited') : (string) $state)
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label(__('admin.resources.redemption_items.fields.is_active'))
                     ->boolean()
                     ->sortable(),
                 TextColumn::make('valid_from')
+                    ->label(__('admin.resources.redemption_items.fields.valid_from'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('valid_until')
+                    ->label(__('admin.resources.redemption_items.fields.valid_until'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
@@ -107,5 +120,25 @@ class RedemptionItemResource extends Resource
             'create' => CreateRedemptionItem::route('/create'),
             'edit' => EditRedemptionItem::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.redemption_items.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.redemption_items.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.redemption_items.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.rewards');
     }
 }

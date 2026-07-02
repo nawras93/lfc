@@ -19,23 +19,23 @@ class LoyaltyStatsOverview extends StatsOverviewWidget
         $metrics = app(LoyaltyMetrics::class);
 
         return [
-            Stat::make('Points Issued', $metrics->pointsIssued())
+            Stat::make(__('admin.widgets.loyalty_stats.points_issued'), $metrics->pointsIssued())
                 ->icon(Heroicon::OutlinedArrowTrendingUp),
 
-            Stat::make('Points Redeemed', $metrics->pointsRedeemed())
+            Stat::make(__('admin.widgets.loyalty_stats.points_redeemed'), $metrics->pointsRedeemed())
                 ->icon(Heroicon::OutlinedArrowTrendingDown),
 
-            Stat::make('Outstanding Liability', $metrics->outstandingLiability())
-                ->description('Net points owed to players & VVIP clients')
+            Stat::make(__('admin.widgets.loyalty_stats.outstanding_liability'), $metrics->outstandingLiability())
+                ->description(__('admin.widgets.loyalty_stats.outstanding_liability_description'))
                 ->color('warning'),
 
-            Stat::make('Attendance Scans', $metrics->attendanceScans())
+            Stat::make(__('admin.widgets.loyalty_stats.attendance_scans'), $metrics->attendanceScans())
                 ->icon(Heroicon::OutlinedQrCode),
 
-            Stat::make('Pending Fulfillments', $metrics->pendingFulfillments())
+            Stat::make(__('admin.widgets.loyalty_stats.pending_fulfillments'), $metrics->pendingFulfillments())
                 ->icon(Heroicon::OutlinedClock),
 
-            Stat::make('VVIP Clients', $metrics->vvipClients())
+            Stat::make(__('admin.widgets.loyalty_stats.vvip_clients'), $metrics->vvipClients())
                 ->icon(Heroicon::OutlinedStar),
         ];
     }

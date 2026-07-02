@@ -13,11 +13,7 @@ enum RedemptionStatus: string implements HasColor, HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::Issued => 'Issued',
-            self::Fulfilled => 'Fulfilled',
-            self::Cancelled => 'Cancelled',
-        };
+        return __('enums.redemption_status.'.$this->value);
     }
 
     public function getColor(): string|array|null

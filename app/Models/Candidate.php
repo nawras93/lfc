@@ -112,18 +112,18 @@ class Candidate extends Model
     public function publicProgressLabel(): string
     {
         if ($this->joining_status === JoiningStatus::JoinedTeam) {
-            return 'Joined';
+            return __('enums.progress.joined');
         }
 
         if ($this->document_status !== DocumentStatus::Complete) {
-            return 'Documents Required';
+            return __('enums.progress.documents_required');
         }
 
         if ($this->recruitment_stage === RecruitmentStage::Accepted) {
-            return 'Accepted';
+            return __('enums.progress.accepted');
         }
 
-        return $this->recruitment_stage->getLabel() ?? 'In Progress';
+        return $this->recruitment_stage->getLabel() ?? __('enums.progress.in_progress');
     }
 
     public function playingPositionLabel(): string

@@ -10,6 +10,14 @@ Route::middleware('public.locale')->group(function (): void {
     Route::post('/register/{seasonSlug}/{registrationSlug}', [PublicRegistrationController::class, 'store'])->name('public.register.store');
 });
 
+Route::get('/admin/locale/{locale}', function (string $locale) {
+    abort_unless(in_array($locale, ['en', 'ar'], true), 404);
+
+    session(['admin_locale' => $locale]);
+
+    return redirect()->to(url()->previous() ?: url('/admin'));
+})->name('admin.locale.switch');
+
 Route::middleware(['auth', 'signed'])->group(function (): void {
     Route::get('/admin/candidate-documents/{candidateDocument}/download', CandidateDocumentDownloadController::class)
         ->name('admin.candidate-documents.download');

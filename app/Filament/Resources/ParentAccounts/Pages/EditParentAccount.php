@@ -22,7 +22,7 @@ class EditParentAccount extends EditRecord
     {
         return [
             Action::make('grantPoints')
-                ->label('Grant points')
+                ->label(__('admin.resources.parent_accounts.actions.grant_points'))
                 ->icon('heroicon-o-currency-dollar')
                 ->visible(fn (ParentAccount $record): bool => $record->isVvipClient() && auth()->user()?->hasRole('Admin'))
                 ->form([
@@ -30,11 +30,11 @@ class EditParentAccount extends EditRecord
                         ->required()
                         ->numeric()
                         ->minValue(1)
-                        ->label('Points to grant'),
+                        ->label(__('admin.resources.parent_accounts.fields.points_to_grant')),
                     TextInput::make('reason')
                         ->required()
                         ->maxLength(255)
-                        ->label('Reason'),
+                        ->label(__('admin.resources.parent_accounts.fields.reason')),
                 ])
                 ->action(function (array $data, ParentAccount $record, PointsEngine $engine): void {
                     $engine->grantToAccount(
@@ -45,7 +45,7 @@ class EditParentAccount extends EditRecord
                     );
 
                     Notification::make()
-                        ->title('Points granted successfully')
+                        ->title(__('admin.resources.parent_accounts.messages.points_granted'))
                         ->success()
                         ->send();
                 }),

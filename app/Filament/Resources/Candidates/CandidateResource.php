@@ -41,8 +41,6 @@ class CandidateResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedIdentification;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Recruitment';
-
     public static function form(Schema $schema): Schema
     {
         return CandidateForm::configure($schema);
@@ -76,6 +74,26 @@ class CandidateResource extends Resource
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.candidates.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.candidates.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.candidates.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('admin.nav.groups.recruitment');
+    }
+
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
         return parent::getRecordRouteBindingEloquentQuery()
@@ -100,7 +118,7 @@ class CandidateResource extends Resource
     public static function makeChangeRecruitmentStageAction(): Action
     {
         return Action::make('changeRecruitmentStage')
-            ->label('Change recruitment stage')
+            ->label(__('admin.resources.candidates.actions.change_recruitment_stage'))
             ->icon(Heroicon::OutlinedArrowPath)
             ->color('warning')
             ->schema(CandidateForm::recruitmentStageActionSchema())
@@ -118,7 +136,7 @@ class CandidateResource extends Resource
                 } catch (InvalidRecruitmentStageTransition $exception) {
                     Notification::make()
                         ->danger()
-                        ->title('Invalid recruitment stage transition')
+                        ->title(__('admin.resources.candidates.messages.invalid_transition_title'))
                         ->body($exception->getMessage())
                         ->send();
 
@@ -130,13 +148,13 @@ class CandidateResource extends Resource
     public static function makeMarkAsPlayerAction(): Action
     {
         return Action::make('markAsPlayer')
-            ->label('Mark as player')
+            ->label(__('admin.resources.candidates.actions.mark_as_player'))
             ->icon(Heroicon::OutlinedUserPlus)
             ->color('success')
             ->disabled(fn (Candidate $record): bool => ! $record->canBeMarkedAsPlayer())
             ->schema([
                 Select::make('team_id')
-                    ->label('Team')
+                    ->label(__('admin.common.team'))
                     ->options(fn (): array => Team::query()->orderBy('name')->pluck('name', 'id')->all())
                     ->searchable()
                     ->preload()
@@ -149,7 +167,7 @@ class CandidateResource extends Resource
                 if (! $record->canBeMarkedAsPlayer()) {
                     Notification::make()
                         ->danger()
-                        ->title('Candidate is not eligible to become a player')
+                        ->title(__('admin.resources.candidates.messages.not_eligible_player'))
                         ->send();
 
                     throw (new Halt)->rollBackDatabaseTransaction();
@@ -165,17 +183,18 @@ class CandidateResource extends Resource
     public static function makeAdjustPointsAction(): Action
     {
         return Action::make('adjustPoints')
-            ->label('Adjust points')
+            ->label(__('admin.resources.candidates.actions.adjust_points'))
             ->icon(Heroicon::OutlinedCurrencyDollar)
             ->color('info')
             ->visible(fn (): bool => auth()->user()?->hasRole(['Admin', 'Management']) ?? false)
             ->schema([
                 TextInput::make('points')
-                    ->label('Points (signed)')
+                    ->label(__('admin.resources.candidates.fields.points_signed'))
                     ->numeric()
                     ->required()
-                    ->helperText('Positive to credit, negative to debit.'),
+                    ->helperText(__('admin.resources.candidates.helper.adjust_points')),
                 Textarea::make('reason')
+                    ->label(__('admin.resources.candidates.fields.reason'))
                     ->required()
                     ->maxLength(1000),
             ])
@@ -192,7 +211,7 @@ class CandidateResource extends Resource
     public static function makeInviteParentAction(): Action
     {
         return Action::make('inviteParent')
-            ->label('Invite parent')
+            ->label(__('admin.resources.candidates.actions.invite_parent'))
             ->icon(Heroicon::OutlinedEnvelope)
             ->color('info')
             ->disabled(fn (Candidate $record): bool => ! $record->is_player)
@@ -200,7 +219,7 @@ class CandidateResource extends Resource
                 if (! $record->is_player) {
                     Notification::make()
                         ->danger()
-                        ->title('Only players can be linked to parent accounts')
+                        ->title(__('admin.resources.candidates.messages.only_players_invite'))
                         ->send();
 
                     throw (new Halt)->rollBackDatabaseTransaction();
@@ -209,7 +228,7 @@ class CandidateResource extends Resource
                 if (blank($record->email)) {
                     Notification::make()
                         ->danger()
-                        ->title('Parent email is required before sending an invitation')
+                        ->title(__('admin.resources.candidates.messages.parent_email_required'))
                         ->send();
 
                     throw (new Halt)->rollBackDatabaseTransaction();
@@ -237,8 +256,8 @@ class CandidateResource extends Resource
 
                 Notification::make()
                     ->success()
-                    ->title('Parent account linked')
-                    ->body('The parent account is ready for the mobile invite flow.')
+                    ->title(__('admin.resources.candidates.messages.parent_linked_title'))
+                    ->body(__('admin.resources.candidates.messages.parent_linked_body'))
                     ->send();
             });
     }
@@ -251,8 +270,8 @@ class CandidateResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Parent phone' => $record->parent_phone,
-            'Recruitment stage' => $record->recruitment_stage->getLabel(),
+            __('admin.resources.candidates.search.parent_phone') => $record->parent_phone,
+            __('admin.resources.candidates.search.recruitment_stage') => $record->recruitment_stage->getLabel(),
         ];
     }
 }

@@ -16,16 +16,18 @@ class TeamsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('admin.resources.teams.fields.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('age_group')
+                    ->label(__('admin.resources.teams.fields.age_group'))
                     ->sortable(),
                 TextColumn::make('season.name')
-                    ->label('Season')
+                    ->label(__('admin.common.season'))
                     ->sortable(),
                 TextColumn::make('candidates_count')
                     ->counts('candidates')
-                    ->label('Candidates'),
+                    ->label(__('admin.resources.teams.fields.candidates_count')),
             ])
             ->recordActions([
                 ViewAction::make(),
