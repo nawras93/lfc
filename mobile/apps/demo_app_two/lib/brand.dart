@@ -5,6 +5,8 @@ const demoTwoBrand = Brand(
   appTitle: 'Demo Two',
   palette: BrandPalette(
     primary: Color(0xFF284F73),
+    primaryMid: Color(0xFF3A678F),
+    primaryOnDark: Color(0xFF537EA4),
     primaryStrong: Color(0xFF1D3B56),
     primarySoft: Color(0xFF7FA5BF),
     primaryTint: Color(0xFFD8E6F0),

@@ -94,7 +94,7 @@ class LfcPalette extends ThemeExtension<LfcPalette> {
     goldBright: brand.goldBright,
     onHero: const Color(0xFFEAF2FA),
     onHeroMuted: const Color(0xFFBFD3E6),
-    heroGradient: [brand.heroEnd, brand.primaryStrong],
+    heroGradient: [brand.heroEnd, brand.primaryMid],
     heroPattern: brand.goldBright.withValues(alpha: 0.18),
     success: brand.success,
     muted: LfcColors.lightTextMuted,
@@ -170,7 +170,7 @@ ColorScheme _lightScheme(BrandPalette brand) => ColorScheme(
   onSecondary: Colors.white,
   secondaryContainer: Color(0xFFF6E7C2),
   onSecondaryContainer: Color(0xFF3D2D00),
-  tertiary: brand.primaryStrong,
+  tertiary: brand.primaryMid,
   onTertiary: Colors.white,
   error: Color(0xFFB3261E),
   onError: Colors.white,
@@ -197,7 +197,7 @@ ColorScheme _lightScheme(BrandPalette brand) => ColorScheme(
 
 ColorScheme _darkScheme(BrandPalette brand) => ColorScheme(
   brightness: Brightness.dark,
-  primary: brand.primary,
+  primary: brand.primaryOnDark,
   onPrimary: Colors.white,
   primaryContainer: brand.primaryStrong,
   onPrimaryContainer: brand.primaryTint,

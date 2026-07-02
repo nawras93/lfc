@@ -30,6 +30,8 @@ class BrandWordmark {
 class BrandPalette {
   const BrandPalette({
     required this.primary,
+    required this.primaryMid,
+    required this.primaryOnDark,
     required this.primaryStrong,
     required this.primarySoft,
     required this.primaryTint,
@@ -44,6 +46,8 @@ class BrandPalette {
 
   static const lusail = BrandPalette(
     primary: Color(0xFF113F71),
+    primaryMid: Color(0xFF1C5288),
+    primaryOnDark: Color(0xFF2E659B),
     primaryStrong: Color(0xFF0B3059),
     primarySoft: Color(0xFF8FB2CF),
     primaryTint: Color(0xFFD4E3F0),
@@ -57,6 +61,8 @@ class BrandPalette {
   );
 
   final Color primary;
+  final Color primaryMid;
+  final Color primaryOnDark;
   final Color primaryStrong;
   final Color primarySoft;
   final Color primaryTint;
