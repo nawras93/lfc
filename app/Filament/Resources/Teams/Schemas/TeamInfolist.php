@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Teams\Schemas;
 
+use App\Models\Team;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -12,7 +13,8 @@ class TeamInfolist
         return $schema
             ->components([
                 TextEntry::make('name')
-                    ->label(__('admin.resources.teams.fields.name')),
+                    ->label(__('admin.resources.teams.fields.name'))
+                    ->state(fn (Team $record): ?string => $record->localized('name')),
                 TextEntry::make('age_group')
                     ->label(__('admin.resources.teams.fields.age_group')),
                 TextEntry::make('season.name')

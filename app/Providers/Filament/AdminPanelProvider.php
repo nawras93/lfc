@@ -115,6 +115,10 @@ class AdminPanelProvider extends PanelProvider
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=changa:600,700" rel="stylesheet">
 <style>
+    @font-face{font-family:'Tajawal';font-weight:400;src:url('/fonts/tajawal/Tajawal-Regular.ttf') format('truetype');ascent-override:80%;descent-override:22%;line-gap-override:0%;}
+    @font-face{font-family:'Tajawal';font-weight:500;src:url('/fonts/tajawal/Tajawal-Medium.ttf') format('truetype');ascent-override:80%;descent-override:22%;line-gap-override:0%;}
+    @font-face{font-family:'Tajawal';font-weight:600;src:url('/fonts/tajawal/Tajawal-Bold.ttf') format('truetype');ascent-override:80%;descent-override:22%;line-gap-override:0%;}
+    @font-face{font-family:'Tajawal';font-weight:700;src:url('/fonts/tajawal/Tajawal-Bold.ttf') format('truetype');ascent-override:80%;descent-override:22%;line-gap-override:0%;}
     /* Changa display font for headings, matching the mobile app. */
     .fi-header-heading,
     .fi-modal-heading,

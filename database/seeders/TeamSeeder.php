@@ -13,12 +13,12 @@ class TeamSeeder extends Seeder
         $season = Season::query()->firstOrFail();
 
         foreach ([
-            ['name' => 'LFC U12', 'age_group' => 'U12'],
-            ['name' => 'LFC U14', 'age_group' => 'U14'],
+            ['name' => 'LFC U12', 'name_ar' => 'لوسيل تحت ١٢', 'age_group' => 'U12'],
+            ['name' => 'LFC U14', 'name_ar' => 'لوسيل تحت ١٤', 'age_group' => 'U14'],
         ] as $team) {
             Team::query()->updateOrCreate(
                 ['name' => $team['name']],
-                ['age_group' => $team['age_group'], 'season_id' => $season->id],
+                ['name_ar' => $team['name_ar'], 'age_group' => $team['age_group'], 'season_id' => $season->id],
             );
         }
     }

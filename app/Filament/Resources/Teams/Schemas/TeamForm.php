@@ -17,6 +17,9 @@ class TeamForm
                     ->label(__('admin.resources.teams.fields.name'))
                     ->required()
                     ->maxLength(255),
+                TextInput::make('name_ar')
+                    ->label(__('admin.resources.teams.fields.name_ar'))
+                    ->maxLength(255),
                 TextInput::make('age_group')
                     ->label(__('admin.resources.teams.fields.age_group'))
                     ->required()

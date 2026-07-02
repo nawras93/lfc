@@ -39,9 +39,16 @@ class OfferResource extends Resource
                             ->label(__('admin.resources.offers.fields.title'))
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('title_ar')
+                            ->label(__('admin.resources.offers.fields.title_ar'))
+                            ->maxLength(255),
                         Textarea::make('body')
                             ->label(__('admin.resources.offers.fields.body'))
                             ->required()
+                            ->maxLength(65535)
+                            ->columnSpanFull(),
+                        Textarea::make('body_ar')
+                            ->label(__('admin.resources.offers.fields.body_ar'))
                             ->maxLength(65535)
                             ->columnSpanFull(),
                         Radio::make('audience')
@@ -67,6 +74,7 @@ class OfferResource extends Resource
             ->columns([
                 TextColumn::make('title')
                     ->label(__('admin.resources.offers.fields.title'))
+                    ->state(fn (Offer $record): ?string => $record->localized('title'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('audience')

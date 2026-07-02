@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\RedemptionType;
+use App\Support\Concerns\HasLocalizedContent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'name',
+    'name_ar',
     'description',
+    'description_ar',
     'type',
     'points_cost',
     'stock',
@@ -22,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class RedemptionItem extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasLocalizedContent, SoftDeletes;
 
     protected function casts(): array
     {

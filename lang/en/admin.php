@@ -116,6 +116,7 @@ return [
             'plural' => 'Teams',
             'fields' => [
                 'name' => 'Name',
+                'name_ar' => 'Name (Arabic)',
                 'age_group' => 'Age group',
                 'candidates_count' => 'Candidates',
             ],
@@ -242,7 +243,9 @@ return [
             ],
             'fields' => [
                 'title' => 'Title',
+                'title_ar' => 'Title (Arabic)',
                 'body' => 'Body',
+                'body_ar' => 'Body (Arabic)',
                 'audience' => 'Audience',
                 'is_published' => 'Published',
                 'valid_from' => 'Valid from',
@@ -257,8 +260,10 @@ return [
             ],
             'fields' => [
                 'name' => 'Name',
+                'name_ar' => 'Name (Arabic)',
                 'type' => 'Type',
                 'description' => 'Description',
+                'description_ar' => 'Description (Arabic)',
                 'points_cost' => 'Points cost',
                 'stock' => 'Stock',
                 'is_active' => 'Active',

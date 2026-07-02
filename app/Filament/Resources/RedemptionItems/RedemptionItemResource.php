@@ -41,12 +41,19 @@ class RedemptionItemResource extends Resource
                             ->label(__('admin.resources.redemption_items.fields.name'))
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('name_ar')
+                            ->label(__('admin.resources.redemption_items.fields.name_ar'))
+                            ->maxLength(255),
                         Select::make('type')
                             ->label(__('admin.resources.redemption_items.fields.type'))
                             ->required()
                             ->options(RedemptionType::class),
                         Textarea::make('description')
                             ->label(__('admin.resources.redemption_items.fields.description'))
+                            ->maxLength(65535)
+                            ->columnSpanFull(),
+                        Textarea::make('description_ar')
+                            ->label(__('admin.resources.redemption_items.fields.description_ar'))
                             ->maxLength(65535)
                             ->columnSpanFull(),
                         TextInput::make('points_cost')
@@ -80,6 +87,7 @@ class RedemptionItemResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label(__('admin.resources.redemption_items.fields.name'))
+                    ->state(fn (RedemptionItem $record): ?string => $record->localized('name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('type')

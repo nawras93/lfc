@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\OfferAudience;
+use App\Support\Concerns\HasLocalizedContent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'title',
+    'title_ar',
     'body',
+    'body_ar',
     'audience',
     'is_published',
     'valid_from',
@@ -19,7 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Offer extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasLocalizedContent, SoftDeletes;
 
     protected function casts(): array
     {

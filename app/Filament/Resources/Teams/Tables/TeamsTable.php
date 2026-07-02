@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Teams\Tables;
 
+use App\Models\Team;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +18,7 @@ class TeamsTable
             ->columns([
                 TextColumn::make('name')
                     ->label(__('admin.resources.teams.fields.name'))
+                    ->state(fn (Team $record): ?string => $record->localized('name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('age_group')

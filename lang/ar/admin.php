@@ -116,6 +116,7 @@ return [
             'plural' => 'الفرق',
             'fields' => [
                 'name' => 'الاسم',
+                'name_ar' => 'الاسم (بالعربية)',
                 'age_group' => 'الفئة العمرية',
                 'candidates_count' => 'المرشحون',
             ],
@@ -242,7 +243,9 @@ return [
             ],
             'fields' => [
                 'title' => 'العنوان',
+                'title_ar' => 'العنوان (بالعربية)',
                 'body' => 'النص',
+                'body_ar' => 'النص (بالعربية)',
                 'audience' => 'الجمهور',
                 'is_published' => 'منشور',
                 'valid_from' => 'صالح من',
@@ -257,8 +260,10 @@ return [
             ],
             'fields' => [
                 'name' => 'الاسم',
+                'name_ar' => 'الاسم (بالعربية)',
                 'type' => 'النوع',
                 'description' => 'الوصف',
+                'description_ar' => 'الوصف (بالعربية)',
                 'points_cost' => 'تكلفة النقاط',
                 'stock' => 'المخزون',
                 'is_active' => 'نشط',
