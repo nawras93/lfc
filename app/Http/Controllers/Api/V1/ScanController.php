@@ -99,6 +99,40 @@ class ScanController extends Controller
 
         $parent = ParentAccount::query()->findOrFail($parentId);
 
+        if ($parent->isMember()) {
+            $cap = (int) config('loyalty.app_two.discount_cap_bp');
+            $per = (int) config('loyalty.app_two.discount_bp_per_attendance');
+            $add = max(0, min($per, $cap - $parent->discountBalance()));
+
+            try {
+                $scan = DB::transaction(function () use ($parent, $fixture, $staff, $add) {
+                    $scan = AttendanceScan::query()->create([
+                        'parent_account_id' => $parent->id,
+                        'fixture_id' => $fixture->id,
+                        'scanned_by' => $staff->id,
+                        'scanned_at' => Carbon::now(),
+                    ]);
+
+                    if ($add > 0) {
+                        $this->pointsEngine->creditAttendanceDiscount($parent, $add, $scan);
+                    }
+
+                    return $scan;
+                });
+            } catch (UniqueConstraintViolationException $e) {
+                return response()->json(['message' => 'Already scanned for this match.'], 409);
+            }
+
+            $parent = $parent->fresh();
+
+            return response()->json([
+                'scan_id' => $scan->id,
+                'discount_added_percent' => $add / 100,
+                'discount_percent' => $parent->discountPercent(),
+                'discount_cap_percent' => $cap / 100,
+            ]);
+        }
+
         $qualifyingPlayers = $parent->players()
             ->where('candidates.team_id', $fixture->team_id)
             ->where('candidates.is_player', true)

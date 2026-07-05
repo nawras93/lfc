@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\LedgerUnit;
 use App\Enums\PointTransactionType;
 use App\Models\Candidate;
 use App\Models\Fixture;
@@ -84,6 +85,18 @@ class PointsEngine
             'points' => $points,
             'reason' => $reason,
             'created_by' => $by->id,
+        ]);
+    }
+
+    public function creditAttendanceDiscount(ParentAccount $account, int $bp, Model $source): PointTransaction
+    {
+        return PointTransaction::query()->create([
+            'parent_account_id' => $account->id,
+            'type' => PointTransactionType::Earn,
+            'points' => $bp,
+            'unit' => LedgerUnit::DiscountPct,
+            'source_type' => $source->getMorphClass(),
+            'source_id' => $source->getKey(),
         ]);
     }
 

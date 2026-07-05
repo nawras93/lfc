@@ -15,6 +15,7 @@ return [
         'title' => 'العنوان',
         'description' => 'الوصف',
         'status' => 'الحالة',
+        'fixture' => 'المباراة',
         'season' => 'الموسم',
         'team' => 'الفريق',
         'player' => 'اللاعب',
@@ -235,6 +236,29 @@ return [
             ],
             'messages' => [
                 'points_granted' => 'تم منح النقاط بنجاح',
+            ],
+        ],
+        'members' => [
+            'singular' => 'عضو',
+            'plural' => 'الأعضاء',
+            'sections' => [
+                'member' => 'ملف العضو',
+            ],
+            'descriptions' => [
+                'member' => 'حساب مشجع التطبيق الثاني المسجل ذاتيًا والخصم المتراكم لتسجيل الأكاديمية.',
+            ],
+            'fields' => [
+                'name' => 'الاسم',
+                'email' => 'البريد الإلكتروني',
+                'phone' => 'الهاتف',
+                'app' => 'التطبيق',
+                'account_type' => 'نوع الحساب',
+                'registered_at' => 'تاريخ التسجيل',
+                'discount_percent' => 'الخصم المتراكم',
+                'discount_cap_percent' => 'الحد الأقصى للخصم',
+            ],
+            'relations' => [
+                'discount_ledger' => 'دفتر الخصم',
             ],
         ],
         'point_rules' => [

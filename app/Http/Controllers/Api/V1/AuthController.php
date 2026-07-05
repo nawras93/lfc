@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\AccountType;
+use App\Enums\AppKey;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\ParentAccountResource;
 use App\Models\ParentAccount;
@@ -12,6 +14,32 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function register(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email', 'unique:parent_accounts,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone' => ['nullable', 'string'],
+        ]);
+
+        $parent = ParentAccount::query()->create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'phone' => $data['phone'] ?? null,
+            'app' => AppKey::AppTwo,
+            'account_type' => AccountType::Member,
+            'is_vvip' => false,
+            'accepted_at' => now(),
+        ]);
+
+        return response()->json([
+            'token' => $parent->createToken('mobile')->plainTextToken,
+            'parent' => ParentAccountResource::make($parent),
+        ]);
+    }
+
     public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([

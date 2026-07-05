@@ -15,6 +15,7 @@ return [
         'title' => 'Title',
         'description' => 'Description',
         'status' => 'Status',
+        'fixture' => 'Fixture',
         'season' => 'Season',
         'team' => 'Team',
         'player' => 'Player',
@@ -235,6 +236,29 @@ return [
             ],
             'messages' => [
                 'points_granted' => 'Points granted successfully',
+            ],
+        ],
+        'members' => [
+            'singular' => 'Member',
+            'plural' => 'Members',
+            'sections' => [
+                'member' => 'Member profile',
+            ],
+            'descriptions' => [
+                'member' => 'Self-registered app-two supporter account and accrued academy discount.',
+            ],
+            'fields' => [
+                'name' => 'Name',
+                'email' => 'Email',
+                'phone' => 'Phone',
+                'app' => 'App',
+                'account_type' => 'Account type',
+                'registered_at' => 'Registered at',
+                'discount_percent' => 'Accrued discount',
+                'discount_cap_percent' => 'Discount cap',
+            ],
+            'relations' => [
+                'discount_ledger' => 'Discount ledger',
             ],
         ],
         'point_rules' => [

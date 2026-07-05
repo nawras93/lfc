@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AppKey;
 use App\Enums\AccountType;
+use App\Enums\LedgerUnit;
 use App\Models\Concerns\ScopedToApp;
 use Database\Factories\ParentAccountFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -55,6 +56,11 @@ class ParentAccount extends Authenticatable
         return $this->account_type === AccountType::VvipClient;
     }
 
+    public function isMember(): bool
+    {
+        return $this->account_type === AccountType::Member;
+    }
+
     public function players(): BelongsToMany
     {
         return $this->belongsToMany(Candidate::class, 'parent_player_links')
@@ -73,7 +79,21 @@ class ParentAccount extends Authenticatable
 
     public function pointsBalance(): int
     {
-        return (int) $this->pointTransactions()->sum('points');
+        return (int) $this->pointTransactions()
+            ->where('unit', LedgerUnit::Points->value)
+            ->sum('points');
+    }
+
+    public function discountBalance(): int
+    {
+        return (int) $this->pointTransactions()
+            ->where('unit', LedgerUnit::DiscountPct->value)
+            ->sum('points');
+    }
+
+    public function discountPercent(): float
+    {
+        return $this->discountBalance() / 100;
     }
 
     public function syncPlayers(array $candidateIds): void
