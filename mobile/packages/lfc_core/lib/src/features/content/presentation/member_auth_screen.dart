@@ -293,11 +293,21 @@ class _Header extends StatelessWidget {
             FanarBackdrop(color: palette.heroPattern),
             Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [ThemeToggleButton(), LanguageToggleButton()],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BackButton(
+                        key: const Key('member-auth-back'),
+                        color: palette.onHero,
+                        onPressed: () => Navigator.of(context).maybePop(),
+                      ),
+                      const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [ThemeToggleButton(), LanguageToggleButton()],
+                      ),
+                    ],
                   ),
                 ),
                 Padding(

@@ -41,6 +41,30 @@ void main() {
     expect(find.byKey(const Key('member-auth-submit')), findsOneWidget);
   });
 
+  testWidgets('guest can navigate back from MemberAuthScreen via back button', (
+    tester,
+  ) async {
+    await _pumpSupporterApp(tester);
+
+    await tester.tap(find.text('Membership'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('membership-sign-in-button')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('member-auth-submit')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('member-auth-back')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('member-auth-submit')), findsNothing);
+    expect(
+      find.byKey(const Key('membership-sign-in-button')),
+      findsOneWidget,
+    );
+    expect(find.text('Sign in to access your membership'), findsOneWidget);
+  });
+
   testWidgets('register flow calls register and lands authenticated', (
     tester,
   ) async {
