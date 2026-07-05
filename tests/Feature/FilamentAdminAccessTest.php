@@ -13,7 +13,12 @@ class FilamentAdminAccessTest extends TestCase
 
     public function test_admin_login_page_is_available(): void
     {
-        $this->get('/admin/login')->assertOk();
+        $this->get('/admin-app-one/login')->assertOk();
+    }
+
+    public function test_app_two_admin_login_page_is_available(): void
+    {
+        $this->get('/admin-app-two/login')->assertOk();
     }
 
     public function test_seeded_admin_can_access_the_filament_panel(): void
@@ -23,7 +28,18 @@ class FilamentAdminAccessTest extends TestCase
         $admin = User::query()->where('email', env('LFC_ADMIN_EMAIL', 'admin@lfc.test'))->firstOrFail();
 
         $this->actingAs($admin)
-            ->get('/admin')
+            ->get('/admin-app-one')
+            ->assertOk();
+    }
+
+    public function test_seeded_admin_can_access_the_app_two_filament_panel(): void
+    {
+        $this->seed();
+
+        $admin = User::query()->where('email', env('LFC_ADMIN_EMAIL', 'admin@lfc.test'))->firstOrFail();
+
+        $this->actingAs($admin)
+            ->get('/admin-app-two')
             ->assertOk();
     }
 
@@ -48,7 +64,7 @@ class FilamentAdminAccessTest extends TestCase
         $coach->assignRole('Coach');
 
         $this->actingAs($coach)
-            ->get('/admin')
+            ->get('/admin-app-one')
             ->assertOk();
     }
 
@@ -60,13 +76,37 @@ class FilamentAdminAccessTest extends TestCase
         $management->assignRole('Management');
 
         $this->actingAs($management)
-            ->get('/admin')
+            ->get('/admin-app-one')
             ->assertOk();
+    }
+
+    public function test_seeded_coach_cannot_access_the_app_two_filament_panel(): void
+    {
+        $this->seed();
+
+        $coach = User::factory()->create();
+        $coach->assignRole('Coach');
+
+        $this->actingAs($coach)
+            ->get('/admin-app-two')
+            ->assertForbidden();
+    }
+
+    public function test_seeded_management_cannot_access_the_app_two_filament_panel(): void
+    {
+        $this->seed();
+
+        $management = User::factory()->create();
+        $management->assignRole('Management');
+
+        $this->actingAs($management)
+            ->get('/admin-app-two')
+            ->assertForbidden();
     }
 
     public function test_admin_login_page_renders_rtl_when_locale_is_arabic(): void
     {
-        $this->get('/admin/login?lang=ar')
+        $this->get('/admin-app-one/login?lang=ar')
             ->assertOk()
             ->assertSee('lang="ar"', false)
             ->assertSee('dir="rtl"', false);

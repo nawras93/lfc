@@ -15,10 +15,12 @@ Route::get('/admin/locale/{locale}', function (string $locale) {
 
     session(['admin_locale' => $locale]);
 
-    return redirect()->to(url()->previous() ?: url('/admin'));
+    return redirect()->to(url()->previous() ?: url('/admin-app-one'));
 })->name('admin.locale.switch');
 
 Route::middleware(['auth', 'signed'])->group(function (): void {
-    Route::get('/admin/candidate-documents/{candidateDocument}/download', CandidateDocumentDownloadController::class)
+    Route::get('/admin-app-one/candidate-documents/{candidateDocument}/download', CandidateDocumentDownloadController::class)
         ->name('admin.candidate-documents.download');
 });
+
+Route::redirect('/admin', '/admin-app-one');

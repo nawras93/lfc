@@ -54,7 +54,7 @@ These give the admin and mobile views more realistic depth:
 
 ## Act 1 — Admin Web
 
-1. Open Filament and sign in with `admin@lfc.test`.
+1. Open Filament at `/admin-app-one` and sign in with `admin@lfc.test`.
 2. Open the loyalty dashboard.
 3. Confirm:
    - Issued points = `1140`
