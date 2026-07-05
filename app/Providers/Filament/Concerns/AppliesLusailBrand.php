@@ -48,7 +48,7 @@ trait AppliesLusailBrand
                 fn (): HtmlString => new HtmlString($this->brandStyles()),
             )
             ->renderHook(
-                PanelsRenderHook::TOPBAR_END,
+                PanelsRenderHook::USER_MENU_BEFORE,
                 fn (): string => View::make('filament.admin.locale-switcher')->render(),
             );
     }
@@ -87,6 +87,26 @@ trait AppliesLusailBrand
     .fi-logo img {
         max-height: 2.25rem;
         width: auto;
+    }
+    /* Flag-only language toggle beside the user menu — mirrors the public site
+       and the mobile app: the flag shown is the language you'll switch *to*.
+       Bare flag, no pill/badge chrome. */
+    .fi-admin-locale-switch {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 160ms ease;
+    }
+    .fi-admin-locale-switch:hover {
+        opacity: .8;
+    }
+    .fi-admin-locale-flag {
+        display: block;
+        width: 1.9rem;
+        height: 1.3rem;
+        border-radius: .25rem;
+        object-fit: cover;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
     }
     /* Login / simple pages: navy hero gradient behind the auth card,
        echoing the mobile login screen. */
