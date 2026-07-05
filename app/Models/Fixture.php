@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AppKey;
 use App\Enums\FixtureStatus;
 use App\Models\Concerns\ScopedToApp;
+use App\Support\Concerns\HasLocalizedContent;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'team_id',
     'season_id',
     'opponent',
+    'opponent_ar',
     'competition',
+    'competition_ar',
     'is_home',
     'venue',
     'kickoff_at',
@@ -28,7 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Fixture extends Model
 {
-    use HasFactory, ScopedToApp, SoftDeletes;
+    use HasFactory, HasLocalizedContent, ScopedToApp, SoftDeletes;
 
     protected function casts(): array
     {

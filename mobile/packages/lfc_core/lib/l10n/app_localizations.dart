@@ -800,17 +800,35 @@ abstract class AppLocalizations {
   /// **'Fixtures'**
   String get fixturesTitle;
 
+  /// No description provided for @fixturesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixtures'**
+  String get fixturesTab;
+
   /// No description provided for @resultsTitle.
   ///
   /// In en, this message translates to:
   /// **'Results'**
   String get resultsTitle;
 
+  /// No description provided for @resultsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get resultsTab;
+
   /// No description provided for @tableTitle.
   ///
   /// In en, this message translates to:
   /// **'Table'**
   String get tableTitle;
+
+  /// No description provided for @tableTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Table'**
+  String get tableTab;
 
   /// No description provided for @newsEmptyState.
   ///
@@ -895,6 +913,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pts'**
   String get pointsColumnShort;
+
+  /// No description provided for @clubShortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Lusail'**
+  String get clubShortName;
 
   /// No description provided for @venueLabel.
   ///

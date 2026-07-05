@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/formatting/app_date_format.dart';
 import '../../../providers.dart';
@@ -24,9 +23,9 @@ class MatchesScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
             child: TabBar(
               tabs: [
-                Tab(text: l10n.fixturesTitle),
-                Tab(text: l10n.resultsTitle),
-                Tab(text: l10n.tableTitle),
+                Tab(text: l10n.fixturesTab),
+                Tab(text: l10n.resultsTab),
+                Tab(text: l10n.tableTab),
               ],
             ),
           ),
@@ -153,8 +152,10 @@ class _ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final score = '${match.ourScore ?? 0}-${match.opponentScore ?? 0}';
+    final score =
+        '${_localizedScore(locale, match.ourScore ?? 0)}–${_localizedScore(locale, match.opponentScore ?? 0)}';
 
     return Card(
       child: Padding(
@@ -162,9 +163,34 @@ class _ResultCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Lusail $score ${match.opponent}',
-              style: theme.textTheme.titleLarge,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.clubShortName,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleLarge,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    score,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    match.opponent,
+                    textAlign: TextAlign.end,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleLarge,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 6),
             Text(match.competition, style: theme.textTheme.bodyMedium),
@@ -202,9 +228,11 @@ class _HomeAwayChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         child: Text(
           isHome ? l10n.homeMatchChip : l10n.awayMatchChip,
-          style: Theme.of(
-            context,
-          ).textTheme.labelMedium?.copyWith(color: scheme.primary),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            color: scheme.primary,
+            height: 1,
+            leadingDistribution: TextLeadingDistribution.even,
+          ),
         ),
       ),
     );
@@ -242,7 +270,7 @@ class _StandingsView extends ConsumerWidget {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(minWidth: 720),
+                  constraints: const BoxConstraints(minWidth: 640),
                   child: _StandingsTable(rows: rows),
                 ),
               ),
@@ -266,55 +294,26 @@ class _StandingsTable extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(18),
-      child: Column(
-        children: [
-          _StandingsHeader(
-            labels: [
-              l10n.positionColumnShort,
-              l10n.clubColumnLabel,
-              l10n.playedColumnShort,
-              l10n.wonColumnShort,
-              l10n.drawnColumnShort,
-              l10n.lostColumnShort,
-              l10n.goalDifferenceColumnShort,
-              l10n.pointsColumnShort,
-            ],
-          ),
-          for (final row in rows)
-            Container(
-              key: Key('standing-row-${row.position}'),
-              decoration: BoxDecoration(
-                color: row.isOwnClub
-                    ? context.lfc.gold.withValues(alpha: 0.16)
-                    : scheme.surface,
-                border: Border(
-                  bottom: BorderSide(color: scheme.outlineVariant),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              child: Row(
-                children: [
-                  _TableCell('${row.position}', width: 48),
-                  _TableCell(
-                    row.clubName,
-                    width: 220,
-                    isOwnClub: row.isOwnClub,
-                    alignStart: true,
-                  ),
-                  _TableCell('${row.played}', width: 48),
-                  _TableCell('${row.won}', width: 48),
-                  _TableCell('${row.drawn}', width: 48),
-                  _TableCell('${row.lost}', width: 48),
-                  _TableCell('${row.goalDifference}', width: 56),
-                  _TableCell(
-                    '${row.points}',
-                    width: 56,
-                    isOwnClub: row.isOwnClub,
-                  ),
-                ],
-              ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: scheme.surface),
+        child: Column(
+          children: [
+            _StandingsHeader(
+              labels: [
+                l10n.positionColumnShort,
+                l10n.clubColumnLabel,
+                l10n.playedColumnShort,
+                l10n.wonColumnShort,
+                l10n.drawnColumnShort,
+                l10n.lostColumnShort,
+                l10n.goalDifferenceColumnShort,
+                l10n.pointsColumnShort,
+              ],
             ),
-        ],
+            for (final entry in rows.asMap().entries)
+              _StandingsRow(row: entry.value, zebra: entry.key.isOdd),
+          ],
+        ),
       ),
     );
   }
@@ -330,18 +329,80 @@ class _StandingsHeader extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     return Container(
-      color: scheme.primary,
+      decoration: BoxDecoration(
+        color: scheme.primary.withValues(alpha: 0.08),
+        border: Border(
+          bottom: BorderSide(
+            color: scheme.outlineVariant.withValues(alpha: 0.7),
+          ),
+        ),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
         children: [
-          _TableCell(labels[0], width: 48, header: true),
-          _TableCell(labels[1], width: 220, header: true, alignStart: true),
-          _TableCell(labels[2], width: 48, header: true),
-          _TableCell(labels[3], width: 48, header: true),
-          _TableCell(labels[4], width: 48, header: true),
-          _TableCell(labels[5], width: 48, header: true),
-          _TableCell(labels[6], width: 56, header: true),
-          _TableCell(labels[7], width: 56, header: true),
+          _TableCell(labels[0], width: 44, header: true),
+          _TableCell(labels[1], width: 200, header: true, alignStart: true),
+          _TableCell(labels[2], width: 46, header: true),
+          _TableCell(labels[3], width: 46, header: true),
+          _TableCell(labels[4], width: 46, header: true),
+          _TableCell(labels[5], width: 46, header: true),
+          _TableCell(labels[6], width: 52, header: true),
+          _TableCell(labels[7], width: 56, header: true, emphasize: true),
+        ],
+      ),
+    );
+  }
+}
+
+class _StandingsRow extends StatelessWidget {
+  const _StandingsRow({required this.row, required this.zebra});
+
+  final StandingRow row;
+  final bool zebra;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final rowColor = row.isOwnClub
+        ? context.lfc.gold.withValues(alpha: 0.16)
+        : zebra
+        ? scheme.surfaceContainerHighest.withValues(alpha: 0.2)
+        : scheme.surface;
+
+    return Container(
+      key: Key('standing-row-${row.position}'),
+      decoration: BoxDecoration(
+        color: rowColor,
+        border: BorderDirectional(
+          start: row.isOwnClub
+              ? BorderSide(color: context.lfc.gold, width: 4)
+              : BorderSide.none,
+          bottom: BorderSide(
+            color: scheme.outlineVariant.withValues(alpha: 0.85),
+          ),
+        ),
+      ),
+      padding: const EdgeInsetsDirectional.fromSTEB(10, 12, 14, 12),
+      child: Row(
+        children: [
+          _TableCell('${row.position}', width: 44),
+          _TableCell(
+            row.clubName,
+            width: 200,
+            isOwnClub: row.isOwnClub,
+            alignStart: true,
+          ),
+          _TableCell('${row.played}', width: 46),
+          _TableCell('${row.won}', width: 46),
+          _TableCell('${row.drawn}', width: 46),
+          _TableCell('${row.lost}', width: 46),
+          _TableCell(_goalDifferenceLabel(row.goalDifference), width: 52),
+          _TableCell(
+            '${row.points}',
+            width: 56,
+            isOwnClub: row.isOwnClub,
+            emphasize: true,
+          ),
         ],
       ),
     );
@@ -355,6 +416,7 @@ class _TableCell extends StatelessWidget {
     this.header = false,
     this.isOwnClub = false,
     this.alignStart = false,
+    this.emphasize = false,
   });
 
   final String text;
@@ -362,23 +424,27 @@ class _TableCell extends StatelessWidget {
   final bool header;
   final bool isOwnClub;
   final bool alignStart;
+  final bool emphasize;
 
   @override
   Widget build(BuildContext context) {
     final style = header
         ? Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w700,
           )
         : Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: isOwnClub ? FontWeight.w700 : FontWeight.w500,
+            fontWeight: emphasize || isOwnClub
+                ? FontWeight.w700
+                : FontWeight.w500,
+            fontSize: emphasize ? 15 : null,
           );
 
     return SizedBox(
       width: width,
       child: Text(
         text,
-        key: isOwnClub && !header && width == 220
+        key: isOwnClub && !header && alignStart
             ? const Key('own-club-cell')
             : null,
         textAlign: alignStart ? TextAlign.start : TextAlign.center,
@@ -387,4 +453,27 @@ class _TableCell extends StatelessWidget {
       ),
     );
   }
+}
+
+String _goalDifferenceLabel(int goalDifference) {
+  if (goalDifference > 0) {
+    return '+$goalDifference';
+  }
+
+  return '$goalDifference';
+}
+
+String _localizedScore(String locale, int score) {
+  final text = score.toString();
+
+  if (!locale.startsWith('ar')) {
+    return text;
+  }
+
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+  return text.replaceAllMapped(
+    RegExp(r'\d'),
+    (match) => arabicDigits[int.parse(match.group(0)!)],
+  );
 }

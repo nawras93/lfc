@@ -378,10 +378,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fixturesTitle => 'Fixtures';
 
   @override
+  String get fixturesTab => 'Fixtures';
+
+  @override
   String get resultsTitle => 'Results';
 
   @override
+  String get resultsTab => 'Results';
+
+  @override
   String get tableTitle => 'Table';
+
+  @override
+  String get tableTab => 'Table';
 
   @override
   String get newsEmptyState => 'No news has been published yet.';
@@ -424,6 +433,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pointsColumnShort => 'Pts';
+
+  @override
+  String get clubShortName => 'Lusail';
 
   @override
   String get venueLabel => 'Venue';

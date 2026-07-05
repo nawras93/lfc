@@ -10,6 +10,7 @@ import 'package:lfc_core/src/features/content/models/news_summary.dart';
 import 'package:lfc_core/src/features/content/models/standing_row.dart';
 import 'package:lfc_core/src/features/session/session_controller.dart';
 import 'package:lfc_core/src/providers.dart';
+import 'package:lfc_core/src/theme/widgets/pills.dart';
 
 import 'helpers/fakes.dart';
 import 'helpers/test_brand.dart';
@@ -118,6 +119,87 @@ void main() {
       Directionality.of(tester.element(find.text('الرئيسية').first)),
       TextDirection.rtl,
     );
+  });
+
+  testWidgets('Arabic matches tabs stay visible with concise labels', (
+    tester,
+  ) async {
+    await _pumpSupporterApp(tester);
+
+    await tester.tap(find.byKey(const Key('language-toggle')).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('المباريات').first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('المباريات'), findsWidgets);
+    expect(find.text('النتائج'), findsOneWidget);
+    expect(find.text('الترتيب'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Arabic results render localized club name and scoreline', (
+    tester,
+  ) async {
+    await _pumpSupporterApp(
+      tester,
+      contentRepository: FakeContentRepository(
+        results: [
+          MatchSummary(
+            id: 7,
+            opponent: 'الدحيل',
+            competition: 'دوري نجوم قطر',
+            isHome: true,
+            venue: 'استاد لوسيل',
+            kickoffAt: DateTime(2026, 7, 5),
+            status: 'closed',
+            ourScore: 2,
+            opponentScore: 1,
+          ),
+        ],
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('language-toggle')).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('المباريات').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('النتائج'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('لوسيل'), findsOneWidget);
+    expect(find.text('٢–١'), findsOneWidget);
+    expect(find.text('الدحيل'), findsOneWidget);
+    expect(find.text('دوري نجوم قطر'), findsOneWidget);
+  });
+
+  testWidgets('membership pills render without layout exceptions', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              VvipPill(label: 'VVIP'),
+              PointsPill(label: '120 pts'),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('VVIP'), findsOneWidget);
+    expect(find.text('120 pts'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }
 

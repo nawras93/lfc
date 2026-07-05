@@ -375,10 +375,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fixturesTitle => 'المباريات القادمة';
 
   @override
+  String get fixturesTab => 'المباريات';
+
+  @override
   String get resultsTitle => 'النتائج';
 
   @override
+  String get resultsTab => 'النتائج';
+
+  @override
   String get tableTitle => 'الترتيب';
+
+  @override
+  String get tableTab => 'الترتيب';
 
   @override
   String get newsEmptyState => 'لا توجد أخبار منشورة بعد.';
@@ -421,6 +430,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pointsColumnShort => 'ن';
+
+  @override
+  String get clubShortName => 'لوسيل';
 
   @override
   String get venueLabel => 'الملعب';

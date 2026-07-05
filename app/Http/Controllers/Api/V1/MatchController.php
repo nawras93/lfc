@@ -37,8 +37,8 @@ class MatchController extends Controller
     {
         return [
             'id' => $fixture->id,
-            'opponent' => $fixture->opponent,
-            'competition' => $fixture->competition,
+            'opponent' => $fixture->localized('opponent'),
+            'competition' => $fixture->localized('competition'),
             'is_home' => $fixture->is_home,
             'venue' => $fixture->venue,
             'kickoff_at' => $fixture->kickoff_at?->toIso8601String(),

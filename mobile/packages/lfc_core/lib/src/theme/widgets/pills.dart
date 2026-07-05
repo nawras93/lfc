@@ -19,6 +19,7 @@ class VvipPill extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Icon(
             Icons.workspace_premium,
@@ -33,6 +34,8 @@ class VvipPill extends StatelessWidget {
               fontWeight: FontWeight.w700,
               fontSize: 11,
               letterSpacing: 0.6,
+              height: 1,
+              leadingDistribution: TextLeadingDistribution.even,
               color: LfcColors.navy800,
             ),
           ),
@@ -61,6 +64,7 @@ class PointsPill extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (icon != null) ...[
             Icon(icon, size: 15, color: palette.gold),
@@ -72,6 +76,8 @@ class PointsPill extends StatelessWidget {
               fontFamily: 'Changa',
               fontWeight: FontWeight.w700,
               fontSize: 13.5,
+              height: 1,
+              leadingDistribution: TextLeadingDistribution.even,
               color: palette.gold,
             ),
           ),

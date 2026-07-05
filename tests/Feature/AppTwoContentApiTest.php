@@ -14,6 +14,7 @@ use App\Models\Standing;
 use App\Models\Team;
 use App\Support\AppContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AppTwoContentApiTest extends TestCase
@@ -254,6 +255,20 @@ class AppTwoContentApiTest extends TestCase
             'points' => 0,
         ]);
 
+        Fixture::query()->create([
+            'app' => AppKey::AppTwo,
+            'team_id' => null,
+            'season_id' => null,
+            'opponent' => 'Al Duhail',
+            'opponent_ar' => 'الدحيل',
+            'competition' => 'Qatar Stars League',
+            'competition_ar' => 'دوري نجوم قطر',
+            'is_home' => true,
+            'venue' => 'Lusail Stadium',
+            'kickoff_at' => now()->addDay(),
+            'status' => FixtureStatus::Scheduled,
+        ]);
+
         $this->withHeader('Accept-Language', 'ar')
             ->getJson('/api/v1/content/news')
             ->assertOk()
@@ -267,6 +282,54 @@ class AppTwoContentApiTest extends TestCase
             ->assertOk()
             ->assertJsonFragment(['club_name' => 'نادي لوسيل'])
             ->assertJsonFragment(['club_name' => 'Fallback Club']);
+
+        $this->withHeader('Accept-Language', 'ar')
+            ->getJson('/api/v1/content/fixtures')
+            ->assertOk()
+            ->assertJsonFragment([
+                'opponent' => 'الدحيل',
+                'competition' => 'دوري نجوم قطر',
+            ]);
+
+        $this->withHeader('Accept-Language', 'en')
+            ->getJson('/api/v1/content/fixtures')
+            ->assertOk()
+            ->assertJsonFragment([
+                'opponent' => 'Al Duhail',
+                'competition' => 'Qatar Stars League',
+            ]);
+    }
+
+    public function test_news_image_urls_pass_through_full_urls_and_storage_paths_are_expanded(): void
+    {
+        $remote = NewsPost::query()->create([
+            'app' => AppKey::AppTwo,
+            'title' => 'Remote Image Story',
+            'body' => 'Body',
+            'image_path' => 'https://picsum.photos/seed/lfc-remote/800/450',
+            'is_published' => true,
+            'published_at' => now()->subHour(),
+        ]);
+
+        $stored = NewsPost::query()->create([
+            'app' => AppKey::AppTwo,
+            'title' => 'Stored Image Story',
+            'body' => 'Body',
+            'image_path' => 'news/example.jpg',
+            'is_published' => true,
+            'published_at' => now()->subHour(),
+        ]);
+
+        $this->getJson('/api/v1/content/news')
+            ->assertOk()
+            ->assertJsonFragment([
+                'id' => $remote->id,
+                'image_url' => 'https://picsum.photos/seed/lfc-remote/800/450',
+            ])
+            ->assertJsonFragment([
+                'id' => $stored->id,
+                'image_url' => Storage::url('news/example.jpg'),
+            ]);
     }
 
     public function test_content_header_can_switch_scope_and_resources_stay_app_two_scoped(): void

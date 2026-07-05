@@ -43,7 +43,7 @@ class AppTwoDemoSeeder extends Seeder
                 'excerpt_ar' => 'يمكن للمشجعين الآن متابعة المباريات والنتائج ومزايا العضوية في مكان واحد.',
                 'body' => 'Lusail SC has opened supporter membership for the new season, giving fans a single place to follow fixtures, results, club news, and member-only experiences throughout the campaign.',
                 'body_ar' => 'فتح نادي لوسيل الرياضي باب عضوية المشجعين للموسم الجديد، ليمنح الجماهير منصة واحدة لمتابعة المباريات والنتائج وأخبار النادي والتجارب الحصرية للأعضاء طوال الموسم.',
-                'image_path' => 'news/lusail-supporter-membership.jpg',
+                'image_path' => 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=800&q=60',
                 'published_at' => now()->subDays(10),
             ],
             [
@@ -53,7 +53,7 @@ class AppTwoDemoSeeder extends Seeder
                 'excerpt_ar' => 'يُنصح العائلات بالحضور مبكراً للاستمتاع بساحة ما قبل المباراة وتدريبات الناشئين.',
                 'body' => 'Supporters attending this weekend can enter early to enjoy the pre-match plaza, community activations, and junior football drills before kickoff.',
                 'body_ar' => 'يمكن للمشجعين الحاضرين هذا الأسبوع الدخول مبكراً للاستمتاع بساحة ما قبل المباراة والفعاليات المجتمعية وتدريبات كرة القدم للناشئين قبل صافرة البداية.',
-                'image_path' => null,
+                'image_path' => 'https://images.unsplash.com/photo-1518604666860-9ed391f76460?auto=format&fit=crop&w=800&q=60',
                 'published_at' => now()->subDays(7),
             ],
             [
@@ -63,7 +63,7 @@ class AppTwoDemoSeeder extends Seeder
                 'excerpt_ar' => 'استعاد الفريق توازنه بعد التأخر في الشوط الأول ليحصد نقطة خارج ملعبه.',
                 'body' => 'The head coach praised the squad for its discipline and resilience after Lusail SC fought back from behind to secure an away draw in league play.',
                 'body_ar' => 'أشاد المدرب بانضباط الفريق وروحه القتالية بعد أن عاد لوسيل من التأخر ليحصد تعادلاً خارج أرضه في الدوري.',
-                'image_path' => 'news/comeback-draw.jpg',
+                'image_path' => 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=60',
                 'published_at' => now()->subDays(4),
             ],
             [
@@ -73,7 +73,7 @@ class AppTwoDemoSeeder extends Seeder
                 'excerpt_ar' => 'تتضمن المباراة المقبلة على أرضنا تجربة صالة خاصة لأعضاء البلاتينوم وضيوفهم.',
                 'body' => 'Platinum members will receive access to the pre-match hospitality lounge, reserved seating guidance, and a hosted welcome before the next home fixture.',
                 'body_ar' => 'سيحصل أعضاء البلاتينوم على دخول إلى صالة الضيافة قبل المباراة، مع إرشادات للمقاعد المخصصة واستقبال خاص قبل اللقاء المقبل على أرضنا.',
-                'image_path' => 'news/platinum-lounge.jpg',
+                'image_path' => null,
                 'published_at' => now()->subDay(),
             ],
         ];
@@ -107,8 +107,10 @@ class AppTwoDemoSeeder extends Seeder
         $fixtures = [];
         $rows = [
             'umm-salal-result' => [
-                'opponent' => 'Umm Salal SC',
-                'competition' => 'QSL',
+                'opponent' => 'Umm Salal',
+                'opponent_ar' => 'أم صلال',
+                'competition' => 'Qatar Stars League',
+                'competition_ar' => 'دوري نجوم قطر',
                 'venue' => 'Lusail Stadium',
                 'kickoff_at' => now()->subDays(35),
                 'is_home' => true,
@@ -117,8 +119,10 @@ class AppTwoDemoSeeder extends Seeder
                 'opponent_score' => 1,
             ],
             'al-wakrah-result' => [
-                'opponent' => 'Al Wakrah SC',
-                'competition' => 'QSL',
+                'opponent' => 'Al Wakrah',
+                'opponent_ar' => 'الوكرة',
+                'competition' => 'Qatar Stars League',
+                'competition_ar' => 'دوري نجوم قطر',
                 'venue' => 'Al Janoub Stadium',
                 'kickoff_at' => now()->subDays(28),
                 'is_home' => false,
@@ -127,8 +131,10 @@ class AppTwoDemoSeeder extends Seeder
                 'opponent_score' => 1,
             ],
             'al-khor-result' => [
-                'opponent' => 'Al Khor SC',
+                'opponent' => 'Al Duhail',
+                'opponent_ar' => 'الدحيل',
                 'competition' => 'Amir Cup',
+                'competition_ar' => 'كأس الأمير',
                 'venue' => 'Lusail Stadium',
                 'kickoff_at' => now()->subDays(21),
                 'is_home' => true,
@@ -137,8 +143,10 @@ class AppTwoDemoSeeder extends Seeder
                 'opponent_score' => 0,
             ],
             'qatar-sc-result' => [
-                'opponent' => 'Qatar SC',
-                'competition' => 'QSL',
+                'opponent' => 'Al Gharafa',
+                'opponent_ar' => 'الغرافة',
+                'competition' => 'Qatar Stars League',
+                'competition_ar' => 'دوري نجوم قطر',
                 'venue' => 'Suhaim Bin Hamad Stadium',
                 'kickoff_at' => now()->subDays(14),
                 'is_home' => false,
@@ -147,8 +155,10 @@ class AppTwoDemoSeeder extends Seeder
                 'opponent_score' => 2,
             ],
             'al-shahaniya-result' => [
-                'opponent' => 'Al Shahaniya SC',
-                'competition' => 'QSL',
+                'opponent' => 'Al Arabi',
+                'opponent_ar' => 'العربي',
+                'competition' => 'Qatar Stars League',
+                'competition_ar' => 'دوري نجوم قطر',
                 'venue' => 'Lusail Stadium',
                 'kickoff_at' => now()->subDays(7),
                 'is_home' => true,
@@ -157,9 +167,11 @@ class AppTwoDemoSeeder extends Seeder
                 'opponent_score' => 2,
             ],
             'al-arabi-fixture' => [
-                'opponent' => 'Al Arabi SC',
-                'competition' => 'QSL',
-                'venue' => 'Grand Hamad Stadium',
+                'opponent' => 'Al Rayyan',
+                'opponent_ar' => 'الريان',
+                'competition' => 'Qatar Stars League',
+                'competition_ar' => 'دوري نجوم قطر',
+                'venue' => 'Ahmad bin Ali Stadium',
                 'kickoff_at' => now()->addDays(4),
                 'is_home' => false,
                 'status' => FixtureStatus::Scheduled,
@@ -167,8 +179,10 @@ class AppTwoDemoSeeder extends Seeder
                 'opponent_score' => null,
             ],
             'al-markhiya-open' => [
-                'opponent' => 'Al Markhiya SC',
-                'competition' => 'QSL',
+                'opponent' => 'Al Sadd',
+                'opponent_ar' => 'السد',
+                'competition' => 'Qatar Stars League',
+                'competition_ar' => 'دوري نجوم قطر',
                 'venue' => 'Lusail Stadium',
                 'kickoff_at' => now()->addDays(9),
                 'is_home' => true,
@@ -179,8 +193,10 @@ class AppTwoDemoSeeder extends Seeder
                 'opponent_score' => null,
             ],
             'al-ahli-fixture' => [
-                'opponent' => 'Al Ahli SC',
+                'opponent' => 'Qatar SC',
+                'opponent_ar' => 'نادي قطر',
                 'competition' => 'Amir Cup',
+                'competition_ar' => 'كأس الأمير',
                 'venue' => 'Al Thumama Stadium',
                 'kickoff_at' => now()->addDays(15),
                 'is_home' => false,
@@ -200,7 +216,9 @@ class AppTwoDemoSeeder extends Seeder
                     'app' => AppKey::AppTwo->value,
                     'team_id' => null,
                     'season_id' => null,
+                    'opponent_ar' => $row['opponent_ar'],
                     'competition' => $row['competition'],
+                    'competition_ar' => $row['competition_ar'],
                     'is_home' => $row['is_home'],
                     'venue' => $row['venue'],
                     'kickoff_at' => $row['kickoff_at'],
@@ -219,14 +237,14 @@ class AppTwoDemoSeeder extends Seeder
     private function seedStandings(): void
     {
         $rows = [
-            ['club_name' => 'Al Duhail SC', 'club_name_ar' => 'الدحيل', 'played' => 22, 'won' => 15, 'drawn' => 4, 'lost' => 3, 'goals_for' => 45, 'goals_against' => 18, 'points' => 49, 'is_own_club' => false],
-            ['club_name' => 'Al Sadd SC', 'club_name_ar' => 'السد', 'played' => 22, 'won' => 14, 'drawn' => 5, 'lost' => 3, 'goals_for' => 41, 'goals_against' => 20, 'points' => 47, 'is_own_club' => false],
-            ['club_name' => 'Al Gharafa SC', 'club_name_ar' => 'الغرافة', 'played' => 22, 'won' => 12, 'drawn' => 5, 'lost' => 5, 'goals_for' => 36, 'goals_against' => 24, 'points' => 41, 'is_own_club' => false],
-            ['club_name' => 'Al Arabi SC', 'club_name_ar' => 'العربي', 'played' => 22, 'won' => 11, 'drawn' => 6, 'lost' => 5, 'goals_for' => 33, 'goals_against' => 25, 'points' => 39, 'is_own_club' => false],
-            ['club_name' => 'Umm Salal SC', 'club_name_ar' => 'أم صلال', 'played' => 22, 'won' => 10, 'drawn' => 5, 'lost' => 7, 'goals_for' => 29, 'goals_against' => 26, 'points' => 35, 'is_own_club' => false],
-            ['club_name' => 'Lusail SC', 'club_name_ar' => 'لوسيل', 'played' => 22, 'won' => 9, 'drawn' => 6, 'lost' => 7, 'goals_for' => 28, 'goals_against' => 27, 'points' => 33, 'is_own_club' => true],
-            ['club_name' => 'Qatar SC', 'club_name_ar' => 'قطر', 'played' => 22, 'won' => 8, 'drawn' => 5, 'lost' => 9, 'goals_for' => 24, 'goals_against' => 31, 'points' => 29, 'is_own_club' => false],
-            ['club_name' => 'Al Khor SC', 'club_name_ar' => 'الخور', 'played' => 22, 'won' => 5, 'drawn' => 4, 'lost' => 13, 'goals_for' => 19, 'goals_against' => 38, 'points' => 19, 'is_own_club' => false],
+            ['club_name' => 'Al Duhail', 'club_name_ar' => 'الدحيل', 'played' => 22, 'won' => 15, 'drawn' => 4, 'lost' => 3, 'goals_for' => 45, 'goals_against' => 18, 'points' => 49, 'is_own_club' => false],
+            ['club_name' => 'Al Sadd', 'club_name_ar' => 'السد', 'played' => 22, 'won' => 14, 'drawn' => 5, 'lost' => 3, 'goals_for' => 41, 'goals_against' => 20, 'points' => 47, 'is_own_club' => false],
+            ['club_name' => 'Al Gharafa', 'club_name_ar' => 'الغرافة', 'played' => 22, 'won' => 12, 'drawn' => 5, 'lost' => 5, 'goals_for' => 36, 'goals_against' => 24, 'points' => 41, 'is_own_club' => false],
+            ['club_name' => 'Al Rayyan', 'club_name_ar' => 'الريان', 'played' => 22, 'won' => 11, 'drawn' => 6, 'lost' => 5, 'goals_for' => 33, 'goals_against' => 25, 'points' => 39, 'is_own_club' => false],
+            ['club_name' => 'Al Arabi', 'club_name_ar' => 'العربي', 'played' => 22, 'won' => 10, 'drawn' => 5, 'lost' => 7, 'goals_for' => 29, 'goals_against' => 26, 'points' => 35, 'is_own_club' => false],
+            ['club_name' => 'Lusail SC', 'club_name_ar' => 'نادي لوسيل', 'played' => 22, 'won' => 9, 'drawn' => 6, 'lost' => 7, 'goals_for' => 28, 'goals_against' => 27, 'points' => 33, 'is_own_club' => true],
+            ['club_name' => 'Al Wakrah', 'club_name_ar' => 'الوكرة', 'played' => 22, 'won' => 8, 'drawn' => 5, 'lost' => 9, 'goals_for' => 24, 'goals_against' => 31, 'points' => 29, 'is_own_club' => false],
+            ['club_name' => 'Umm Salal', 'club_name_ar' => 'أم صلال', 'played' => 22, 'won' => 5, 'drawn' => 4, 'lost' => 13, 'goals_for' => 19, 'goals_against' => 38, 'points' => 19, 'is_own_club' => false],
         ];
 
         foreach ($rows as $row) {
