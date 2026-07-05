@@ -19,6 +19,7 @@ import 'features/locale/data/locale_storage.dart';
 import 'features/offers/data/offers_repository.dart';
 import 'features/players/data/player_repository.dart';
 import 'features/players/models/player_summary.dart';
+import 'features/players/models/point_history_entry.dart';
 import 'features/redemptions/data/redemption_repository.dart';
 import 'features/scan/data/scan_repository.dart';
 import 'features/session/session_controller.dart';
@@ -175,6 +176,11 @@ final playerRepositoryProvider = Provider<PlayerRepository>(
 
 final playersProvider = FutureProvider.autoDispose<List<PlayerSummary>>(
   (ref) => ref.watch(playerRepositoryProvider).fetchPlayers(),
+);
+
+final accountTransactionsProvider =
+    FutureProvider.autoDispose<List<PointHistoryEntry>>(
+  (ref) => ref.watch(playerRepositoryProvider).fetchAccountTransactions(),
 );
 
 final redemptionRepositoryProvider = Provider<RedemptionRepository>(

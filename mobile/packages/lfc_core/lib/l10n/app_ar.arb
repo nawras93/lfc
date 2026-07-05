@@ -158,5 +158,41 @@
   "pointsColumnShort": "ن",
   "venueLabel": "الملعب",
   "homeMatchChip": "داخل الأرض",
-  "awayMatchChip": "خارج الأرض"
+  "awayMatchChip": "خارج الأرض",
+  "createAccountButton": "إنشاء حساب",
+  "nameLabel": "الاسم الكامل",
+  "confirmPasswordLabel": "تأكيد كلمة المرور",
+  "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين.",
+  "phoneLabel": "الهاتف",
+  "walletTitle": "المحفظة",
+  "memberDiscountLabel": "خصم التسجيل في الأكاديمية",
+  "discountPercentValue": "{percent}%",
+  "@discountPercentValue": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "redeemableTowardRegistration": "قابل للاستخدام نحو التسجيل في الأكاديمية",
+  "discountCapNote": "بحد أقصى {cap}%",
+  "@discountCapNote": {
+    "placeholders": {
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "memberQrTitle": "رمز يوم المباراة",
+  "memberQrSubtitle": "أظهر هذا الرمز في المباراة لكسب 0.5%",
+  "discountHistoryTitle": "سجل الخصم",
+  "discountHistoryEmpty": "لا توجد حركات خصم بعد.",
+  "discountHistoryFormat": "{value}%",
+  "@discountHistoryFormat": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "vvipCardComingSoon": "بطاقة عضويتك كبار الشخصيات — قريبًا",
+  "signOutButton": "تسجيل الخروج"
 }

@@ -105,6 +105,36 @@ class SessionController extends Notifier<SessionState> {
     }
   }
 
+  Future<void> register({
+    required String name,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+    String? phone,
+  }) async {
+    state = state.copyWith(isBusy: true);
+    final repository = ref.read(authRepositoryProvider);
+
+    try {
+      final result = await repository.register(
+        name: name,
+        email: email,
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+        phone: phone,
+      );
+      final account = await repository.getMe();
+      state = SessionState(
+        status: SessionStatus.authenticated,
+        token: result.token,
+        account: account,
+      );
+    } catch (error) {
+      state = const SessionState(status: SessionStatus.unauthenticated);
+      rethrow;
+    }
+  }
+
   Future<void> acceptInvite({
     required String token,
     required String password,

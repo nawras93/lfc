@@ -158,5 +158,41 @@
   "pointsColumnShort": "Pts",
   "venueLabel": "Venue",
   "homeMatchChip": "Home",
-  "awayMatchChip": "Away"
+  "awayMatchChip": "Away",
+  "createAccountButton": "Create account",
+  "nameLabel": "Full name",
+  "confirmPasswordLabel": "Confirm password",
+  "passwordsDoNotMatch": "Passwords don't match.",
+  "phoneLabel": "Phone",
+  "walletTitle": "Wallet",
+  "memberDiscountLabel": "ACADEMY REGISTRATION DISCOUNT",
+  "discountPercentValue": "{percent}%",
+  "@discountPercentValue": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "redeemableTowardRegistration": "redeemable toward academy registration",
+  "discountCapNote": "of {cap}% maximum",
+  "@discountCapNote": {
+    "placeholders": {
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "memberQrTitle": "Match day QR",
+  "memberQrSubtitle": "Show this at the match to earn 0.5%",
+  "discountHistoryTitle": "Discount history",
+  "discountHistoryEmpty": "No discount transactions yet.",
+  "discountHistoryFormat": "{value}%",
+  "@discountHistoryFormat": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "vvipCardComingSoon": "Your VVIP membership card — coming soon",
+  "signOutButton": "Sign out"
 }

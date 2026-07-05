@@ -5,6 +5,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../providers.dart';
 import '../../../theme/app_theme.dart';
 import '../../session/session_controller.dart';
+import 'discount_wallet_screen.dart';
+import 'member_auth_screen.dart';
 
 class MembershipGateScreen extends ConsumerWidget {
   const MembershipGateScreen({super.key});
@@ -15,16 +17,7 @@ class MembershipGateScreen extends ConsumerWidget {
     final session = ref.watch(sessionControllerProvider);
 
     return switch (session.status) {
-      SessionStatus.authenticated => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(
-            l10n.membershipComingSoon,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-      ),
+      SessionStatus.authenticated => const _MembershipRouter(),
       SessionStatus.unknown => const Center(child: CircularProgressIndicator()),
       SessionStatus.unauthenticated => Center(
         child: ConstrainedBox(
@@ -47,7 +40,11 @@ class MembershipGateScreen extends ConsumerWidget {
                   FilledButton(
                     key: const Key('membership-sign-in-button'),
                     onPressed: () {
-                      // TODO(T23): Wire the real app-two sign-in flow.
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const MemberAuthScreen(),
+                        ),
+                      );
                     },
                     child: Text(l10n.signInButton),
                   ),
@@ -58,5 +55,39 @@ class MembershipGateScreen extends ConsumerWidget {
         ),
       ),
     };
+  }
+}
+
+class _MembershipRouter extends ConsumerWidget {
+  const _MembershipRouter();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final session = ref.watch(sessionControllerProvider);
+    final account = session.account;
+    final accountType = account?.accountType ?? '';
+
+    if (accountType == 'vvip_member') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.credit_card, size: 48, color: context.lfc.gold),
+              const SizedBox(height: 16),
+              Text(
+                l10n.vvipCardComingSoon,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return const DiscountWalletScreen();
   }
 }

@@ -913,6 +913,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Away'**
   String get awayMatchChip;
+
+  /// No description provided for @createAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccountButton;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get nameLabel;
+
+  /// No description provided for @confirmPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPasswordLabel;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords don\'t match.'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @phoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phoneLabel;
+
+  /// No description provided for @walletTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get walletTitle;
+
+  /// No description provided for @memberDiscountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ACADEMY REGISTRATION DISCOUNT'**
+  String get memberDiscountLabel;
+
+  /// No description provided for @discountPercentValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String discountPercentValue(int percent);
+
+  /// No description provided for @redeemableTowardRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'redeemable toward academy registration'**
+  String get redeemableTowardRegistration;
+
+  /// No description provided for @discountCapNote.
+  ///
+  /// In en, this message translates to:
+  /// **'of {cap}% maximum'**
+  String discountCapNote(int cap);
+
+  /// No description provided for @memberQrTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Match day QR'**
+  String get memberQrTitle;
+
+  /// No description provided for @memberQrSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show this at the match to earn 0.5%'**
+  String get memberQrSubtitle;
+
+  /// No description provided for @discountHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount history'**
+  String get discountHistoryTitle;
+
+  /// No description provided for @discountHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No discount transactions yet.'**
+  String get discountHistoryEmpty;
+
+  /// No description provided for @discountHistoryFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}%'**
+  String discountHistoryFormat(Object value);
+
+  /// No description provided for @vvipCardComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Your VVIP membership card — coming soon'**
+  String get vvipCardComingSoon;
+
+  /// No description provided for @signOutButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOutButton;
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,7 @@ import '../../../providers.dart';
 import '../../../theme/presentation/theme_toggle_button.dart';
 import '../../../theme/widgets/brand_app_bar.dart';
 import '../../locale/presentation/language_toggle_button.dart';
+import '../../session/session_controller.dart';
 import 'home_news_screen.dart';
 import 'matches_screen.dart';
 import 'membership_gate_screen.dart';
@@ -32,6 +33,8 @@ class _SupporterShellState extends ConsumerState<SupporterShell> {
     });
 
     final l10n = AppLocalizations.of(context)!;
+    final session = ref.watch(sessionControllerProvider);
+    final isAuth = session.status == SessionStatus.authenticated;
     final labels = [
       l10n.homeNavLabel,
       l10n.matchesNavLabel,
@@ -41,7 +44,20 @@ class _SupporterShellState extends ConsumerState<SupporterShell> {
     return Scaffold(
       appBar: BrandAppBar(
         roleLabel: labels[_index],
-        actions: const [ThemeToggleButton(), LanguageToggleButton()],
+        actions: [
+          const ThemeToggleButton(),
+          const LanguageToggleButton(),
+          if (isAuth)
+            IconButton(
+              key: const Key('supporter-logout'),
+              tooltip: l10n.logoutButton,
+              onPressed: session.isBusy
+                  ? null
+                  : () =>
+                      ref.read(sessionControllerProvider.notifier).logout(),
+              icon: const Icon(Icons.logout),
+            ),
+        ],
       ),
       body: SafeArea(
         top: false,

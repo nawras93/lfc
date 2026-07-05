@@ -430,4 +430,62 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get awayMatchChip => 'خارج الأرض';
+
+  @override
+  String get createAccountButton => 'إنشاء حساب';
+
+  @override
+  String get nameLabel => 'الاسم الكامل';
+
+  @override
+  String get confirmPasswordLabel => 'تأكيد كلمة المرور';
+
+  @override
+  String get passwordsDoNotMatch => 'كلمتا المرور غير متطابقتين.';
+
+  @override
+  String get phoneLabel => 'الهاتف';
+
+  @override
+  String get walletTitle => 'المحفظة';
+
+  @override
+  String get memberDiscountLabel => 'خصم التسجيل في الأكاديمية';
+
+  @override
+  String discountPercentValue(int percent) {
+    return '$percent%';
+  }
+
+  @override
+  String get redeemableTowardRegistration =>
+      'قابل للاستخدام نحو التسجيل في الأكاديمية';
+
+  @override
+  String discountCapNote(int cap) {
+    return 'بحد أقصى $cap%';
+  }
+
+  @override
+  String get memberQrTitle => 'رمز يوم المباراة';
+
+  @override
+  String get memberQrSubtitle => 'أظهر هذا الرمز في المباراة لكسب 0.5%';
+
+  @override
+  String get discountHistoryTitle => 'سجل الخصم';
+
+  @override
+  String get discountHistoryEmpty => 'لا توجد حركات خصم بعد.';
+
+  @override
+  String discountHistoryFormat(Object value) {
+    return '$value%';
+  }
+
+  @override
+  String get vvipCardComingSoon => 'بطاقة عضويتك كبار الشخصيات — قريبًا';
+
+  @override
+  String get signOutButton => 'تسجيل الخروج';
 }

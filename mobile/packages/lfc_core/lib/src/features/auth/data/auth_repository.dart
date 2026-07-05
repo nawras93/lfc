@@ -31,6 +31,33 @@ class AuthRepository {
     }
   }
 
+  Future<LoginResponse> register({
+    required String name,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+    String? phone,
+  }) async {
+    try {
+      final response = await dio.post<Map<String, dynamic>>(
+        '/auth/register',
+        data: {
+          'name': name,
+          'email': email,
+          'password': password,
+          'password_confirmation': passwordConfirmation,
+          if (phone != null && phone.isNotEmpty) 'phone': phone,
+        },
+      );
+      final payload = response.data ?? const <String, dynamic>{};
+      final result = LoginResponse.fromJson(payload);
+      await tokenStorage.writeToken(result.token);
+      return result;
+    } catch (error) {
+      throw ApiException.fromObject(error);
+    }
+  }
+
   Future<LoginResponse> acceptInvite({
     required String token,
     required String password,

@@ -433,4 +433,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get awayMatchChip => 'Away';
+
+  @override
+  String get createAccountButton => 'Create account';
+
+  @override
+  String get nameLabel => 'Full name';
+
+  @override
+  String get confirmPasswordLabel => 'Confirm password';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords don\'t match.';
+
+  @override
+  String get phoneLabel => 'Phone';
+
+  @override
+  String get walletTitle => 'Wallet';
+
+  @override
+  String get memberDiscountLabel => 'ACADEMY REGISTRATION DISCOUNT';
+
+  @override
+  String discountPercentValue(int percent) {
+    return '$percent%';
+  }
+
+  @override
+  String get redeemableTowardRegistration =>
+      'redeemable toward academy registration';
+
+  @override
+  String discountCapNote(int cap) {
+    return 'of $cap% maximum';
+  }
+
+  @override
+  String get memberQrTitle => 'Match day QR';
+
+  @override
+  String get memberQrSubtitle => 'Show this at the match to earn 0.5%';
+
+  @override
+  String get discountHistoryTitle => 'Discount history';
+
+  @override
+  String get discountHistoryEmpty => 'No discount transactions yet.';
+
+  @override
+  String discountHistoryFormat(Object value) {
+    return '$value%';
+  }
+
+  @override
+  String get vvipCardComingSoon => 'Your VVIP membership card — coming soon';
+
+  @override
+  String get signOutButton => 'Sign out';
 }

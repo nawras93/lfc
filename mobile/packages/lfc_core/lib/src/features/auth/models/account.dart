@@ -8,6 +8,8 @@ class Account {
     required this.isVvip,
     required this.accountType,
     required this.accountBalance,
+    this.discountPercent = 0,
+    this.discountCapPercent = 0,
   });
 
   factory Account.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,8 @@ class Account {
       isVvip: json['is_vvip'] as bool? ?? false,
       accountType: json['account_type'] as String?,
       accountBalance: (json['account_balance'] as num?)?.toInt() ?? 0,
+      discountPercent: (json['discount_percent'] as num?)?.toDouble() ?? 0,
+      discountCapPercent: (json['discount_cap_percent'] as num?)?.toDouble() ?? 0,
     );
   }
 
@@ -31,4 +35,6 @@ class Account {
   final bool isVvip;
   final String? accountType;
   final int accountBalance;
+  final double discountPercent;
+  final double discountCapPercent;
 }
