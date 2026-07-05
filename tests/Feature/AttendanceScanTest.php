@@ -7,6 +7,7 @@ use App\Models\AttendanceScan;
 use App\Models\Candidate;
 use App\Models\Fixture;
 use App\Models\ParentAccount;
+use App\Models\PointRule;
 use App\Models\Season;
 use App\Models\Team;
 use App\Models\User;
@@ -20,10 +21,15 @@ class AttendanceScanTest extends TestCase
     use RefreshDatabase;
 
     private Team $team;
+
     private Season $season;
+
     private Fixture $openFixture;
+
     private Candidate $player;
+
     private ParentAccount $parent;
+
     private User $admin;
 
     protected function setUp(): void
@@ -103,7 +109,7 @@ class AttendanceScanTest extends TestCase
         $service = app(ScanTokenService::class);
         $result = $service->issue($this->parent);
 
-        $tampered = $result['token'] . 'bad';
+        $tampered = $result['token'].'bad';
 
         $this->assertNull($service->verify($tampered));
     }
@@ -204,7 +210,13 @@ class AttendanceScanTest extends TestCase
             ])->assertStatus(409)
             ->assertJson(['message' => 'Already scanned for this match.']);
 
-        $this->assertDatabaseCount('attendance_scans', 1);
+        $this->assertSame(
+            1,
+            AttendanceScan::query()
+                ->where('parent_account_id', $this->parent->id)
+                ->where('fixture_id', $this->openFixture->id)
+                ->count(),
+        );
     }
 
     public function test_scan_rejected_when_fixture_not_open_for_scanning(): void
@@ -412,7 +424,7 @@ class AttendanceScanTest extends TestCase
     public function test_scan_credits_zero_when_no_rule_but_still_records_attendance(): void
     {
         // Deactivate all rules so no rule matches
-        \App\Models\PointRule::query()->update(['is_active' => false]);
+        PointRule::query()->update(['is_active' => false]);
 
         $tokenData = $this->issueParentToken();
 
@@ -443,7 +455,10 @@ class AttendanceScanTest extends TestCase
                 'token' => $tokenData['token'],
             ])->assertOk();
 
-        $scan = AttendanceScan::query()->firstOrFail();
+        $scan = AttendanceScan::query()
+            ->where('parent_account_id', $this->parent->id)
+            ->where('fixture_id', $this->openFixture->id)
+            ->firstOrFail();
 
         $this->assertCount(1, $scan->transactions);
 

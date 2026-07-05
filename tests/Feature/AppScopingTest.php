@@ -27,14 +27,18 @@ class AppScopingTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_seeded_rows_backfill_to_app_one_and_points_unit(): void
+    public function test_seeded_rows_keep_app_one_backfill_and_explicit_app_two_stamping(): void
     {
         $this->seed();
 
-        $this->assertSame(0, DB::table('parent_accounts')->where('app', '!=', AppKey::AppOne->value)->count());
-        $this->assertSame(0, DB::table('fixtures')->where('app', '!=', AppKey::AppOne->value)->count());
-        $this->assertSame(0, DB::table('offers')->where('app', '!=', AppKey::AppOne->value)->count());
-        $this->assertSame(0, DB::table('point_transactions')->where('unit', '!=', 'points')->count());
+        $this->assertSame(2, DB::table('parent_accounts')->where('app', AppKey::AppTwo->value)->count());
+        $this->assertSame(8, DB::table('fixtures')->where('app', AppKey::AppTwo->value)->count());
+        $this->assertSame(3, DB::table('offers')->where('app', AppKey::AppTwo->value)->count());
+        $this->assertSame(5, DB::table('point_transactions')->where('unit', '!=', 'points')->count());
+
+        $this->assertSame(AppKey::AppOne->value, DB::table('parent_accounts')->where('email', 'parent.demo@lfc.test')->value('app'));
+        $this->assertSame(AppKey::AppOne->value, DB::table('fixtures')->where('opponent', 'Al Sadd SC')->value('app'));
+        $this->assertSame(AppKey::AppOne->value, DB::table('offers')->where('title', 'Early Bird Registration Discount')->value('app'));
     }
 
     public function test_global_scope_is_inert_when_no_app_context_is_set(): void
@@ -79,13 +83,16 @@ class AppScopingTest extends TestCase
         $context = app(AppContext::class);
         $context->setCurrent(AppKey::AppTwo);
 
-        $this->assertSame([$appTwoAccount->id], ParentAccount::query()->pluck('id')->all());
-        $this->assertSame([$appTwoFixture->id], Fixture::query()->pluck('id')->all());
-        $this->assertSame([$appTwoOffer->id], Offer::query()->pluck('id')->all());
+        $this->assertContains($appTwoAccount->id, ParentAccount::query()->pluck('id')->all());
+        $this->assertContains($appTwoFixture->id, Fixture::query()->pluck('id')->all());
+        $this->assertContains($appTwoOffer->id, Offer::query()->pluck('id')->all());
+        $this->assertTrue(ParentAccount::query()->get()->every(fn (ParentAccount $account): bool => $account->app === AppKey::AppTwo));
+        $this->assertTrue(Fixture::query()->get()->every(fn (Fixture $fixture): bool => $fixture->app === AppKey::AppTwo));
+        $this->assertTrue(Offer::query()->get()->every(fn (Offer $offer): bool => $offer->app === AppKey::AppTwo));
 
-        $this->assertSame([$appTwoAccount->id], ParentAccount::query()->forApp(AppKey::AppTwo)->pluck('id')->all());
-        $this->assertSame([$appTwoFixture->id], Fixture::query()->forApp(AppKey::AppTwo)->pluck('id')->all());
-        $this->assertSame([$appTwoOffer->id], Offer::query()->forApp(AppKey::AppTwo)->pluck('id')->all());
+        $this->assertContains($appTwoAccount->id, ParentAccount::query()->forApp(AppKey::AppTwo)->pluck('id')->all());
+        $this->assertContains($appTwoFixture->id, Fixture::query()->forApp(AppKey::AppTwo)->pluck('id')->all());
+        $this->assertContains($appTwoOffer->id, Offer::query()->forApp(AppKey::AppTwo)->pluck('id')->all());
 
         $this->assertGreaterThan(1, ParentAccount::withoutAppScope()->count());
         $this->assertGreaterThan(1, Fixture::withoutAppScope()->count());
@@ -97,9 +104,9 @@ class AppScopingTest extends TestCase
         $this->assertNotContains($appTwoFixture->id, Fixture::query()->pluck('id')->all());
         $this->assertNotContains($appTwoOffer->id, Offer::query()->pluck('id')->all());
 
-        $this->assertSame([$appTwoAccount->id], ParentAccount::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
-        $this->assertSame([$appTwoFixture->id], Fixture::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
-        $this->assertSame([$appTwoOffer->id], Offer::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
+        $this->assertContains($appTwoAccount->id, ParentAccount::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
+        $this->assertContains($appTwoFixture->id, Fixture::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
+        $this->assertContains($appTwoOffer->id, Offer::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
     }
 
     public function test_scoped_models_auto_stamp_app_on_create_when_context_exists_and_fall_back_to_db_default_without_context(): void

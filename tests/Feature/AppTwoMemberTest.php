@@ -26,7 +26,9 @@ class AppTwoMemberTest extends TestCase
     use RefreshDatabase;
 
     private Team $team;
+
     private Season $season;
+
     private User $admin;
 
     protected function setUp(): void
@@ -145,7 +147,10 @@ class AppTwoMemberTest extends TestCase
             ])->assertStatus(409)
             ->assertJson(['message' => 'Already scanned for this match.']);
 
-        $this->assertSame(1, AttendanceScan::query()->count());
+        $this->assertSame(1, AttendanceScan::query()
+            ->where('parent_account_id', $member->id)
+            ->where('fixture_id', $fixture->id)
+            ->count());
         $this->assertSame(1, PointTransaction::query()
             ->where('parent_account_id', $member->id)
             ->where('unit', LedgerUnit::DiscountPct->value)
@@ -247,7 +252,14 @@ class AppTwoMemberTest extends TestCase
 
         app(AppContext::class)->setCurrent(AppKey::AppTwo);
 
-        $this->assertSame([$member->id], MemberResource::getEloquentQuery()->pluck('id')->all());
+        $memberIds = MemberResource::getEloquentQuery()->pluck('id')->all();
+
+        $this->assertContains($member->id, $memberIds);
+        $this->assertNotEmpty($memberIds);
+        $this->assertTrue(MemberResource::getEloquentQuery()->get()->every(
+            fn (ParentAccount $record): bool => $record->app === AppKey::AppTwo
+                && $record->account_type === AccountType::Member,
+        ));
     }
 
     private function createMember(): ParentAccount

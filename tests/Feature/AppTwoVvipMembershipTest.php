@@ -87,7 +87,13 @@ class AppTwoVvipMembershipTest extends TestCase
             'account_type' => AccountType::Member,
         ]);
 
-        $this->assertSame([$member->id], VvipMemberResource::getEloquentQuery()->pluck('id')->all());
+        $memberIds = VvipMemberResource::getEloquentQuery()->pluck('id')->all();
+
+        $this->assertContains($member->id, $memberIds);
+        $this->assertTrue(VvipMemberResource::getEloquentQuery()->get()->every(
+            fn (ParentAccount $record): bool => $record->app === AppKey::AppTwo
+                && $record->account_type === AccountType::VvipMember,
+        ));
     }
 
     public function test_me_benefits_returns_localized_ordered_benefits_for_vvip_member_and_null_for_non_membership_accounts(): void
@@ -275,7 +281,7 @@ class AppTwoVvipMembershipTest extends TestCase
             ->assertOk()
             ->json('data'))->pluck('title')->all();
 
-        $this->assertSame(['App Two All'], $appTwoMemberTitles);
+        $this->assertContains('App Two All', $appTwoMemberTitles);
         $this->assertNotContains($appTwoVvip->title, $appTwoMemberTitles);
 
         $appOneTitles = collect($this->actingAs($appOneVvipClient, 'sanctum')
@@ -287,6 +293,7 @@ class AppTwoVvipMembershipTest extends TestCase
         $this->assertContains('App One All', $appOneTitles);
         $this->assertNotContains($appTwoAll->title, $appOneTitles);
         $this->assertNotContains($appTwoVvip->title, $appOneTitles);
+        $this->assertNotContains('Supporter scarf bundle for opening night', $appOneTitles);
     }
 
     public function test_membership_tiers_created_in_app_two_context_are_scoped_and_benefits_cascade_delete(): void
@@ -315,7 +322,12 @@ class AppTwoVvipMembershipTest extends TestCase
             'name' => 'App One Tier',
         ]);
 
-        $this->assertSame([$createdTier->id], MembershipTierResource::getEloquentQuery()->pluck('id')->all());
+        $tierIds = MembershipTierResource::getEloquentQuery()->pluck('id')->all();
+
+        $this->assertContains($createdTier->id, $tierIds);
+        $this->assertTrue(MembershipTierResource::getEloquentQuery()->get()->every(
+            fn (MembershipTier $tier): bool => $tier->app === AppKey::AppTwo,
+        ));
 
         $benefit = MembershipBenefit::factory()->create([
             'membership_tier_id' => $createdTier->id,

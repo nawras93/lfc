@@ -145,3 +145,82 @@ redeems `150`, VVIP redeems `200`):
 ```bash
 php artisan migrate:fresh --seed
 ```
+
+## App Two — Lusail SC supporter app
+
+### Setup
+
+Use the same backend setup:
+
+```bash
+php artisan migrate:fresh --seed
+php artisan serve --host=0.0.0.0 --port=8000
+```
+
+Run the Flutter app from `mobile/apps/demo_app_two`. Use the same base-URL rules as app one; see `docs/MOBILE-DEMO-APPS.md` for emulator and device notes.
+
+### Credentials
+
+- Member demo: `member.demo@lfc.test` / `password`
+- VVIP member demo: `vvip.member.demo@lfc.test` / `password`
+
+### Seeded app-two numbers
+
+- Member wallet discount: `2.5%` from `5` attended matches (`+0.5%` each)
+- VVIP tier: `Platinum`
+- VVIP member number: `LSC-000123`
+- VVIP valid until: `2027-06-30`
+- Published news posts: `4`
+- Results: `5`
+- Upcoming fixtures: `3` (including `1` open for scanning)
+- Standings rows: `8`
+- Published offers: `3` (`2` All, `1` VVIP)
+
+### Act 1 — Guest browse
+
+1. Launch `demo_app_two` without signing in.
+2. Home tab:
+   - browse the club news feed
+   - open a news article detail view
+3. Matches tab:
+   - Fixtures shows the `3` upcoming matches
+   - Results shows the `5` played matches
+   - Table shows `8` clubs with Lusail highlighted
+4. Confirm EN/AR switching and RTL rendering both work before login.
+
+### Act 2 — Register a new fan
+
+1. Open the Membership tab as a guest.
+2. Create a brand-new supporter account in-app.
+3. Expected result:
+   - the user lands in the discount wallet
+   - wallet starts at `0%`
+   - no VVIP card is shown
+
+### Act 3 — Member wallet
+
+1. Sign in as `member.demo@lfc.test`.
+2. Confirm the wallet shows:
+   - `2.5%` redeemable toward academy registration
+   - `10%` maximum cap
+   - a live rotating QR
+   - `5` history rows at `+0.5%`
+3. Optional live demo:
+   - have staff scan this member at the open app-two fixture
+   - the wallet increases by another `+0.5%`
+
+### Act 4 — VVIP card
+
+1. Sign in as `vvip.member.demo@lfc.test`.
+2. Confirm the app shows:
+   - digital `Platinum` membership card
+   - member number `LSC-000123`
+   - valid-until date `2027-06-30`
+   - identity QR on the card
+   - Platinum benefits list
+   - app-two VVIP and All offers
+3. Repeat the same check in Arabic to confirm RTL layout and localized content.
+
+### Note
+
+The on-device run for `demo_app_two` is the user's verification step after the seeded backend data is in place.

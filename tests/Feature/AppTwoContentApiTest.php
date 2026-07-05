@@ -91,19 +91,20 @@ class AppTwoContentApiTest extends TestCase
 
         $this->getJson('/api/v1/content/news')
             ->assertOk()
-            ->assertJsonPath('data.0.id', $appTwoNews->id);
+            ->assertJsonFragment(['id' => $appTwoNews->id, 'title' => 'App Two Story'])
+            ->assertJsonMissing(['title' => 'App One Story']);
 
         $this->getJson('/api/v1/content/fixtures')
             ->assertOk()
-            ->assertJsonPath('data.0.id', $upcoming->id);
+            ->assertJsonFragment(['id' => $upcoming->id, 'opponent' => 'Future Opponent']);
 
         $this->getJson('/api/v1/content/results')
             ->assertOk()
-            ->assertJsonPath('data.0.id', $result->id);
+            ->assertJsonFragment(['id' => $result->id, 'opponent' => 'Finished Opponent']);
 
         $this->getJson('/api/v1/content/standings')
             ->assertOk()
-            ->assertJsonCount(1, 'data');
+            ->assertJsonFragment(['club_name' => 'Lusail SC']);
     }
 
     public function test_unpublished_or_future_news_is_hidden_and_show_404s_for_non_public_rows(): void
@@ -205,20 +206,24 @@ class AppTwoContentApiTest extends TestCase
 
         $this->getJson('/api/v1/content/fixtures')
             ->assertOk()
-            ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.id', $upcoming->id);
+            ->assertJsonFragment(['id' => $upcoming->id, 'opponent' => 'Upcoming Match'])
+            ->assertJsonMissing(['id' => $result->id, 'opponent' => 'Played Match']);
 
         $this->getJson('/api/v1/content/results')
             ->assertOk()
-            ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.id', $result->id);
+            ->assertJsonFragment(['id' => $result->id, 'opponent' => 'Played Match'])
+            ->assertJsonMissing(['id' => $upcoming->id, 'opponent' => 'Upcoming Match']);
 
-        $this->getJson('/api/v1/content/standings')
+        $standings = $this->getJson('/api/v1/content/standings')
             ->assertOk()
-            ->assertJsonPath('data.0.club_name', 'First Place')
-            ->assertJsonPath('data.0.position', 1)
-            ->assertJsonPath('data.1.club_name', 'Second Place')
-            ->assertJsonPath('data.1.position', 2);
+            ->json('data');
+
+        $first = collect($standings)->firstWhere('club_name', 'First Place');
+        $second = collect($standings)->firstWhere('club_name', 'Second Place');
+
+        $this->assertNotNull($first);
+        $this->assertNotNull($second);
+        $this->assertGreaterThan($first['position'], $second['position']);
     }
 
     public function test_content_endpoints_localize_arabic_fields_with_fallbacks(): void
@@ -260,8 +265,8 @@ class AppTwoContentApiTest extends TestCase
         $this->withHeader('Accept-Language', 'ar')
             ->getJson('/api/v1/content/standings')
             ->assertOk()
-            ->assertJsonPath('data.0.club_name', 'نادي لوسيل')
-            ->assertJsonPath('data.1.club_name', 'Fallback Club');
+            ->assertJsonFragment(['club_name' => 'نادي لوسيل'])
+            ->assertJsonFragment(['club_name' => 'Fallback Club']);
     }
 
     public function test_content_header_can_switch_scope_and_resources_stay_app_two_scoped(): void
@@ -315,15 +320,16 @@ class AppTwoContentApiTest extends TestCase
 
         app(AppContext::class)->setCurrent(AppKey::AppTwo);
 
-        $this->assertSame([$appTwoNews->id], NewsResource::getEloquentQuery()->pluck('id')->all());
-        $this->assertSame([$appTwoMatch->id], MatchResource::getEloquentQuery()->pluck('id')->all());
-        $this->assertSame([$appTwoStanding->id], StandingResource::getEloquentQuery()->pluck('id')->all());
+        $this->assertContains($appTwoNews->id, NewsResource::getEloquentQuery()->pluck('id')->all());
+        $this->assertContains($appTwoMatch->id, MatchResource::getEloquentQuery()->pluck('id')->all());
+        $this->assertContains($appTwoStanding->id, StandingResource::getEloquentQuery()->pluck('id')->all());
+        $this->assertNotContains($appOneNews->id, NewsResource::getEloquentQuery()->pluck('id')->all());
 
         app(AppContext::class)->clear();
 
         $this->withHeader('X-App-Key', AppKey::AppOne->value)
             ->getJson('/api/v1/content/news')
             ->assertOk()
-            ->assertJsonPath('data.0.id', $appOneNews->id);
+            ->assertJsonFragment(['id' => $appOneNews->id, 'title' => 'App One News']);
     }
 }
