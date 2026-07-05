@@ -263,13 +263,7 @@ class _StandingsView extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minWidth: 640),
-                  child: _StandingsTable(rows: rows),
-                ),
-              ),
+              _StandingsTable(rows: rows),
             ],
           ),
         );
@@ -336,14 +330,14 @@ class _StandingsHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
         children: [
-          _TableCell(labels[0], width: 44, header: true),
-          _TableCell(labels[1], width: 200, header: true, alignStart: true),
-          _TableCell(labels[2], width: 46, header: true),
-          _TableCell(labels[3], width: 46, header: true),
-          _TableCell(labels[4], width: 46, header: true),
-          _TableCell(labels[5], width: 46, header: true),
-          _TableCell(labels[6], width: 52, header: true),
-          _TableCell(labels[7], width: 56, header: true, emphasize: true),
+          _TableCell(labels[0], flex: 3, header: true),
+          _TableCell(labels[1], flex: 9, header: true, alignStart: true),
+          _TableCell(labels[2], flex: 3, header: true),
+          _TableCell(labels[3], flex: 3, header: true),
+          _TableCell(labels[4], flex: 3, header: true),
+          _TableCell(labels[5], flex: 3, header: true),
+          _TableCell(labels[6], flex: 4, header: true),
+          _TableCell(labels[7], flex: 4, header: true, emphasize: true),
         ],
       ),
     );
@@ -378,24 +372,24 @@ class _StandingsRow extends StatelessWidget {
           ),
         ),
       ),
-      padding: const EdgeInsetsDirectional.fromSTEB(10, 12, 14, 12),
+      padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 14, 10),
       child: Row(
         children: [
-          _TableCell('${row.position}', width: 44),
+          _TableCell('${row.position}', flex: 3),
           _TableCell(
             row.clubName,
-            width: 200,
+            flex: 9,
             isOwnClub: row.isOwnClub,
             alignStart: true,
           ),
-          _TableCell('${row.played}', width: 46),
-          _TableCell('${row.won}', width: 46),
-          _TableCell('${row.drawn}', width: 46),
-          _TableCell('${row.lost}', width: 46),
-          _TableCell(_goalDifferenceLabel(row.goalDifference), width: 52),
+          _TableCell('${row.played}', flex: 3),
+          _TableCell('${row.won}', flex: 3),
+          _TableCell('${row.drawn}', flex: 3),
+          _TableCell('${row.lost}', flex: 3),
+          _TableCell(_goalDifferenceLabel(row.goalDifference), flex: 4),
           _TableCell(
             '${row.points}',
-            width: 56,
+            flex: 4,
             isOwnClub: row.isOwnClub,
             emphasize: true,
           ),
@@ -408,7 +402,7 @@ class _StandingsRow extends StatelessWidget {
 class _TableCell extends StatelessWidget {
   const _TableCell(
     this.text, {
-    required this.width,
+    required this.flex,
     this.header = false,
     this.isOwnClub = false,
     this.alignStart = false,
@@ -416,7 +410,7 @@ class _TableCell extends StatelessWidget {
   });
 
   final String text;
-  final double width;
+  final int flex;
   final bool header;
   final bool isOwnClub;
   final bool alignStart;
@@ -428,16 +422,17 @@ class _TableCell extends StatelessWidget {
         ? Theme.of(context).textTheme.labelLarge?.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w700,
+            fontSize: 12,
           )
         : Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: emphasize || isOwnClub
                 ? FontWeight.w700
                 : FontWeight.w500,
-            fontSize: emphasize ? 15 : null,
+            fontSize: emphasize ? 13 : 12,
           );
 
-    return SizedBox(
-      width: width,
+    return Expanded(
+      flex: flex,
       child: Text(
         text,
         key: isOwnClub && !header && alignStart

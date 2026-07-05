@@ -91,6 +91,64 @@ void main() {
     expect(decoration.color, isNotNull);
   });
 
+  testWidgets('standings table fits width with no horizontal scroll', (
+    tester,
+  ) async {
+    await _pumpSupporterApp(
+      tester,
+      contentRepository: FakeContentRepository(
+        standings: const [
+          StandingRow(
+            position: 1,
+            clubName: 'Lusail SC',
+            played: 3,
+            won: 3,
+            drawn: 0,
+            lost: 0,
+            goalsFor: 7,
+            goalsAgainst: 1,
+            goalDifference: 6,
+            points: 9,
+            isOwnClub: true,
+          ),
+          StandingRow(
+            position: 2,
+            clubName: 'Doha FC',
+            played: 3,
+            won: 2,
+            drawn: 0,
+            lost: 1,
+            goalsFor: 5,
+            goalsAgainst: 3,
+            goalDifference: 2,
+            points: 6,
+            isOwnClub: false,
+          ),
+        ],
+      ),
+    );
+
+    await tester.tap(find.text('Matches'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Table'));
+    await tester.pumpAndSettle();
+
+    // No horizontal SingleChildScrollView (removed in T29)
+    expect(
+      find.byWidgetPredicate(
+        (w) =>
+            w is SingleChildScrollView &&
+            w.scrollDirection == Axis.horizontal,
+      ),
+      findsNothing,
+    );
+
+    // Club names still visible (table fits without overflow)
+    expect(find.text('Lusail SC'), findsOneWidget);
+    expect(find.text('Doha FC'), findsOneWidget);
+    expect(find.byKey(const Key('own-club-cell')), findsOneWidget);
+  });
+
   testWidgets('membership tab shows sign-in gate for guests', (tester) async {
     await _pumpSupporterApp(tester);
 
