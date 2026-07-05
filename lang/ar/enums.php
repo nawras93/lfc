@@ -4,6 +4,12 @@ return [
     'account_type' => [
         'parent' => 'ولي أمر',
         'vvip_client' => 'عميل كبار الشخصيات',
+        'member' => 'عضو',
+        'vvip_member' => 'عضو كبار الشخصيات',
+    ],
+    'app_keys' => [
+        'app_one' => 'التطبيق الأول',
+        'app_two' => 'التطبيق الثاني',
     ],
     'countries' => [
         'Bahrain' => 'البحرين',
@@ -130,6 +136,10 @@ return [
         'not_started' => 'لم يبدأ',
         'ready_to_join' => 'جاهز للانضمام',
         'joined_team' => 'انضم إلى الفريق',
+    ],
+    'ledger_unit' => [
+        'points' => 'نقاط',
+        'discount_pct' => 'نسبة خصم',
     ],
     'nationalities' => [
         'Bahraini' => 'بحريني',

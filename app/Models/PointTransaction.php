@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LedgerUnit;
 use App\Enums\PointTransactionType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
     'parent_account_id',
     'type',
     'points',
+    'unit',
     'point_rule_id',
     'source_type',
     'source_id',
@@ -26,6 +28,7 @@ class PointTransaction extends Model
         return [
             'type' => PointTransactionType::class,
             'points' => 'integer',
+            'unit' => LedgerUnit::class,
         ];
     }
 

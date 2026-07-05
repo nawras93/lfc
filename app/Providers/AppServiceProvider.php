@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Support\AppContext;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
@@ -26,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(AppContext::class);
     }
 
     /**

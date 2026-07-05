@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AppKey;
 use App\Models\ParentAccount;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,6 +24,7 @@ class ParentAccountFactory extends Factory
             'invitation_token' => null,
             'invited_at' => null,
             'accepted_at' => now(),
+            'app' => AppKey::AppOne,
         ];
     }
 

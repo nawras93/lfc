@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\AppKey;
 use App\Enums\AccountType;
+use App\Models\Concerns\ScopedToApp;
 use Database\Factories\ParentAccountFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -24,6 +26,7 @@ use Laravel\Sanctum\HasApiTokens;
     'accepted_at',
     'is_vvip',
     'account_type',
+    'app',
 ])]
 #[Hidden([
     'password',
@@ -33,7 +36,7 @@ use Laravel\Sanctum\HasApiTokens;
 class ParentAccount extends Authenticatable
 {
     /** @use HasFactory<ParentAccountFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, ScopedToApp;
 
     protected function casts(): array
     {
@@ -43,6 +46,7 @@ class ParentAccount extends Authenticatable
             'accepted_at' => 'datetime',
             'is_vvip' => 'boolean',
             'account_type' => AccountType::class,
+            'app' => AppKey::class,
         ];
     }
 

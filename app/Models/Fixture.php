@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\AppKey;
 use App\Enums\FixtureStatus;
+use App\Models\Concerns\ScopedToApp;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,10 +21,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'scan_opens_at',
     'scan_closes_at',
     'status',
+    'app',
 ])]
 class Fixture extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, ScopedToApp, SoftDeletes;
 
     protected function casts(): array
     {
@@ -31,6 +34,7 @@ class Fixture extends Model
             'scan_opens_at' => 'datetime',
             'scan_closes_at' => 'datetime',
             'status' => FixtureStatus::class,
+            'app' => AppKey::class,
         ];
     }
 

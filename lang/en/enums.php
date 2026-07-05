@@ -4,6 +4,12 @@ return [
     'account_type' => [
         'parent' => 'Parent',
         'vvip_client' => 'VVIP Client',
+        'member' => 'Member',
+        'vvip_member' => 'VVIP Member',
+    ],
+    'app_keys' => [
+        'app_one' => 'App One',
+        'app_two' => 'App Two',
     ],
     'countries' => [
         'Bahrain' => 'Bahrain',
@@ -130,6 +136,10 @@ return [
         'not_started' => 'Not Started',
         'ready_to_join' => 'Ready To Join',
         'joined_team' => 'Joined Team',
+    ],
+    'ledger_unit' => [
+        'points' => 'Points',
+        'discount_pct' => 'Discount %',
     ],
     'nationalities' => [
         'Bahraini' => 'Bahraini',
