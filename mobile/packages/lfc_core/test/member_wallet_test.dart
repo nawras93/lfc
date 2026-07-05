@@ -74,6 +74,11 @@ void main() {
 
     expect(authRepo.registerCalled, isTrue);
     expect(authRepo.lastRegisterEmail, 'fan@example.com');
+
+    // On success the auth route must pop and reveal the wallet underneath —
+    // the user should not be stranded on the login form.
+    expect(find.byKey(const Key('member-auth-submit')), findsNothing);
+    expect(find.byKey(const Key('parent-qr')), findsOneWidget);
   });
 
   testWidgets('member wallet renders discount card + QR + history row', (

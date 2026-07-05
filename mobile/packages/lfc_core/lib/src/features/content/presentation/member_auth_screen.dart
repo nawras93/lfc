@@ -9,6 +9,7 @@ import '../../../theme/app_theme.dart';
 import '../../../theme/presentation/theme_toggle_button.dart';
 import '../../../theme/widgets/fanar_backdrop.dart';
 import '../../locale/presentation/language_toggle_button.dart';
+import '../../session/session_controller.dart';
 
 enum _AuthMode { signIn, createAccount }
 
@@ -74,6 +75,18 @@ class _MemberAuthScreenState extends ConsumerState<MemberAuthScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
+    // This screen is pushed as a route over the Membership tab. Once auth
+    // succeeds the tab underneath re-renders to the wallet on its own, so pop
+    // back to it rather than leaving the user stranded on the login form
+    // (this Scaffold has no back button).
+    ref.listen<SessionState>(sessionControllerProvider, (previous, next) {
+      if (next.status == SessionStatus.authenticated &&
+          Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+    });
+
     final session = ref.watch(sessionControllerProvider);
     final isSignIn = _mode == _AuthMode.signIn;
 
