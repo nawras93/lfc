@@ -78,8 +78,9 @@ class _MemberAuthScreenState extends ConsumerState<MemberAuthScreen> {
 
     // This screen is pushed as a route over the Membership tab. Once auth
     // succeeds the tab underneath re-renders to the wallet on its own, so pop
-    // back to it rather than leaving the user stranded on the login form
-    // (this Scaffold has no back button).
+    // back to it automatically rather than leaving the user on the login form.
+    // (A guest who changes their mind can also leave via the header back
+    // button in _Header, which pops the same route.)
     ref.listen<SessionState>(sessionControllerProvider, (previous, next) {
       if (next.status == SessionStatus.authenticated &&
           Navigator.of(context).canPop()) {
