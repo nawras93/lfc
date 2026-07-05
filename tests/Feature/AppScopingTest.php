@@ -6,6 +6,7 @@ use App\Enums\AppKey;
 use App\Enums\FixtureStatus;
 use App\Enums\OfferAudience;
 use App\Models\Fixture;
+use App\Models\NewsPost;
 use App\Models\Offer;
 use App\Models\ParentAccount;
 use App\Models\Season;
@@ -99,5 +100,36 @@ class AppScopingTest extends TestCase
         $this->assertSame([$appTwoAccount->id], ParentAccount::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
         $this->assertSame([$appTwoFixture->id], Fixture::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
         $this->assertSame([$appTwoOffer->id], Offer::withoutAppScope()->forApp(AppKey::AppTwo)->pluck('id')->all());
+    }
+
+    public function test_scoped_models_auto_stamp_app_on_create_when_context_exists_and_fall_back_to_db_default_without_context(): void
+    {
+        $this->seed();
+
+        app(AppContext::class)->setCurrent(AppKey::AppTwo);
+
+        $offer = Offer::query()->create([
+            'title' => 'Scoped Offer',
+            'body' => 'Scoped body',
+            'audience' => OfferAudience::All,
+            'is_published' => true,
+        ]);
+
+        $news = NewsPost::query()->create([
+            'title' => 'Scoped News',
+            'body' => 'Scoped news body',
+        ]);
+
+        $this->assertSame(AppKey::AppTwo, $offer->fresh()->app);
+        $this->assertSame(AppKey::AppTwo, $news->fresh()->app);
+
+        app(AppContext::class)->clear();
+
+        $defaultNews = NewsPost::query()->create([
+            'title' => 'Default News',
+            'body' => 'Default body',
+        ]);
+
+        $this->assertSame(AppKey::AppOne, $defaultNews->fresh()->app);
     }
 }

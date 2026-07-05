@@ -8,6 +8,7 @@ return [
             'accounts' => 'Accounts',
             'loyalty' => 'Loyalty',
             'rewards' => 'Rewards',
+            'content' => 'Content',
         ],
     ],
     'common' => [
@@ -259,6 +260,72 @@ return [
             ],
             'relations' => [
                 'discount_ledger' => 'Discount ledger',
+            ],
+        ],
+        'news' => [
+            'singular' => 'News post',
+            'plural' => 'News',
+            'sections' => [
+                'content' => 'Content',
+                'publication' => 'Publication',
+            ],
+            'descriptions' => [
+                'content' => 'Bilingual club news shown on the app-two home screen.',
+                'publication' => 'Hero image and publication controls for guest visibility.',
+            ],
+            'fields' => [
+                'title' => 'Title',
+                'title_ar' => 'Title (Arabic)',
+                'excerpt' => 'Excerpt',
+                'excerpt_ar' => 'Excerpt (Arabic)',
+                'body' => 'Body',
+                'body_ar' => 'Body (Arabic)',
+                'image' => 'Image',
+                'is_published' => 'Published',
+                'published_at' => 'Published at',
+            ],
+        ],
+        'matches' => [
+            'singular' => 'Match',
+            'plural' => 'Matches',
+            'sections' => [
+                'match' => 'Match details',
+            ],
+            'descriptions' => [
+                'match' => 'Public first-team fixture details, including scoreline and home or away status.',
+            ],
+            'fields' => [
+                'opponent' => 'Opponent',
+                'competition' => 'Competition',
+                'is_home' => 'Home match',
+                'venue' => 'Venue',
+                'kickoff_at' => 'Kickoff at',
+                'our_score' => 'Our score',
+                'opponent_score' => 'Opponent score',
+                'score' => 'Score',
+            ],
+        ],
+        'standings' => [
+            'singular' => 'Standing',
+            'plural' => 'Standings',
+            'sections' => [
+                'club' => 'Club record',
+            ],
+            'descriptions' => [
+                'club' => 'League table totals used for the app-two standings screen.',
+            ],
+            'fields' => [
+                'club_name' => 'Club name',
+                'club_name_ar' => 'Club name (Arabic)',
+                'played' => 'Played',
+                'won' => 'Won',
+                'drawn' => 'Drawn',
+                'lost' => 'Lost',
+                'goals_for' => 'Goals for',
+                'goals_against' => 'Goals against',
+                'goal_difference' => 'Goal difference',
+                'points' => 'Points',
+                'is_own_club' => 'Own club',
             ],
         ],
         'point_rules' => [

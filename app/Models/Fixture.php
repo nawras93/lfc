@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\AppKey;
 use App\Enums\FixtureStatus;
 use App\Models\Concerns\ScopedToApp;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,11 +15,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'team_id',
     'season_id',
     'opponent',
+    'competition',
+    'is_home',
     'venue',
     'kickoff_at',
     'scan_opens_at',
     'scan_closes_at',
     'status',
+    'our_score',
+    'opponent_score',
     'app',
 ])]
 class Fixture extends Model
@@ -34,6 +37,9 @@ class Fixture extends Model
             'scan_opens_at' => 'datetime',
             'scan_closes_at' => 'datetime',
             'status' => FixtureStatus::class,
+            'is_home' => 'boolean',
+            'our_score' => 'integer',
+            'opponent_score' => 'integer',
             'app' => AppKey::class,
         ];
     }
@@ -53,5 +59,15 @@ class Fixture extends Model
         return $this->status === FixtureStatus::OpenForScanning
             && ($this->scan_opens_at === null || now() >= $this->scan_opens_at)
             && ($this->scan_closes_at === null || now() <= $this->scan_closes_at);
+    }
+
+    public function isPlayed(): bool
+    {
+        return $this->our_score !== null && $this->opponent_score !== null;
+    }
+
+    public function isUpcoming(): bool
+    {
+        return ! $this->isPlayed() && $this->kickoff_at?->isFuture();
     }
 }

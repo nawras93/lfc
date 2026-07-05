@@ -8,12 +8,13 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SetAppContext
+class SetAppContextFromHeader
 {
-    public function handle(Request $request, Closure $next, string $app): Response
+    public function handle(Request $request, Closure $next): Response
     {
+        $app = AppKey::tryFrom((string) $request->header('X-App-Key')) ?? AppKey::AppTwo;
         $context = app(AppContext::class);
-        $context->setCurrent(AppKey::from($app));
+        $context->setCurrent($app);
 
         try {
             return $next($request);

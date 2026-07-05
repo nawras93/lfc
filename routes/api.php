@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\MatchController;
+use App\Http\Controllers\Api\V1\NewsController;
 use App\Http\Controllers\Api\V1\OfferController;
 use App\Http\Controllers\Api\V1\PlayerController;
 use App\Http\Controllers\Api\V1\PointTransactionController;
@@ -8,6 +10,8 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RedemptionController;
 use App\Http\Controllers\Api\V1\ScanController;
 use App\Http\Controllers\Api\V1\StaffAuthController;
+use App\Http\Controllers\Api\V1\StandingController;
+use App\Http\Middleware\SetAppContextFromHeader;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')
@@ -17,6 +21,14 @@ Route::prefix('v1')
         Route::post('/auth/login', [AuthController::class, 'login']);
         Route::post('/auth/accept-invite', [AuthController::class, 'acceptInvite']);
         Route::post('/staff/login', [StaffAuthController::class, 'login']);
+
+        Route::middleware(SetAppContextFromHeader::class)->group(function (): void {
+            Route::get('/content/news', [NewsController::class, 'index']);
+            Route::get('/content/news/{news}', [NewsController::class, 'show']);
+            Route::get('/content/fixtures', [MatchController::class, 'fixtures']);
+            Route::get('/content/results', [MatchController::class, 'results']);
+            Route::get('/content/standings', [StandingController::class, 'index']);
+        });
 
         Route::middleware('auth:sanctum')->group(function (): void {
             Route::post('/auth/logout', [AuthController::class, 'logout']);

@@ -10,6 +10,12 @@ trait ScopedToApp
 {
     public static function bootScopedToApp(): void
     {
+        static::creating(function ($model): void {
+            if ($model->getAttribute('app') === null && ($app = app(AppContext::class)->current()) !== null) {
+                $model->setAttribute('app', $app);
+            }
+        });
+
         static::addGlobalScope('app', function (Builder $query): void {
             $app = app(AppContext::class)->current();
 
