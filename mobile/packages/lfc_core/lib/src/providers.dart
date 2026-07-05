@@ -16,7 +16,10 @@ import 'features/content/models/news_summary.dart';
 import 'features/content/models/standing_row.dart';
 import 'features/locale/locale_controller.dart';
 import 'features/locale/data/locale_storage.dart';
+import 'features/membership/data/membership_repository.dart';
+import 'features/membership/models/membership_card.dart';
 import 'features/offers/data/offers_repository.dart';
+import 'features/offers/models/offer_summary.dart';
 import 'features/players/data/player_repository.dart';
 import 'features/players/models/player_summary.dart';
 import 'features/players/models/point_history_entry.dart';
@@ -180,8 +183,8 @@ final playersProvider = FutureProvider.autoDispose<List<PlayerSummary>>(
 
 final accountTransactionsProvider =
     FutureProvider.autoDispose<List<PointHistoryEntry>>(
-  (ref) => ref.watch(playerRepositoryProvider).fetchAccountTransactions(),
-);
+      (ref) => ref.watch(playerRepositoryProvider).fetchAccountTransactions(),
+    );
 
 final redemptionRepositoryProvider = Provider<RedemptionRepository>(
   (ref) => RedemptionRepository(ref.watch(dioProvider)),
@@ -189,6 +192,18 @@ final redemptionRepositoryProvider = Provider<RedemptionRepository>(
 
 final offersRepositoryProvider = Provider<OffersRepository>(
   (ref) => OffersRepository(ref.watch(dioProvider)),
+);
+
+final membershipRepositoryProvider = Provider<MembershipRepository>(
+  (ref) => MembershipRepository(ref.watch(dioProvider)),
+);
+
+final membershipProvider = FutureProvider.autoDispose<MembershipCard?>(
+  (ref) => ref.watch(membershipRepositoryProvider).fetchMembership(),
+);
+
+final offersProvider = FutureProvider.autoDispose<List<OfferSummary>>(
+  (ref) => ref.watch(offersRepositoryProvider).fetchOffers(),
 );
 
 final parentScanRepositoryProvider = Provider<ScanRepository>(

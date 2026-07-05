@@ -187,6 +187,18 @@
   "memberQrSubtitle": "Show this at the match to earn 0.5%",
   "discountHistoryTitle": "Discount history",
   "discountHistoryEmpty": "No discount transactions yet.",
+  "membershipCardLabel": "Membership card",
+  "memberNumberLabel": "Member no.",
+  "validUntilLabel": "Valid until {date}",
+  "@validUntilLabel": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "yourBenefitsTitle": "Your benefits",
+  "membershipBenefitsEmpty": "No benefits listed yet",
+  "vvipOffersTitle": "VVIP offers",
+  "membershipUnavailable": "Membership details unavailable",
   "discountHistoryFormat": "{value}%",
   "@discountHistoryFormat": {
     "placeholders": {

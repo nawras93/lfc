@@ -187,6 +187,18 @@
   "memberQrSubtitle": "أظهر هذا الرمز في المباراة لكسب 0.5%",
   "discountHistoryTitle": "سجل الخصم",
   "discountHistoryEmpty": "لا توجد حركات خصم بعد.",
+  "membershipCardLabel": "بطاقة العضوية",
+  "memberNumberLabel": "رقم العضو",
+  "validUntilLabel": "صالحة حتى {date}",
+  "@validUntilLabel": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "yourBenefitsTitle": "مزاياك",
+  "membershipBenefitsEmpty": "لا توجد مزايا مدرجة بعد",
+  "vvipOffersTitle": "عروض كبار الشخصيات",
+  "membershipUnavailable": "بيانات العضوية غير متاحة",
   "discountHistoryFormat": "{value}%",
   "@discountHistoryFormat": {
     "placeholders": {

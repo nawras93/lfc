@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../providers.dart';
 import '../../../theme/app_theme.dart';
+import '../../membership/presentation/vvip_card_screen.dart';
 import '../../session/session_controller.dart';
 import 'discount_wallet_screen.dart';
 import 'member_auth_screen.dart';
@@ -63,29 +64,12 @@ class _MembershipRouter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final session = ref.watch(sessionControllerProvider);
     final account = session.account;
     final accountType = account?.accountType ?? '';
 
     if (accountType == 'vvip_member') {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.credit_card, size: 48, color: context.lfc.gold),
-              const SizedBox(height: 16),
-              Text(
-                l10n.vvipCardComingSoon,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-        ),
-      );
+      return const VvipCardScreen();
     }
 
     return const DiscountWalletScreen();

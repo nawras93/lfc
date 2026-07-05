@@ -479,6 +479,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get discountHistoryEmpty => 'لا توجد حركات خصم بعد.';
 
   @override
+  String get membershipCardLabel => 'بطاقة العضوية';
+
+  @override
+  String get memberNumberLabel => 'رقم العضو';
+
+  @override
+  String validUntilLabel(Object date) {
+    return 'صالحة حتى $date';
+  }
+
+  @override
+  String get yourBenefitsTitle => 'مزاياك';
+
+  @override
+  String get membershipBenefitsEmpty => 'لا توجد مزايا مدرجة بعد';
+
+  @override
+  String get vvipOffersTitle => 'عروض كبار الشخصيات';
+
+  @override
+  String get membershipUnavailable => 'بيانات العضوية غير متاحة';
+
+  @override
   String discountHistoryFormat(Object value) {
     return '$value%';
   }

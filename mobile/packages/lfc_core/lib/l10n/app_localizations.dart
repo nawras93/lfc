@@ -998,6 +998,48 @@ abstract class AppLocalizations {
   /// **'No discount transactions yet.'**
   String get discountHistoryEmpty;
 
+  /// No description provided for @membershipCardLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Membership card'**
+  String get membershipCardLabel;
+
+  /// No description provided for @memberNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Member no.'**
+  String get memberNumberLabel;
+
+  /// No description provided for @validUntilLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {date}'**
+  String validUntilLabel(Object date);
+
+  /// No description provided for @yourBenefitsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your benefits'**
+  String get yourBenefitsTitle;
+
+  /// No description provided for @membershipBenefitsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No benefits listed yet'**
+  String get membershipBenefitsEmpty;
+
+  /// No description provided for @vvipOffersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'VVIP offers'**
+  String get vvipOffersTitle;
+
+  /// No description provided for @membershipUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Membership details unavailable'**
+  String get membershipUnavailable;
+
   /// No description provided for @discountHistoryFormat.
   ///
   /// In en, this message translates to:

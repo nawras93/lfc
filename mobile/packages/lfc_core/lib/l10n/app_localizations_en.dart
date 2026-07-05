@@ -482,6 +482,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discountHistoryEmpty => 'No discount transactions yet.';
 
   @override
+  String get membershipCardLabel => 'Membership card';
+
+  @override
+  String get memberNumberLabel => 'Member no.';
+
+  @override
+  String validUntilLabel(Object date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get yourBenefitsTitle => 'Your benefits';
+
+  @override
+  String get membershipBenefitsEmpty => 'No benefits listed yet';
+
+  @override
+  String get vvipOffersTitle => 'VVIP offers';
+
+  @override
+  String get membershipUnavailable => 'Membership details unavailable';
+
+  @override
   String discountHistoryFormat(Object value) {
     return '$value%';
   }

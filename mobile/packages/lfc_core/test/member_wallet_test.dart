@@ -7,11 +7,17 @@ import 'package:lfc_core/src/core/storage/token_storage.dart';
 import 'package:lfc_core/src/features/auth/data/auth_repository.dart';
 import 'package:lfc_core/src/features/auth/models/account.dart';
 import 'package:lfc_core/src/features/auth/models/login_response.dart';
+import 'package:lfc_core/src/features/membership/data/membership_repository.dart';
+import 'package:lfc_core/src/features/membership/models/membership_benefit.dart';
+import 'package:lfc_core/src/features/membership/models/membership_card.dart';
+import 'package:lfc_core/src/features/membership/models/membership_tier_info.dart';
 import 'package:lfc_core/src/features/players/data/player_repository.dart';
 import 'package:lfc_core/src/features/players/models/point_history_entry.dart';
 import 'package:lfc_core/src/features/scan/data/scan_repository.dart';
 import 'package:lfc_core/src/features/scan/models/scan_token.dart';
 import 'package:lfc_core/src/features/session/session_controller.dart';
+import 'package:lfc_core/src/features/offers/data/offers_repository.dart';
+import 'package:lfc_core/src/features/offers/models/offer_summary.dart';
 import 'package:lfc_core/src/providers.dart';
 
 import 'helpers/fakes.dart';
@@ -40,9 +46,7 @@ void main() {
   ) async {
     final authRepo = _FakeAuthRepository();
 
-    await tester.pumpWidget(
-      _pumpWithAuth(authRepository: authRepo),
-    );
+    await tester.pumpWidget(_pumpWithAuth(authRepository: authRepo));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Membership'));
@@ -136,9 +140,7 @@ void main() {
     expect(find.text('+0.5%'), findsOneWidget);
   });
 
-  testWidgets('role routing shows VVIP placeholder for vvip_member', (
-    tester,
-  ) async {
+  testWidgets('role routing shows VVIP card for vvip_member', (tester) async {
     await tester.pumpWidget(
       _pumpWithAuth(
         sessionState: const SessionState(
@@ -154,6 +156,25 @@ void main() {
             accountBalance: 0,
           ),
         ),
+        membershipRepository: _FakeMembershipRepository(
+          membership: MembershipCard(
+            tier: const MembershipTierInfo(
+              name: 'Platinum',
+              level: 2,
+              accentColor: '#C8A24A',
+            ),
+            memberNumber: 'LSC-000123',
+            validUntil: DateTime(2027, 6, 30),
+            benefits: const [
+              MembershipBenefit(
+                title: 'Private lounge',
+                description: 'Access on home match days',
+                icon: 'lounge',
+              ),
+            ],
+          ),
+        ),
+        offersRepository: _FakeOffersRepository(),
       ),
     );
     await tester.pumpAndSettle();
@@ -161,7 +182,100 @@ void main() {
     await tester.tap(find.text('Membership'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Your VVIP membership card — coming soon'), findsOneWidget);
+    await tester.ensureVisible(
+      find.text('Private lounge', skipOffstage: false),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Platinum'), findsOneWidget);
+    expect(find.text('LSC-000123'), findsOneWidget);
+    expect(find.byKey(const Key('vvip-qr')), findsOneWidget);
+    expect(find.text('Private lounge'), findsOneWidget);
+  });
+
+  testWidgets('VVIP offers section renders VVIP offer card', (tester) async {
+    await tester.pumpWidget(
+      _pumpWithAuth(
+        sessionState: const SessionState(
+          status: SessionStatus.authenticated,
+          account: Account(
+            id: 21,
+            name: 'VVIP Fan',
+            email: 'vvip.member@example.com',
+            phone: null,
+            whatsapp: null,
+            isVvip: true,
+            accountType: 'vvip_member',
+            accountBalance: 0,
+          ),
+        ),
+        membershipRepository: _FakeMembershipRepository(
+          membership: MembershipCard(
+            tier: const MembershipTierInfo(
+              name: 'Gold',
+              level: 1,
+              accentColor: '#C8A24A',
+            ),
+            memberNumber: 'LSC-000777',
+            validUntil: DateTime(2027, 6, 30),
+            benefits: const [],
+          ),
+        ),
+        offersRepository: _FakeOffersRepository(
+          offers: const [
+            OfferSummary(
+              id: 1,
+              title: 'VVIP Lounge',
+              body: 'Private hospitality access',
+              audience: 'vvip',
+              validFrom: null,
+              validUntil: null,
+            ),
+          ],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Membership'));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('VVIP offers', skipOffstage: false));
+    await tester.pumpAndSettle();
+
+    expect(find.text('VVIP offers'), findsOneWidget);
+    expect(find.text('VVIP Lounge'), findsOneWidget);
+    expect(find.text('VVIP'), findsAtLeastNWidgets(1));
+  });
+
+  testWidgets('VVIP card handles missing membership gracefully', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _pumpWithAuth(
+        sessionState: const SessionState(
+          status: SessionStatus.authenticated,
+          account: Account(
+            id: 22,
+            name: 'VVIP Fan',
+            email: 'vvip.member@example.com',
+            phone: null,
+            whatsapp: null,
+            isVvip: true,
+            accountType: 'vvip_member',
+            accountBalance: 0,
+          ),
+        ),
+        membershipRepository: _FakeMembershipRepository(membership: null),
+        offersRepository: _FakeOffersRepository(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Membership'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Membership details unavailable'), findsOneWidget);
   });
 
   testWidgets('member wallet shows discount card for member account', (
@@ -227,6 +341,61 @@ void main() {
 
     expect(find.text('خصم التسجيل في الأكاديمية'), findsOneWidget);
   });
+
+  testWidgets('VVIP card renders RTL after switching to Arabic', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _pumpWithAuth(
+        sessionState: const SessionState(
+          status: SessionStatus.authenticated,
+          account: Account(
+            id: 41,
+            name: 'مشجع مميز',
+            email: 'vvip@lfc.test',
+            phone: null,
+            whatsapp: null,
+            isVvip: true,
+            accountType: 'vvip_member',
+            accountBalance: 0,
+          ),
+        ),
+        membershipRepository: _FakeMembershipRepository(
+          membership: MembershipCard(
+            tier: const MembershipTierInfo(
+              name: 'بلاتيني',
+              level: 2,
+              accentColor: '#C8A24A',
+            ),
+            memberNumber: 'LSC-AR-9',
+            validUntil: DateTime(2027, 6, 30),
+            benefits: const [
+              MembershipBenefit(
+                title: 'الدخول إلى الصالة',
+                description: 'ضيافة خاصة قبل المباراة',
+                icon: 'lounge',
+              ),
+            ],
+          ),
+        ),
+        offersRepository: _FakeOffersRepository(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Membership'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('language-toggle')).first);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.text('الدخول إلى الصالة', skipOffstage: false),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('بطاقة العضوية'), findsOneWidget);
+    expect(find.text('مزاياك'), findsOneWidget);
+    expect(find.text('الدخول إلى الصالة'), findsOneWidget);
+  });
 }
 
 Future<void> _pumpSupporterApp(WidgetTester tester) async {
@@ -269,10 +438,14 @@ Widget _pumpWithAuth({
   AuthRepository? authRepository,
   PlayerRepository? playerRepository,
   ScanRepository? scanRepository,
+  MembershipRepository? membershipRepository,
+  OffersRepository? offersRepository,
 }) {
   final authRepo = authRepository ?? _FakeAuthRepository();
   final scanRepo = scanRepository ?? _FakeScanRepository();
   final playerRepo = playerRepository ?? _FakePlayerRepository();
+  final membershipRepo = membershipRepository ?? _FakeMembershipRepository();
+  final offersRepo = offersRepository ?? _FakeOffersRepository();
 
   return ProviderScope(
     overrides: [
@@ -289,6 +462,8 @@ Widget _pumpWithAuth({
         () => _FakeSessionController(sessionState, authRepo),
       ),
       playerRepositoryProvider.overrideWithValue(playerRepo),
+      membershipRepositoryProvider.overrideWithValue(membershipRepo),
+      offersRepositoryProvider.overrideWithValue(offersRepo),
       accountTransactionsProvider.overrideWith(
         (ref) => playerRepo.fetchAccountTransactions(),
       ),
@@ -407,10 +582,7 @@ class _FakeSessionController extends SessionController {
   }
 
   @override
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     final repo = authRepository!;
     final result = await repo.login(email: email, password: password);
     state = SessionState(
@@ -427,8 +599,7 @@ class _FakeSessionController extends SessionController {
 }
 
 class _FakePlayerRepository extends PlayerRepository {
-  _FakePlayerRepository({this.accountTransactions = const []})
-    : super(Dio());
+  _FakePlayerRepository({this.accountTransactions = const []}) : super(Dio());
 
   final List<PointHistoryEntry> accountTransactions;
 
@@ -447,4 +618,22 @@ class _FakeScanRepository extends ScanRepository {
       expiresAt: DateTime.now().add(const Duration(minutes: 5)),
     );
   }
+}
+
+class _FakeMembershipRepository extends MembershipRepository {
+  _FakeMembershipRepository({this.membership}) : super(Dio());
+
+  final MembershipCard? membership;
+
+  @override
+  Future<MembershipCard?> fetchMembership() async => membership;
+}
+
+class _FakeOffersRepository extends OffersRepository {
+  _FakeOffersRepository({this.offers = const []}) : super(Dio());
+
+  final List<OfferSummary> offers;
+
+  @override
+  Future<List<OfferSummary>> fetchOffers() async => offers;
 }
