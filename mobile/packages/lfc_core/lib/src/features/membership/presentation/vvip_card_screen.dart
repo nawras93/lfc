@@ -145,13 +145,12 @@ class _MembershipHeroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final locale = Localizations.localeOf(context).toLanguageTag();
     final palette = context.lfc;
     final accent = membershipAccentColor(card.tier.accentColor, palette.gold);
     final gradient = membershipHeroGradient(context, accent);
     final validUntil = card.validUntil == null
         ? l10n.notAvailableValue
-        : AppDateFormat.date(locale).format(card.validUntil!);
+        : AppDateFormat.westernDate().format(card.validUntil!);
     final memberNumber = card.memberNumber ?? l10n.notAvailableValue;
 
     return Container(
@@ -385,15 +384,14 @@ class _OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final locale = Localizations.localeOf(context).toLanguageTag();
     final theme = Theme.of(context);
     final isVvip = offer.audience == 'vvip';
     final from = offer.validFrom == null
         ? l10n.notAvailableValue
-        : AppDateFormat.date(locale).format(offer.validFrom!);
+        : AppDateFormat.westernDate().format(offer.validFrom!);
     final until = offer.validUntil == null
         ? l10n.notAvailableValue
-        : AppDateFormat.date(locale).format(offer.validUntil!);
+        : AppDateFormat.westernDate().format(offer.validUntil!);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),

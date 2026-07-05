@@ -12,4 +12,10 @@ class AppDateFormat {
   /// dd-MM-yyyy HH:mm — a date with time.
   static DateFormat dateTime([String? locale]) =>
       DateFormat('dd-MM-yyyy HH:mm', locale);
+
+  /// dd-MM-yyyy — Latin digits for app-two numeric dates in both EN and AR.
+  static DateFormat westernDate() => DateFormat('dd-MM-yyyy', 'en');
+
+  /// dd-MM-yyyy HH:mm — Latin digits for app-two numeric dates in both EN and AR.
+  static DateFormat westernDateTime() => DateFormat('dd-MM-yyyy HH:mm', 'en');
 }

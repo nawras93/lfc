@@ -5,6 +5,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../core/formatting/app_date_format.dart';
 import '../../../providers.dart';
 import '../models/news_summary.dart';
+import '../util/media_url.dart';
 import 'content_states.dart';
 import 'news_detail_screen.dart';
 
@@ -55,15 +56,18 @@ class HomeNewsScreen extends ConsumerWidget {
   }
 }
 
-class _NewsCard extends StatelessWidget {
+class _NewsCard extends ConsumerWidget {
   const _NewsCard({required this.article});
 
   final NewsSummary article;
 
   @override
-  Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context).languageCode;
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final config = ref.watch(appConfigProvider);
+    final imageUrl = article.imageUrl == null
+        ? null
+        : resolveMediaUrl(article.imageUrl!, config.apiBaseUrl);
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -78,11 +82,11 @@ class _NewsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (article.imageUrl != null)
+            if (imageUrl != null)
               SizedBox(
                 height: 188,
                 child: Image.network(
-                  article.imageUrl!,
+                  imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (_, _, _) =>
                       const ColoredBox(color: Colors.transparent),
@@ -94,7 +98,7 @@ class _NewsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppDateFormat.date(locale).format(article.publishedAt),
+                    AppDateFormat.westernDate().format(article.publishedAt),
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),

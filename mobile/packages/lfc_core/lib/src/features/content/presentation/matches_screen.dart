@@ -54,7 +54,6 @@ class _MatchesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final locale = Localizations.localeOf(context).languageCode;
     final provider = kind == _MatchViewKind.fixtures
         ? fixturesProvider
         : resultsProvider;
@@ -84,8 +83,8 @@ class _MatchesList extends ConsumerWidget {
             itemCount: matches.length,
             separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, index) => kind == _MatchViewKind.fixtures
-                ? _FixtureCard(match: matches[index], locale: locale)
-                : _ResultCard(match: matches[index], locale: locale),
+                ? _FixtureCard(match: matches[index])
+                : _ResultCard(match: matches[index]),
           ),
         );
       },
@@ -94,10 +93,9 @@ class _MatchesList extends ConsumerWidget {
 }
 
 class _FixtureCard extends StatelessWidget {
-  const _FixtureCard({required this.match, required this.locale});
+  const _FixtureCard({required this.match});
 
   final MatchSummary match;
-  final String locale;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +123,7 @@ class _FixtureCard extends StatelessWidget {
             Text(match.competition, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 8),
             Text(
-              AppDateFormat.dateTime(locale).format(match.kickoffAt),
+              AppDateFormat.westernDateTime().format(match.kickoffAt),
               style: theme.textTheme.labelLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -145,17 +143,15 @@ class _FixtureCard extends StatelessWidget {
 }
 
 class _ResultCard extends StatelessWidget {
-  const _ResultCard({required this.match, required this.locale});
+  const _ResultCard({required this.match});
 
   final MatchSummary match;
-  final String locale;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final score =
-        '${_localizedScore(locale, match.ourScore ?? 0)}–${_localizedScore(locale, match.opponentScore ?? 0)}';
+    final score = '${match.ourScore ?? 0}–${match.opponentScore ?? 0}';
 
     return Card(
       child: Padding(
@@ -196,7 +192,7 @@ class _ResultCard extends StatelessWidget {
             Text(match.competition, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 8),
             Text(
-              AppDateFormat.date(locale).format(match.kickoffAt),
+              AppDateFormat.westernDate().format(match.kickoffAt),
               style: theme.textTheme.labelLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -461,19 +457,4 @@ String _goalDifferenceLabel(int goalDifference) {
   }
 
   return '$goalDifference';
-}
-
-String _localizedScore(String locale, int score) {
-  final text = score.toString();
-
-  if (!locale.startsWith('ar')) {
-    return text;
-  }
-
-  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-
-  return text.replaceAllMapped(
-    RegExp(r'\d'),
-    (match) => arabicDigits[int.parse(match.group(0)!)],
-  );
 }

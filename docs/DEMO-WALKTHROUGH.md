@@ -3,6 +3,7 @@
 ## Setup
 
 ```bash
+php artisan storage:link
 php artisan migrate:fresh --seed
 php artisan serve --host=0.0.0.0 --port=8000
 ```
@@ -170,10 +171,10 @@ Run the Flutter app from `mobile/apps/demo_app_two`. Use the same base-URL rules
 - VVIP tier: `Platinum`
 - VVIP member number: `LSC-000123`
 - VVIP valid until: `2027-06-30`
-- Published news posts: `4`
+- Published news posts: `3` official Lusail SC items
 - Results: `5`
 - Upcoming fixtures: `3` (including `1` open for scanning)
-- Standings rows: `8`
+- Standings rows: `13` (Lusail highlighted in `8th`)
 - Published offers: `3` (`2` All, `1` VVIP)
 
 ### Act 1 — Guest browse

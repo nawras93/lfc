@@ -70,8 +70,15 @@ class AppTwoDemoSeederInvariantsTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $appTwoFixtures->filter->isUpcoming()->count());
         $this->assertGreaterThanOrEqual(1, $appTwoFixtures->filter->isOpenForScanning()->count());
         $this->assertSame(1, $appTwoStandings->where('is_own_club', true)->count());
+        $this->assertCount(13, $appTwoStandings);
         $this->assertTrue($appTwoOffers->contains(fn (Offer $offer): bool => $offer->audience === OfferAudience::All));
         $this->assertTrue($appTwoOffers->contains(fn (Offer $offer): bool => $offer->audience === OfferAudience::VVIP));
+
+        $newsFeed = collect($this->getJson('/api/v1/content/news')->assertOk()->json('data'));
+        $officialStory = $newsFeed->firstWhere('title', 'Club president honoured with the Sports & Youth Excellence Award');
+
+        $this->assertNotNull($officialStory);
+        $this->assertStringStartsWith('/storage/news/', $officialStory['image_url']);
 
         $memberOfferTitles = Offer::query()
             ->forApp($member->app)
@@ -105,7 +112,7 @@ class AppTwoDemoSeederInvariantsTest extends TestCase
                 ParentAccount::query()->where('email', 'member.demo@lfc.test')->exists(),
             );
             $this->assertFalse(
-                NewsPost::query()->where('title', 'Lusail SC launches supporter membership for the new season')->exists(),
+                NewsPost::query()->where('title', 'Eyyal Al-Freej community tournament concludes')->exists(),
             );
         } finally {
             $context->clear();

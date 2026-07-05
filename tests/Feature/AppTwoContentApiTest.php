@@ -14,7 +14,6 @@ use App\Models\Standing;
 use App\Models\Team;
 use App\Support\AppContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AppTwoContentApiTest extends TestCase
@@ -300,7 +299,7 @@ class AppTwoContentApiTest extends TestCase
             ]);
     }
 
-    public function test_news_image_urls_pass_through_full_urls_and_storage_paths_are_expanded(): void
+    public function test_news_image_urls_pass_through_full_urls_and_storage_paths_are_root_relative(): void
     {
         $remote = NewsPost::query()->create([
             'app' => AppKey::AppTwo,
@@ -328,7 +327,7 @@ class AppTwoContentApiTest extends TestCase
             ])
             ->assertJsonFragment([
                 'id' => $stored->id,
-                'image_url' => Storage::url('news/example.jpg'),
+                'image_url' => '/storage/news/example.jpg',
             ]);
     }
 

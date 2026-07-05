@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\NewsPost;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
@@ -42,7 +42,7 @@ class NewsController extends Controller
             'image_url' => $post->image_path
                 ? (Str::startsWith($post->image_path, ['http://', 'https://'])
                     ? $post->image_path
-                    : Storage::url($post->image_path))
+                    : '/'.ltrim(parse_url(Storage::url($post->image_path), PHP_URL_PATH) ?? '', '/'))
                 : null,
             'published_at' => $post->published_at?->toIso8601String(),
         ];

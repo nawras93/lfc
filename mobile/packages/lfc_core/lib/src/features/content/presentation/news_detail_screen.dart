@@ -5,6 +5,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../core/formatting/app_date_format.dart';
 import '../../../providers.dart';
 import '../../../theme/widgets/brand_app_bar.dart';
+import '../util/media_url.dart';
 import 'content_states.dart';
 
 class NewsDetailScreen extends ConsumerWidget {
@@ -16,7 +17,7 @@ class NewsDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final articleAsync = ref.watch(newsArticleProvider(newsId));
     final l10n = AppLocalizations.of(context)!;
-    final locale = Localizations.localeOf(context).languageCode;
+    final config = ref.watch(appConfigProvider);
 
     return Scaffold(
       appBar: const BrandAppBar(showBack: true),
@@ -27,46 +28,52 @@ class NewsDetailScreen extends ConsumerWidget {
           retryLabel: l10n.retryButton,
           onRetry: () => ref.invalidate(newsArticleProvider(newsId)),
         ),
-        data: (article) => ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          children: [
-            if (article.imageUrl != null) ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.network(
-                    article.imageUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) =>
-                        const ColoredBox(color: Colors.transparent),
+        data: (article) {
+          final imageUrl = article.imageUrl == null
+              ? null
+              : resolveMediaUrl(article.imageUrl!, config.apiBaseUrl);
+
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            children: [
+              if (imageUrl != null) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, _, _) =>
+                          const ColoredBox(color: Colors.transparent),
+                    ),
                   ),
                 ),
+                const SizedBox(height: 18),
+              ],
+              Text(
+                AppDateFormat.westernDate().format(article.publishedAt),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
-              const SizedBox(height: 18),
-            ],
-            Text(
-              AppDateFormat.date(locale).format(article.publishedAt),
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              article.title,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            if (article.excerpt.isNotEmpty) ...[
               const SizedBox(height: 10),
               Text(
-                article.excerpt,
-                style: Theme.of(context).textTheme.titleMedium,
+                article.title,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
+              if (article.excerpt.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Text(
+                  article.excerpt,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+              const SizedBox(height: 16),
+              Text(article.body, style: Theme.of(context).textTheme.bodyLarge),
             ],
-            const SizedBox(height: 16),
-            Text(article.body, style: Theme.of(context).textTheme.bodyLarge),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

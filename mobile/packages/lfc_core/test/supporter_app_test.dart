@@ -167,7 +167,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('لوسيل'), findsOneWidget);
-    expect(find.text('٢–١'), findsOneWidget);
+    expect(find.text('2–1'), findsOneWidget);
     expect(find.text('الدحيل'), findsOneWidget);
     expect(find.text('دوري نجوم قطر'), findsOneWidget);
   });
