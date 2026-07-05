@@ -147,7 +147,6 @@ class _MembershipHeroCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final palette = context.lfc;
-    final theme = Theme.of(context);
     final accent = membershipAccentColor(card.tier.accentColor, palette.gold);
     final gradient = membershipHeroGradient(context, accent);
     final validUntil = card.validUntil == null
@@ -235,13 +234,6 @@ class _MembershipHeroCard extends StatelessWidget {
                 ],
               );
             },
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.validUntilLabel(validUntil),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: palette.onHeroMuted,
-            ),
           ),
         ],
       ),
