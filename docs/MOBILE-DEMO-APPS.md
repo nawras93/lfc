@@ -52,6 +52,8 @@ flutter build ios          # iOS build (requires Xcode signing); or `flutter bui
 
 Append the same `--dart-define=API_BASE_URL=...` if the build should target something other than localhost.
 
+> **Shipping to a real device / client?** See **[MOBILE-RELEASE-BUILDS.md](./MOBILE-RELEASE-BUILDS.md)** for the full bundling process — Android keystore signing, iOS `DEVELOPMENT_TEAM` setup + TestFlight, and the backend-URL rule for physical devices.
+
 ---
 
 ## Managing installed apps on simulators/emulators

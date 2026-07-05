@@ -30,6 +30,11 @@
 	<string>Camera access is used to scan parent QR codes at the gate.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<!-- Demo-only: allow plain-HTTP API calls (e.g. the Mac's LAN IP or an ngrok URL)
+		     so a USB-cabled device can reach `php artisan serve` without HTTPS.
+		     Tighten or remove NSAllowsArbitraryLoads before any App Store submission. -->
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 		<key>NSExceptionDomains</key>
