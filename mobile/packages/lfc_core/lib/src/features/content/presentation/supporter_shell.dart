@@ -29,6 +29,10 @@ class _SupporterShellState extends ConsumerState<SupporterShell> {
         ref.invalidate(fixturesProvider);
         ref.invalidate(resultsProvider);
         ref.invalidate(standingsProvider);
+        // The VVIP card's benefits + offers are server-localized too, so they
+        // must refetch on a language switch (otherwise they show stale English).
+        ref.invalidate(membershipProvider);
+        ref.invalidate(offersProvider);
       }
     });
 

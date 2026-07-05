@@ -420,6 +420,78 @@ void main() {
     expect(find.text('مزاياك'), findsOneWidget);
     expect(find.text('الدخول إلى الصالة'), findsOneWidget);
   });
+
+  testWidgets('VVIP card refetches benefits + offers on language switch', (
+    tester,
+  ) async {
+    final membershipRepo = _FakeMembershipRepository(
+      membership: MembershipCard(
+        tier: const MembershipTierInfo(
+          name: 'Platinum',
+          level: 2,
+          accentColor: '#C8A24A',
+        ),
+        memberNumber: 'LSC-000123',
+        validUntil: DateTime(2027, 6, 30),
+        benefits: const [
+          MembershipBenefit(
+            title: 'Private lounge',
+            description: 'Access on home match days',
+            icon: 'lounge',
+          ),
+        ],
+      ),
+    );
+    final offersRepo = _FakeOffersRepository(
+      offers: const [
+        OfferSummary(
+          id: 1,
+          title: 'VVIP Lounge',
+          body: 'Private hospitality access',
+          audience: 'vvip',
+          validFrom: null,
+          validUntil: null,
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      _pumpWithAuth(
+        sessionState: const SessionState(
+          status: SessionStatus.authenticated,
+          account: Account(
+            id: 24,
+            name: 'VVIP Fan',
+            email: 'vvip.member@example.com',
+            phone: null,
+            whatsapp: null,
+            isVvip: true,
+            accountType: 'vvip_member',
+            accountBalance: 0,
+          ),
+        ),
+        membershipRepository: membershipRepo,
+        offersRepository: offersRepo,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Membership'));
+    await tester.pumpAndSettle();
+
+    // Card is displayed → both server-localized providers fetched at least once.
+    final membershipBefore = membershipRepo.fetchCount;
+    final offersBefore = offersRepo.fetchCount;
+    expect(membershipBefore, greaterThanOrEqualTo(1));
+    expect(offersBefore, greaterThanOrEqualTo(1));
+
+    // Switching language must refetch them (otherwise stale English content).
+    await tester.tap(find.byKey(const Key('language-toggle')).first);
+    await tester.pumpAndSettle();
+
+    expect(membershipRepo.fetchCount, greaterThan(membershipBefore));
+    expect(offersRepo.fetchCount, greaterThan(offersBefore));
+  });
 }
 
 Future<void> _pumpSupporterApp(WidgetTester tester) async {
@@ -648,16 +720,24 @@ class _FakeMembershipRepository extends MembershipRepository {
   _FakeMembershipRepository({this.membership}) : super(Dio());
 
   final MembershipCard? membership;
+  int fetchCount = 0;
 
   @override
-  Future<MembershipCard?> fetchMembership() async => membership;
+  Future<MembershipCard?> fetchMembership() async {
+    fetchCount++;
+    return membership;
+  }
 }
 
 class _FakeOffersRepository extends OffersRepository {
   _FakeOffersRepository({this.offers = const []}) : super(Dio());
 
   final List<OfferSummary> offers;
+  int fetchCount = 0;
 
   @override
-  Future<List<OfferSummary>> fetchOffers() async => offers;
+  Future<List<OfferSummary>> fetchOffers() async {
+    fetchCount++;
+    return offers;
+  }
 }
