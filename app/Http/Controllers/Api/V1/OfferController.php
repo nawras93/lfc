@@ -19,6 +19,7 @@ class OfferController extends Controller
         }
 
         $offers = Offer::query()
+            ->forApp($parent->app)
             ->visibleTo($parent)
             ->orderByDesc('created_at')
             ->get()

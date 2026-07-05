@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\BenefitController;
 use App\Http\Controllers\Api\V1\MatchController;
 use App\Http\Controllers\Api\V1\NewsController;
 use App\Http\Controllers\Api\V1\OfferController;
@@ -33,6 +34,7 @@ Route::prefix('v1')
         Route::middleware('auth:sanctum')->group(function (): void {
             Route::post('/auth/logout', [AuthController::class, 'logout']);
             Route::get('/me', ProfileController::class);
+            Route::get('/me/benefits', BenefitController::class);
             Route::get('/players', [PlayerController::class, 'index']);
             Route::get('/players/{player}', [PlayerController::class, 'show']);
             Route::get('/players/{player}/transactions', [PointTransactionController::class, 'playerHistory']);

@@ -6,6 +6,7 @@ return [
             'recruitment' => 'Recruitment',
             'attendance' => 'Attendance',
             'accounts' => 'Accounts',
+            'membership' => 'Membership',
             'loyalty' => 'Loyalty',
             'rewards' => 'Rewards',
             'content' => 'Content',
@@ -260,6 +261,56 @@ return [
             ],
             'relations' => [
                 'discount_ledger' => 'Discount ledger',
+            ],
+        ],
+        'membership_tiers' => [
+            'singular' => 'Membership tier',
+            'plural' => 'Membership tiers',
+            'sections' => [
+                'tier' => 'Tier details',
+            ],
+            'descriptions' => [
+                'tier' => 'Tier name, display order, and card accent for app-two VVIP members.',
+            ],
+            'fields' => [
+                'name' => 'Name',
+                'name_ar' => 'Name (Arabic)',
+                'level' => 'Level',
+                'accent_color' => 'Accent color',
+                'is_active' => 'Active',
+                'benefits_count' => 'Benefits',
+            ],
+            'relations' => [
+                'benefits' => 'Benefits',
+            ],
+        ],
+        'membership_benefits' => [
+            'fields' => [
+                'title' => 'Title',
+                'title_ar' => 'Title (Arabic)',
+                'description' => 'Description',
+                'description_ar' => 'Description (Arabic)',
+                'icon' => 'Icon',
+                'sort_order' => 'Sort order',
+            ],
+        ],
+        'vvip_members' => [
+            'singular' => 'VVIP member',
+            'plural' => 'VVIP members',
+            'sections' => [
+                'account' => 'Membership card',
+            ],
+            'descriptions' => [
+                'account' => 'Admin-created premium supporters with a tier, member number, and validity date.',
+            ],
+            'fields' => [
+                'name' => 'Name',
+                'email' => 'Email',
+                'password' => 'Password',
+                'phone' => 'Phone',
+                'membership_tier' => 'Membership tier',
+                'member_number' => 'Member number',
+                'membership_valid_until' => 'Valid until',
             ],
         ],
         'news' => [

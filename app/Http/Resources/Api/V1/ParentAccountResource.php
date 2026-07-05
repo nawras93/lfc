@@ -9,6 +9,8 @@ class ParentAccountResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $tier = $this->membershipTier;
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -23,6 +25,12 @@ class ParentAccountResource extends JsonResource
             'account_balance' => $this->pointsBalance(),
             'discount_percent' => $this->discountPercent(),
             'discount_cap_percent' => config('loyalty.app_two.discount_cap_bp') / 100,
+            'membership' => $this->membership_tier_id ? [
+                'tier_name' => $tier?->localized('name'),
+                'tier_level' => $tier?->level,
+                'member_number' => $this->member_number,
+                'valid_until' => $this->membership_valid_until?->toDateString(),
+            ] : null,
         ];
     }
 }

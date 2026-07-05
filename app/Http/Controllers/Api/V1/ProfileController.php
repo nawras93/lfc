@@ -17,6 +17,6 @@ class ProfileController extends Controller
             abort(403, 'Only parent accounts can view this profile.');
         }
 
-        return ParentAccountResource::make($parent);
+        return ParentAccountResource::make($parent->loadMissing('membershipTier'));
     }
 }

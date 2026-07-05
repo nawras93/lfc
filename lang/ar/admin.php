@@ -6,8 +6,10 @@ return [
             'recruitment' => 'الاستقطاب',
             'attendance' => 'الحضور',
             'accounts' => 'الحسابات',
+            'membership' => 'العضوية',
             'loyalty' => 'الولاء',
             'rewards' => 'المكافآت',
+            'content' => 'المحتوى',
         ],
     ],
     'common' => [
@@ -259,6 +261,56 @@ return [
             ],
             'relations' => [
                 'discount_ledger' => 'دفتر الخصم',
+            ],
+        ],
+        'membership_tiers' => [
+            'singular' => 'فئة عضوية',
+            'plural' => 'فئات العضوية',
+            'sections' => [
+                'tier' => 'تفاصيل الفئة',
+            ],
+            'descriptions' => [
+                'tier' => 'اسم الفئة وترتيبها ولون البطاقة الخاص بأعضاء كبار الشخصيات في التطبيق الثاني.',
+            ],
+            'fields' => [
+                'name' => 'الاسم',
+                'name_ar' => 'الاسم (بالعربية)',
+                'level' => 'المستوى',
+                'accent_color' => 'لون التمييز',
+                'is_active' => 'نشطة',
+                'benefits_count' => 'المزايا',
+            ],
+            'relations' => [
+                'benefits' => 'المزايا',
+            ],
+        ],
+        'membership_benefits' => [
+            'fields' => [
+                'title' => 'العنوان',
+                'title_ar' => 'العنوان (بالعربية)',
+                'description' => 'الوصف',
+                'description_ar' => 'الوصف (بالعربية)',
+                'icon' => 'الأيقونة',
+                'sort_order' => 'ترتيب العرض',
+            ],
+        ],
+        'vvip_members' => [
+            'singular' => 'عضو كبار الشخصيات',
+            'plural' => 'أعضاء كبار الشخصيات',
+            'sections' => [
+                'account' => 'بطاقة العضوية',
+            ],
+            'descriptions' => [
+                'account' => 'حسابات داعمين مميزة ينشئها المشرف مع فئة ورقم عضو وتاريخ صلاحية.',
+            ],
+            'fields' => [
+                'name' => 'الاسم',
+                'email' => 'البريد الإلكتروني',
+                'password' => 'كلمة المرور',
+                'phone' => 'الهاتف',
+                'membership_tier' => 'فئة العضوية',
+                'member_number' => 'رقم العضو',
+                'membership_valid_until' => 'صالحة حتى',
             ],
         ],
         'news' => [

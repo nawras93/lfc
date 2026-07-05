@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Enums\AppKey;
 use App\Enums\AccountType;
+use App\Enums\AppKey;
 use App\Enums\LedgerUnit;
 use App\Models\Concerns\ScopedToApp;
 use Database\Factories\ParentAccountFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,6 +29,9 @@ use Laravel\Sanctum\HasApiTokens;
     'is_vvip',
     'account_type',
     'app',
+    'membership_tier_id',
+    'member_number',
+    'membership_valid_until',
 ])]
 #[Hidden([
     'password',
@@ -48,6 +52,7 @@ class ParentAccount extends Authenticatable
             'is_vvip' => 'boolean',
             'account_type' => AccountType::class,
             'app' => AppKey::class,
+            'membership_valid_until' => 'date',
         ];
     }
 
@@ -59,6 +64,16 @@ class ParentAccount extends Authenticatable
     public function isMember(): bool
     {
         return $this->account_type === AccountType::Member;
+    }
+
+    public function isVvipMember(): bool
+    {
+        return $this->account_type === AccountType::VvipMember;
+    }
+
+    public function membershipTier(): BelongsTo
+    {
+        return $this->belongsTo(MembershipTier::class);
     }
 
     public function players(): BelongsToMany
