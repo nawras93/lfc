@@ -360,6 +360,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loginTagline => 'أكاديميتك. نقاطك. يوم مباراتك.';
 
   @override
+  String get supporterAuthTagline => 'ناديك. مباراتك. مكافآتك.';
+
+  @override
   String get homeNavLabel => 'الرئيسية';
 
   @override

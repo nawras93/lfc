@@ -97,7 +97,7 @@ class _MemberAuthScreenState extends ConsumerState<MemberAuthScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _Header(tagline: l10n.loginTagline),
+              _Header(tagline: l10n.supporterAuthTagline),
               Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 480),

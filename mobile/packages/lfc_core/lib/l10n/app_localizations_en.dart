@@ -363,6 +363,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginTagline => 'Your academy. Your points. Your matchday.';
 
   @override
+  String get supporterAuthTagline => 'Your club. Your matchday. Your rewards.';
+
+  @override
   String get homeNavLabel => 'Home';
 
   @override

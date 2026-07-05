@@ -770,6 +770,12 @@ abstract class AppLocalizations {
   /// **'Your academy. Your points. Your matchday.'**
   String get loginTagline;
 
+  /// No description provided for @supporterAuthTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Your club. Your matchday. Your rewards.'**
+  String get supporterAuthTagline;
+
   /// No description provided for @homeNavLabel.
   ///
   /// In en, this message translates to:
