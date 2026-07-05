@@ -9,6 +9,11 @@ import 'config/app_config.dart';
 import 'core/api/api_exception.dart';
 import 'core/storage/token_storage.dart';
 import 'features/auth/data/auth_repository.dart';
+import 'features/content/data/content_repository.dart';
+import 'features/content/models/match_summary.dart';
+import 'features/content/models/news_article.dart';
+import 'features/content/models/news_summary.dart';
+import 'features/content/models/standing_row.dart';
 import 'features/locale/locale_controller.dart';
 import 'features/locale/data/locale_storage.dart';
 import 'features/offers/data/offers_repository.dart';
@@ -86,6 +91,9 @@ final dioProvider = Provider<Dio>((ref) {
         if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
+        if (config.appKey != null && config.appKey!.isNotEmpty) {
+          options.headers['X-App-Key'] = config.appKey;
+        }
         options.headers['Accept'] = 'application/json';
         options.headers['Accept-Language'] = ref
             .read(localeControllerProvider)
@@ -132,6 +140,32 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   );
 });
 
+final contentRepositoryProvider = Provider<ContentRepository>(
+  (ref) => ContentRepository(ref.watch(dioProvider)),
+);
+
+final newsProvider = FutureProvider.autoDispose<List<NewsSummary>>(
+  (ref) => ref.watch(contentRepositoryProvider).fetchNews(),
+);
+
+final newsArticleProvider = FutureProvider.autoDispose.family<NewsArticle, int>(
+  (ref, id) {
+    return ref.watch(contentRepositoryProvider).fetchNewsArticle(id);
+  },
+);
+
+final fixturesProvider = FutureProvider.autoDispose<List<MatchSummary>>(
+  (ref) => ref.watch(contentRepositoryProvider).fetchFixtures(),
+);
+
+final resultsProvider = FutureProvider.autoDispose<List<MatchSummary>>(
+  (ref) => ref.watch(contentRepositoryProvider).fetchResults(),
+);
+
+final standingsProvider = FutureProvider.autoDispose<List<StandingRow>>(
+  (ref) => ref.watch(contentRepositoryProvider).fetchStandings(),
+);
+
 final sessionControllerProvider =
     NotifierProvider<SessionController, SessionState>(SessionController.new);
 
@@ -174,6 +208,9 @@ final staffDioProvider = Provider<Dio>((ref) {
         final token = await storage.readToken();
         if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
+        }
+        if (config.appKey != null && config.appKey!.isNotEmpty) {
+          options.headers['X-App-Key'] = config.appKey;
         }
         options.headers['Accept'] = 'application/json';
         options.headers['Accept-Language'] = ref

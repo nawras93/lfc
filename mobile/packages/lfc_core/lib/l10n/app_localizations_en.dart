@@ -361,4 +361,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginTagline => 'Your academy. Your points. Your matchday.';
+
+  @override
+  String get homeNavLabel => 'Home';
+
+  @override
+  String get matchesNavLabel => 'Matches';
+
+  @override
+  String get membershipNavLabel => 'Membership';
+
+  @override
+  String get latestNewsTitle => 'Latest news';
+
+  @override
+  String get fixturesTitle => 'Fixtures';
+
+  @override
+  String get resultsTitle => 'Results';
+
+  @override
+  String get tableTitle => 'Table';
+
+  @override
+  String get newsEmptyState => 'No news has been published yet.';
+
+  @override
+  String get fixturesEmptyState => 'No upcoming fixtures right now.';
+
+  @override
+  String get resultsEmptyState => 'No results available yet.';
+
+  @override
+  String get tableEmptyState => 'The league table is not available yet.';
+
+  @override
+  String get membershipSignInPrompt => 'Sign in to access your membership';
+
+  @override
+  String get membershipComingSoon => 'Your membership - coming soon';
+
+  @override
+  String get clubColumnLabel => 'Club';
+
+  @override
+  String get positionColumnShort => 'Pos';
+
+  @override
+  String get playedColumnShort => 'P';
+
+  @override
+  String get wonColumnShort => 'W';
+
+  @override
+  String get drawnColumnShort => 'D';
+
+  @override
+  String get lostColumnShort => 'L';
+
+  @override
+  String get goalDifferenceColumnShort => 'GD';
+
+  @override
+  String get pointsColumnShort => 'Pts';
+
+  @override
+  String get venueLabel => 'Venue';
+
+  @override
+  String get homeMatchChip => 'Home';
+
+  @override
+  String get awayMatchChip => 'Away';
 }

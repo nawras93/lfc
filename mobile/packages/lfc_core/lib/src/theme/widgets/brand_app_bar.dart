@@ -34,9 +34,7 @@ class BrandAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Flexible(
-            child: BrandMark(compact: true, showSubline: false),
-          ),
+          const Flexible(child: BrandMark(compact: true, showSubline: false)),
           if (roleLabel != null) ...[
             const SizedBox(width: 10),
             _RoleChip(label: roleLabel!),

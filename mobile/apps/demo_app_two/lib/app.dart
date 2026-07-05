@@ -14,10 +14,13 @@ class DemoAppTwo extends StatelessWidget {
       overrides: [
         brandProvider.overrideWithValue(demoTwoBrand),
         appConfigProvider.overrideWith(
-          (ref) => AppConfig.fromEnvironment(defaultBaseUrl: demoTwoApiBaseUrl),
+          (ref) => AppConfig.fromEnvironment(
+            defaultBaseUrl: demoTwoApiBaseUrl,
+            appKey: 'app_two',
+          ),
         ),
       ],
-      child: const CoreApp(),
+      child: const SupporterApp(),
     );
   }
 }

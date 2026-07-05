@@ -103,9 +103,7 @@ class _DetailRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: theme.textTheme.labelMedium?.copyWith(
-                letterSpacing: 0.4,
-              ),
+              style: theme.textTheme.labelMedium?.copyWith(letterSpacing: 0.4),
             ),
           ),
           Expanded(

@@ -14,9 +14,7 @@ class VvipPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [palette.goldBright, palette.gold],
-        ),
+        gradient: LinearGradient(colors: [palette.goldBright, palette.gold]),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(

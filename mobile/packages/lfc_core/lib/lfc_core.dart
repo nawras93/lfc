@@ -1,4 +1,5 @@
 export 'src/app.dart' show CoreApp;
+export 'src/supporter_app.dart' show SupporterApp;
 export 'src/branding/brand.dart'
     show Brand, BrandPalette, BrandWordmark, brandProvider;
 export 'src/config/app_config.dart' show AppConfig;

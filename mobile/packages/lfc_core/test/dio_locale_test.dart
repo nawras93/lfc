@@ -60,4 +60,30 @@ void main() {
 
     expect(captured, ['en', 'ar']);
   });
+
+  test('dio sends X-App-Key when configured', () async {
+    final container = ProviderContainer(
+      overrides: [
+        appConfigProvider.overrideWithValue(
+          const AppConfig(
+            apiBaseUrl: 'http://localhost:8000/api/v1',
+            appKey: 'app_two',
+          ),
+        ),
+        secureStorageProvider.overrideWithValue(MemorySecureStorage()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final dio = container.read(dioProvider);
+    String? captured;
+    dio.httpClientAdapter = FakeHttpClientAdapter((options) async {
+      captured = options.headers['X-App-Key'] as String?;
+      return jsonResponseBody(const {'data': []});
+    });
+
+    await dio.get('/content/news');
+
+    expect(captured, 'app_two');
+  });
 }

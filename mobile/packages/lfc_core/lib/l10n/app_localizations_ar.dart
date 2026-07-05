@@ -358,4 +358,76 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get loginTagline => 'أكاديميتك. نقاطك. يوم مباراتك.';
+
+  @override
+  String get homeNavLabel => 'الرئيسية';
+
+  @override
+  String get matchesNavLabel => 'المباريات';
+
+  @override
+  String get membershipNavLabel => 'العضوية';
+
+  @override
+  String get latestNewsTitle => 'آخر الأخبار';
+
+  @override
+  String get fixturesTitle => 'المباريات القادمة';
+
+  @override
+  String get resultsTitle => 'النتائج';
+
+  @override
+  String get tableTitle => 'الترتيب';
+
+  @override
+  String get newsEmptyState => 'لا توجد أخبار منشورة بعد.';
+
+  @override
+  String get fixturesEmptyState => 'لا توجد مباريات قادمة الآن.';
+
+  @override
+  String get resultsEmptyState => 'لا توجد نتائج متاحة بعد.';
+
+  @override
+  String get tableEmptyState => 'جدول الترتيب غير متاح بعد.';
+
+  @override
+  String get membershipSignInPrompt => 'سجّل الدخول للوصول إلى عضويتك';
+
+  @override
+  String get membershipComingSoon => 'عضويتك - قريبًا';
+
+  @override
+  String get clubColumnLabel => 'النادي';
+
+  @override
+  String get positionColumnShort => 'م';
+
+  @override
+  String get playedColumnShort => 'ل';
+
+  @override
+  String get wonColumnShort => 'ف';
+
+  @override
+  String get drawnColumnShort => 'ت';
+
+  @override
+  String get lostColumnShort => 'خ';
+
+  @override
+  String get goalDifferenceColumnShort => 'ف.أ';
+
+  @override
+  String get pointsColumnShort => 'ن';
+
+  @override
+  String get venueLabel => 'الملعب';
+
+  @override
+  String get homeMatchChip => 'داخل الأرض';
+
+  @override
+  String get awayMatchChip => 'خارج الأرض';
 }

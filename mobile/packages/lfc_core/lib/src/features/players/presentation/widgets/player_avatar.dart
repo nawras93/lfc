@@ -20,7 +20,10 @@ class PlayerAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: scheme.primary.withValues(alpha: 0.12),
-        border: Border.all(color: palette.gold.withValues(alpha: 0.6), width: 1.5),
+        border: Border.all(
+          color: palette.gold.withValues(alpha: 0.6),
+          width: 1.5,
+        ),
       ),
       alignment: Alignment.center,
       child: Text(

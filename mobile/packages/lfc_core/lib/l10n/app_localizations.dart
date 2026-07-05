@@ -769,6 +769,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your academy. Your points. Your matchday.'**
   String get loginTagline;
+
+  /// No description provided for @homeNavLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeNavLabel;
+
+  /// No description provided for @matchesNavLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get matchesNavLabel;
+
+  /// No description provided for @membershipNavLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Membership'**
+  String get membershipNavLabel;
+
+  /// No description provided for @latestNewsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest news'**
+  String get latestNewsTitle;
+
+  /// No description provided for @fixturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixtures'**
+  String get fixturesTitle;
+
+  /// No description provided for @resultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get resultsTitle;
+
+  /// No description provided for @tableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Table'**
+  String get tableTitle;
+
+  /// No description provided for @newsEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'No news has been published yet.'**
+  String get newsEmptyState;
+
+  /// No description provided for @fixturesEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming fixtures right now.'**
+  String get fixturesEmptyState;
+
+  /// No description provided for @resultsEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'No results available yet.'**
+  String get resultsEmptyState;
+
+  /// No description provided for @tableEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'The league table is not available yet.'**
+  String get tableEmptyState;
+
+  /// No description provided for @membershipSignInPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to access your membership'**
+  String get membershipSignInPrompt;
+
+  /// No description provided for @membershipComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Your membership - coming soon'**
+  String get membershipComingSoon;
+
+  /// No description provided for @clubColumnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Club'**
+  String get clubColumnLabel;
+
+  /// No description provided for @positionColumnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Pos'**
+  String get positionColumnShort;
+
+  /// No description provided for @playedColumnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'P'**
+  String get playedColumnShort;
+
+  /// No description provided for @wonColumnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get wonColumnShort;
+
+  /// No description provided for @drawnColumnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'D'**
+  String get drawnColumnShort;
+
+  /// No description provided for @lostColumnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'L'**
+  String get lostColumnShort;
+
+  /// No description provided for @goalDifferenceColumnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'GD'**
+  String get goalDifferenceColumnShort;
+
+  /// No description provided for @pointsColumnShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Pts'**
+  String get pointsColumnShort;
+
+  /// No description provided for @venueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue'**
+  String get venueLabel;
+
+  /// No description provided for @homeMatchChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeMatchChip;
+
+  /// No description provided for @awayMatchChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Away'**
+  String get awayMatchChip;
 }
 
 class _AppLocalizationsDelegate

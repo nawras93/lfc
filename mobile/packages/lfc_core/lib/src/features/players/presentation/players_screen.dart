@@ -59,10 +59,8 @@ class PlayersScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
             itemCount: items.length,
             separatorBuilder: (_, _) => const SizedBox(height: 12),
-            itemBuilder: (context, index) => _PlayerCard(
-              player: items[index],
-              pointsUnit: l10n.pointsUnit,
-            ),
+            itemBuilder: (context, index) =>
+                _PlayerCard(player: items[index], pointsUnit: l10n.pointsUnit),
           ),
         );
       },
@@ -195,7 +193,11 @@ class _EmptyPlayers extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
-        Text(title, textAlign: TextAlign.center, style: theme.textTheme.titleLarge),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.titleLarge,
+        ),
         const SizedBox(height: 8),
         Text(
           body,
