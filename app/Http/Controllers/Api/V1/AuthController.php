@@ -10,6 +10,7 @@ use App\Models\ParentAccount;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -47,7 +48,9 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $parent = ParentAccount::query()->where('email', $credentials['email'])->first();
+        $parent = ParentAccount::query()
+            ->whereRaw('lower(email) = ?', [Str::lower($credentials['email'])])
+            ->first();
 
         if (! $parent || ! $parent->password || ! Hash::check($credentials['password'], $parent->password)) {
             throw ValidationException::withMessages([

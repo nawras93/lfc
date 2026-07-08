@@ -74,6 +74,8 @@ class _StaffLoginScreenState extends ConsumerState<StaffLoginScreen> {
                       const SizedBox(height: 24),
                       TextFormField(
                         controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
                         decoration: InputDecoration(
                           labelText: l10n.emailLabel,
                           errorText: _error?.firstErrorFor('email'),
