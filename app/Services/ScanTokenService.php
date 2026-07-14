@@ -10,7 +10,7 @@ class ScanTokenService
     public function issue(ParentAccount $parent, ?Carbon $at = null): array
     {
         $at ??= now();
-        $ttl = config('scan.token_ttl', 60);
+        $ttl = (int) config('scan.token_ttl', 60);
         $secret = config('scan.qr_secret');
 
         $payload = [
@@ -31,7 +31,7 @@ class ScanTokenService
     public function verify(string $token, ?Carbon $at = null): ?int
     {
         $at ??= now();
-        $ttl = config('scan.token_ttl', 60);
+        $ttl = (int) config('scan.token_ttl', 60);
         $secret = config('scan.qr_secret');
 
         $parts = explode('.', $token, 2);

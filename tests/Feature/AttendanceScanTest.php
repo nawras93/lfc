@@ -82,6 +82,20 @@ class AttendanceScanTest extends TestCase
         return app(ScanTokenService::class)->issue($this->parent);
     }
 
+    public function test_token_issue_and_verify_survive_a_string_ttl(): void
+    {
+        // env() hands back a string whenever SCAN_TOKEN_TTL is set in .env, and
+        // Carbon 3's addSeconds() only accepts int|float — so an uncast value
+        // 500s every /scan-token request.
+        config(['scan.token_ttl' => '900']);
+
+        $service = app(ScanTokenService::class);
+        $result = $service->issue($this->parent);
+
+        $this->assertNotEmpty($result['expires_at']);
+        $this->assertSame($this->parent->id, $service->verify($result['token']));
+    }
+
     public function test_token_issue_and_verify_round_trip(): void
     {
         $service = app(ScanTokenService::class);
