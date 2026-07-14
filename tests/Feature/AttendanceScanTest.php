@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Services\ScanTokenService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AttendanceScanTest extends TestCase
@@ -82,18 +83,49 @@ class AttendanceScanTest extends TestCase
         return app(ScanTokenService::class)->issue($this->parent);
     }
 
-    public function test_token_issue_and_verify_survive_a_string_ttl(): void
+    /** An app-two fixture open for scanning — app-two matches carry no team. */
+    private function createAppTwoOpenFixture(): Fixture
     {
-        // env() hands back a string whenever SCAN_TOKEN_TTL is set in .env, and
-        // Carbon 3's addSeconds() only accepts int|float — so an uncast value
-        // 500s every /scan-token request.
-        config(['scan.token_ttl' => '900']);
+        return Fixture::query()->create([
+            'team_id' => null,
+            'season_id' => $this->season->id,
+            'opponent' => 'App Two Fixture',
+            'venue' => 'Training Ground',
+            'kickoff_at' => now()->addDays(2),
+            'scan_opens_at' => now()->subHour(),
+            'scan_closes_at' => now()->addHours(2),
+            'status' => FixtureStatus::OpenForScanning,
+            'app' => AppKey::AppTwo,
+        ]);
+    }
+
+    /**
+     * env() hands back a string whenever SCAN_TOKEN_TTL is set in .env, and Carbon 3's
+     * addSeconds() only accepts int|float — so an uncast value 500s every /scan-token.
+     * A blank or non-numeric value then casts to 0, which would expire every QR the
+     * instant it is issued and kill scanning silently. Both must fall back safely.
+     */
+    #[DataProvider('unusableTtlProvider')]
+    public function test_token_issue_and_verify_survive_an_unusable_ttl(mixed $ttl): void
+    {
+        config(['scan.token_ttl' => $ttl]);
 
         $service = app(ScanTokenService::class);
         $result = $service->issue($this->parent);
 
         $this->assertNotEmpty($result['expires_at']);
         $this->assertSame($this->parent->id, $service->verify($result['token']));
+    }
+
+    public static function unusableTtlProvider(): array
+    {
+        return [
+            'string from .env' => ['900'],
+            'blank SCAN_TOKEN_TTL=' => [''],
+            'non-numeric' => ['abc'],
+            'zero' => [0],
+            'negative' => [-5],
+        ];
     }
 
     public function test_token_issue_and_verify_round_trip(): void
@@ -358,17 +390,7 @@ class AttendanceScanTest extends TestCase
 
     public function test_staff_fixtures_endpoint_without_header_defaults_to_app_one(): void
     {
-        $appTwoFixture = Fixture::query()->create([
-            'team_id' => null,
-            'season_id' => $this->season->id,
-            'opponent' => 'App Two Fixture',
-            'venue' => 'Training Ground',
-            'kickoff_at' => now()->addDays(2),
-            'scan_opens_at' => now()->subHour(),
-            'scan_closes_at' => now()->addHours(2),
-            'status' => FixtureStatus::OpenForScanning,
-            'app' => AppKey::AppTwo,
-        ]);
+        $appTwoFixture = $this->createAppTwoOpenFixture();
 
         $this->withToken($this->adminToken())
             ->getJson('/api/v1/staff/fixtures')
@@ -385,17 +407,7 @@ class AttendanceScanTest extends TestCase
 
     public function test_staff_fixtures_endpoint_with_app_two_header_returns_only_app_two_open_fixtures(): void
     {
-        $appTwoFixture = Fixture::query()->create([
-            'team_id' => null,
-            'season_id' => $this->season->id,
-            'opponent' => 'App Two Fixture',
-            'venue' => 'Training Ground',
-            'kickoff_at' => now()->addDays(2),
-            'scan_opens_at' => now()->subHour(),
-            'scan_closes_at' => now()->addHours(2),
-            'status' => FixtureStatus::OpenForScanning,
-            'app' => AppKey::AppTwo,
-        ]);
+        $appTwoFixture = $this->createAppTwoOpenFixture();
 
         $this->withToken($this->adminToken())
             ->withHeader('X-App-Key', AppKey::AppTwo->value)
@@ -413,17 +425,7 @@ class AttendanceScanTest extends TestCase
 
     public function test_staff_fixtures_endpoint_with_app_one_header_returns_only_app_one_open_fixtures(): void
     {
-        $appTwoFixture = Fixture::query()->create([
-            'team_id' => null,
-            'season_id' => $this->season->id,
-            'opponent' => 'App Two Fixture',
-            'venue' => 'Training Ground',
-            'kickoff_at' => now()->addDays(2),
-            'scan_opens_at' => now()->subHour(),
-            'scan_closes_at' => now()->addHours(2),
-            'status' => FixtureStatus::OpenForScanning,
-            'app' => AppKey::AppTwo,
-        ]);
+        $appTwoFixture = $this->createAppTwoOpenFixture();
 
         $this->withToken($this->adminToken())
             ->withHeader('X-App-Key', AppKey::AppOne->value)
@@ -446,6 +448,37 @@ class AttendanceScanTest extends TestCase
             ->assertStatus(403);
     }
 
+    /**
+     * The app-two staff scanner sends X-App-Key on every request, /scan included.
+     * /scan is deliberately NOT app-scoped — scoping it would filter the Fixture and
+     * ParentAccount lookups it needs — so the header must stay inert here. Without this
+     * test, moving SetAppContextFromHeader onto the whole authed group would 404 every
+     * app-two scan on-device while the suite stayed green.
+     */
+    public function test_scan_ignores_the_app_key_header(): void
+    {
+        $member = ParentAccount::factory()->create([
+            'account_type' => AccountType::Member,
+            'app' => AppKey::AppTwo,
+        ]);
+        $memberToken = app(ScanTokenService::class)->issue($member);
+        $appTwoFixture = $this->createAppTwoOpenFixture();
+
+        $this->withToken($this->adminToken())
+            ->withHeader('X-App-Key', AppKey::AppTwo->value)
+            ->postJson('/api/v1/scan', [
+                'fixture_id' => $appTwoFixture->id,
+                'token' => $memberToken['token'],
+            ])
+            ->assertOk()
+            ->assertJsonPath('discount_added_percent', 0.5);
+
+        $this->assertDatabaseHas('attendance_scans', [
+            'parent_account_id' => $member->id,
+            'fixture_id' => $appTwoFixture->id,
+        ]);
+    }
+
     public function test_scan_rejects_parent_and_fixture_from_different_apps(): void
     {
         $member = ParentAccount::factory()->create([
@@ -461,17 +494,7 @@ class AttendanceScanTest extends TestCase
             ])->assertStatus(422)
             ->assertJson(['message' => 'This QR is not valid for this match.']);
 
-        $appTwoFixture = Fixture::query()->create([
-            'team_id' => null,
-            'season_id' => $this->season->id,
-            'opponent' => 'App Two Fixture',
-            'venue' => 'Training Ground',
-            'kickoff_at' => now()->addDays(2),
-            'scan_opens_at' => now()->subHour(),
-            'scan_closes_at' => now()->addHours(2),
-            'status' => FixtureStatus::OpenForScanning,
-            'app' => AppKey::AppTwo,
-        ]);
+        $appTwoFixture = $this->createAppTwoOpenFixture();
 
         $parentToken = $this->issueParentToken();
 

@@ -293,7 +293,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get staffLoginButton => 'دخول كموظف';
 
   @override
-  String get backToParentLogin => 'العودة إلى دخول أولياء الأمور';
+  String get exitStaffModeButton => 'الخروج من وضع الطاقم';
 
   @override
   String get staffScannerTitle => 'الماسح';
@@ -329,7 +329,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get scanDiscountTotalLabel => 'إجمالي الخصم';
 
   @override
-  String scanDiscountCapNote(double cap) {
+  String scanDiscountCapNote(int cap) {
     return 'الحد الأقصى: $cap%';
   }
 

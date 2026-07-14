@@ -19,7 +19,10 @@ void main() {
         overrides: [
           brandProvider.overrideWithValue(demoTwoBrand),
           appConfigProvider.overrideWithValue(
-            const AppConfig(apiBaseUrl: demoTwoApiBaseUrl, appKey: 'app_two'),
+            const AppConfig(
+              apiBaseUrl: demoTwoApiBaseUrl,
+              appKey: AppKeys.appTwo,
+            ),
           ),
           secureStorageProvider.overrideWithValue(_MemorySecureStorage()),
           contentRepositoryProvider.overrideWithValue(

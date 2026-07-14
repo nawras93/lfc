@@ -113,7 +113,7 @@
   "staffLoginTitle": "دخول ماسح الموظفين",
   "staffLoginSubtitle": "استخدم حساب موظف يملك صلاحية المسح.",
   "staffLoginButton": "دخول كموظف",
-  "backToParentLogin": "العودة إلى دخول أولياء الأمور",
+  "exitStaffModeButton": "الخروج من وضع الطاقم",
   "staffScannerTitle": "الماسح",
   "fixtureLabel": "المباراة",
   "manualTokenTitle": "إدخال الرمز يدويًا",
@@ -129,7 +129,7 @@
   "@scanDiscountCapNote": {
     "placeholders": {
       "cap": {
-        "type": "double"
+        "type": "int"
       }
     }
   },

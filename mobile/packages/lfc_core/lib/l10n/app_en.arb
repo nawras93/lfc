@@ -113,7 +113,7 @@
   "staffLoginTitle": "Staff scanner login",
   "staffLoginSubtitle": "Use a staff account with scanner access.",
   "staffLoginButton": "Sign in as staff",
-  "backToParentLogin": "Back to parent login",
+  "exitStaffModeButton": "Exit staff mode",
   "staffScannerTitle": "Scanner",
   "fixtureLabel": "Fixture",
   "manualTokenTitle": "Manual token entry",
@@ -129,7 +129,7 @@
   "@scanDiscountCapNote": {
     "placeholders": {
       "cap": {
-        "type": "double"
+        "type": "int"
       }
     }
   },

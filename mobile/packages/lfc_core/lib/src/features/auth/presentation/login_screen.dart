@@ -9,6 +9,7 @@ import '../../../theme/app_theme.dart';
 import '../../../theme/presentation/theme_toggle_button.dart';
 import '../../../theme/widgets/fanar_backdrop.dart';
 import '../../locale/presentation/language_toggle_button.dart';
+import '../../staff/presentation/staff_entry_button.dart';
 import 'accept_invite_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -160,13 +161,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: Text(l10n.openAcceptInvite),
                           ),
                           const Divider(height: 28),
-                          OutlinedButton.icon(
-                            onPressed: () => ref
-                                .read(staffSessionControllerProvider.notifier)
-                                .showLogin(),
-                            icon: const Icon(Icons.qr_code_scanner),
-                            label: Text(l10n.staffScannerEntry),
-                          ),
+                          const StaffEntryButton(),
                           const SizedBox(height: 16),
                           Text(
                             l10n.demoApiHint,

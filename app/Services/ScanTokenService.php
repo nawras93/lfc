@@ -7,10 +7,21 @@ use Carbon\Carbon;
 
 class ScanTokenService
 {
+    /**
+     * A blank or non-numeric config value casts to 0, which would expire every QR
+     * the instant it is issued. Guard here too, so the TTL is safe whatever its source.
+     */
+    private function ttl(): int
+    {
+        $ttl = (int) config('scan.token_ttl', 60);
+
+        return $ttl > 0 ? $ttl : 60;
+    }
+
     public function issue(ParentAccount $parent, ?Carbon $at = null): array
     {
         $at ??= now();
-        $ttl = (int) config('scan.token_ttl', 60);
+        $ttl = $this->ttl();
         $secret = config('scan.qr_secret');
 
         $payload = [
@@ -31,7 +42,7 @@ class ScanTokenService
     public function verify(string $token, ?Carbon $at = null): ?int
     {
         $at ??= now();
-        $ttl = (int) config('scan.token_ttl', 60);
+        $ttl = $this->ttl();
         $secret = config('scan.qr_secret');
 
         $parts = explode('.', $token, 2);

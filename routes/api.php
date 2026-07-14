@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\ScanController;
 use App\Http\Controllers\Api\V1\StaffAuthController;
 use App\Http\Controllers\Api\V1\StandingController;
 use App\Http\Middleware\SetAppContextFromHeader;
+use App\Http\Middleware\SetAppContextFromUser;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')
@@ -31,7 +32,7 @@ Route::prefix('v1')
             Route::get('/content/standings', [StandingController::class, 'index']);
         });
 
-        Route::middleware('auth:sanctum')->group(function (): void {
+        Route::middleware(['auth:sanctum', SetAppContextFromUser::class])->group(function (): void {
             Route::post('/auth/logout', [AuthController::class, 'logout']);
             Route::get('/me', ProfileController::class);
             Route::get('/me/benefits', BenefitController::class);

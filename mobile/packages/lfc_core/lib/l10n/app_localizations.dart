@@ -638,11 +638,11 @@ abstract class AppLocalizations {
   /// **'Sign in as staff'**
   String get staffLoginButton;
 
-  /// No description provided for @backToParentLogin.
+  /// No description provided for @exitStaffModeButton.
   ///
   /// In en, this message translates to:
-  /// **'Back to parent login'**
-  String get backToParentLogin;
+  /// **'Exit staff mode'**
+  String get exitStaffModeButton;
 
   /// No description provided for @staffScannerTitle.
   ///
@@ -714,7 +714,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Cap: {cap}%'**
-  String scanDiscountCapNote(double cap);
+  String scanDiscountCapNote(int cap);
 
   /// No description provided for @totalPointsLabel.
   ///

@@ -16,7 +16,7 @@ class DemoAppTwo extends StatelessWidget {
         appConfigProvider.overrideWith(
           (ref) => AppConfig.fromEnvironment(
             defaultBaseUrl: demoTwoApiBaseUrl,
-            appKey: 'app_two',
+            appKey: AppKeys.appTwo,
           ),
         ),
       ],

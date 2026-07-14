@@ -455,7 +455,7 @@ void main() {
     expect(find.byKey(const Key('staff-scan-result')), findsOneWidget);
     expect(find.text('Discount added: +0.5%'), findsOneWidget);
     expect(find.text('Total discount: 3.0%'), findsOneWidget);
-    expect(find.text('Cap: 10.0%'), findsOneWidget);
+    expect(find.text('Cap: 10%'), findsOneWidget);
     expect(find.text('Total points: 0'), findsNothing);
   });
 

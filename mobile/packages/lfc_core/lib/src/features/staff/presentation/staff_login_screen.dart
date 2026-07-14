@@ -119,7 +119,7 @@ class _StaffLoginScreenState extends ConsumerState<StaffLoginScreen> {
                         onPressed: () => ref
                             .read(staffSessionControllerProvider.notifier)
                             .hideLogin(),
-                        child: Text(l10n.backToParentLogin),
+                        child: Text(l10n.exitStaffModeButton),
                       ),
                     ],
                   ),

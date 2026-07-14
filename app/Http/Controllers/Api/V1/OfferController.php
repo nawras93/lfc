@@ -18,8 +18,8 @@ class OfferController extends Controller
             abort(403, 'Only parent accounts can view offers.');
         }
 
+        // App scoping comes from SetAppContextFromUser + the ScopedToApp global scope.
         $offers = Offer::query()
-            ->forApp($parent->app)
             ->visibleTo($parent)
             ->orderByDesc('created_at')
             ->get()

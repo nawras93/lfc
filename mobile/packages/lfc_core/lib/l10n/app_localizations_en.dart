@@ -295,7 +295,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get staffLoginButton => 'Sign in as staff';
 
   @override
-  String get backToParentLogin => 'Back to parent login';
+  String get exitStaffModeButton => 'Exit staff mode';
 
   @override
   String get staffScannerTitle => 'Scanner';
@@ -332,7 +332,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanDiscountTotalLabel => 'Total discount';
 
   @override
-  String scanDiscountCapNote(double cap) {
+  String scanDiscountCapNote(int cap) {
     return 'Cap: $cap%';
   }
 

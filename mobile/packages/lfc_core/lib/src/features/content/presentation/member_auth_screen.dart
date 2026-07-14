@@ -10,6 +10,7 @@ import '../../../theme/presentation/theme_toggle_button.dart';
 import '../../../theme/widgets/fanar_backdrop.dart';
 import '../../locale/presentation/language_toggle_button.dart';
 import '../../session/session_controller.dart';
+import '../../staff/presentation/staff_entry_button.dart';
 
 enum _AuthMode { signIn, createAccount }
 
@@ -249,19 +250,7 @@ class _MemberAuthScreenState extends ConsumerState<MemberAuthScreen> {
                                   ),
                           ),
                           const Divider(height: 28),
-                          OutlinedButton.icon(
-                            key: const Key('staff-entry'),
-                            onPressed: () {
-                              ref
-                                  .read(staffSessionControllerProvider.notifier)
-                                  .showLogin();
-                              if (Navigator.of(context).canPop()) {
-                                Navigator.of(context).pop();
-                              }
-                            },
-                            icon: const Icon(Icons.qr_code_scanner),
-                            label: Text(l10n.staffScannerEntry),
-                          ),
+                          const StaffEntryButton(),
                         ],
                       ),
                     ),
