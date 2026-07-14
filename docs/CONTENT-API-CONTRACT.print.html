@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Content API — handover sheet for the website team</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+
+  :root {
+    --navy: #0d1b33;
+    --gold: #b48b2f;
+    --ink: #1a1f2b;
+    --muted: #5b6474;
+    --rule: #d9dee7;
+    --bg-soft: #f5f7fa;
+    --danger: #8c2f2f;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10.2pt;
+    line-height: 1.5;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Cover header */
+  .masthead {
+    border-bottom: 3px solid var(--gold);
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
+  .eyebrow {
+    font-size: 8pt;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  h1 {
+    font-size: 20pt;
+    line-height: 1.2;
+    margin: 0 0 6px;
+    color: var(--navy);
+    letter-spacing: -.01em;
+  }
+  .subtitle { margin: 0; color: var(--muted); font-size: 9.6pt; }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--navy);
+    margin: 22px 0 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--rule);
+    break-after: avoid;
+  }
+  h3 {
+    font-size: 10.6pt;
+    margin: 16px 0 6px;
+    color: var(--navy);
+    break-after: avoid;
+  }
+  h3 code {
+    background: var(--navy);
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 9.4pt;
+  }
+
+  p { margin: 0 0 9px; }
+  ul { margin: 0 0 10px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+
+  strong { color: var(--navy); }
+
+  code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 8.9pt;
+    background: var(--bg-soft);
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+
+  pre {
+    direction: ltr;
+    unicode-bidi: isolate;
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold);
+    border-radius: 5px;
+    padding: 10px 12px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 8.6pt;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    margin: 0 0 11px;
+    break-inside: avoid;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 12px;
+    font-size: 9.4pt;
+    break-inside: avoid;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    text-align: left;
+    padding: 6px 9px;
+    font-weight: 600;
+    font-size: 9pt;
+  }
+  td {
+    padding: 6px 9px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fbfcfd; }
+  td:first-child { white-space: nowrap; }
+  td code { font-size: 8.6pt; }
+
+  .callout {
+    background: #fdf8ee;
+    border: 1px solid #e8d7ab;
+    border-left: 3px solid var(--gold);
+    border-radius: 5px;
+    padding: 10px 12px;
+    margin: 0 0 12px;
+    break-inside: avoid;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .danger {
+    background: #fdf4f4;
+    border-color: #e3c0c0;
+    border-left-color: var(--danger);
+  }
+  .danger strong { color: var(--danger); }
+
+  .lead {
+    font-size: 10.6pt;
+    color: var(--ink);
+  }
+
+  .note { color: var(--muted); font-size: 9.2pt; }
+
+  ol { padding-left: 18px; margin: 0 0 10px; }
+  ol li { margin-bottom: 7px; }
+
+  /* Arabic inside an LTR JSON sample: isolate each string so the bidi algorithm
+     cannot drag the surrounding quotes, commas and braces out of place, and use a
+     face that actually renders Arabic well (mono fonts do not). */
+  .rtl {
+    direction: rtl;
+    unicode-bidi: isolate;
+    font-family: "Geeza Pro", "SF Arabic", "Al Bayan", "Arial", sans-serif;
+    font-size: 9.4pt;
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <p class="eyebrow">Lusail SC — Fan App</p>
+  <h1>Content API — handover sheet for the website team</h1>
+  <p class="subtitle">The contract the website exposes and the fan app consumes.</p>
+</div>
+
+<p class="lead"><strong>Purpose.</strong> The Lusail SC fan app has no content of its own. Its Home page (news), Matches page (fixtures, results, league table) and news detail page all read live from an API. The website will hold this same content, so <strong>the website is where it should live, and the website exposes it through the API described here.</strong> The app then reads from you, and content is entered once.</p>
+
+<p><strong>Direction of the dependency.</strong> You build these endpoints as part of the site. We consume them. Nothing needs to be built on our side.</p>
+
+<div class="callout">
+  <p><strong>This is not a wishlist — it is a working contract.</strong> Every endpoint and payload below is already implemented and running in our demo backend, and the app is talking to it today. Match this shape and the app connects with no client changes. If you need to deviate, tell us <strong>before</strong> you build, not after.</p>
+</div>
+
+<h2>1. Ground rules</h2>
+
+<table>
+  <tr><th>Rule</th><th>Detail</th></tr>
+  <tr><td>Auth</td><td><strong>None.</strong> All of these are public, readable by any visitor. Do not put them behind a login.</td></tr>
+  <tr><td>Format</td><td>JSON, UTF-8.</td></tr>
+  <tr><td>Envelope</td><td>Every response is wrapped: <code>{"data": ...}</code>. Lists return <code>{"data": [...]}</code>, single items <code>{"data": {...}}</code>.</td></tr>
+  <tr><td>Empty state</td><td>An empty list is <code>{"data": []}</code> with <strong>HTTP 200</strong> — never a 404, never <code>null</code>.</td></tr>
+  <tr><td>Missing item</td><td>A news article that doesn't exist, or isn't published, is <strong>HTTP 404</strong>.</td></tr>
+  <tr><td>CORS</td><td>Must allow the app's origin.</td></tr>
+  <tr><td>Base path</td><td>Yours to choose (e.g. <code>https://lusailsc.qa/api/v1</code>). Give us the base URL; the paths below hang off it.</td></tr>
+</table>
+
+<h2>2. Language</h2>
+
+<p><strong>One request, one language.</strong> The client sends a standard header:</p>
+
+<pre><code>Accept-Language: ar        (or: en)</code></pre>
+
+<p>You return the strings <strong>already translated, in the same JSON fields</strong>. Do <strong>not</strong> return <code>title</code> and <code>title_ar</code> side by side and expect the client to choose — the client sends the header and renders whatever comes back.</p>
+
+<p>If the header is missing, default to English. If a given item has no Arabic translation, fall back to the English text rather than returning an empty string.</p>
+
+<p>Fields that are translated: <code>title</code>, <code>excerpt</code>, <code>body</code>, <code>opponent</code>, <code>competition</code>, <code>club_name</code>.</p>
+
+<h2>3. Endpoints</h2>
+
+<h3><code>GET /content/news</code> — news list (Home page)</h3>
+
+<pre><code>{
+  "data": [
+    {
+      "id": 3,
+      "title": "Club president honoured with the Sports &amp; Youth Excellence Award",
+      "excerpt": "Lusail SC president Nawaf Mohammed Al-Mudahka received the Sports
+                  and Youth Excellence Award on behalf of the Sumaismah Youth Centre.",
+      "image_url": "https://lusailsc.qa/media/news/president-award.jpg",
+      "published_at": "2026-07-11T18:35:58+00:00"
+    }
+  ]
+}</code></pre>
+
+<p>With <code>Accept-Language: ar</code>, the same request returns:</p>
+
+<pre><code>{
+  "data": [
+    {
+      "id": 3,
+      "title": "<span class="rtl">رئيس نادي لوسيل يحصل على جائزة التميز الرياضي والشبابي</span>",
+      "excerpt": "<span class="rtl">حصل رئيس نادي لوسيل نواف محمد المضاحكة على جائزة التميز…</span>",
+      "image_url": "https://lusailsc.qa/media/news/president-award.jpg",
+      "published_at": "2026-07-11T18:35:58+00:00"
+    }
+  ]
+}</code></pre>
+<p class="note">The Arabic values above are shown truncated for space; the real response carries the full text. Note that only the <em>values</em> change — every key stays identical.</p>
+
+<ul>
+  <li><strong>Sorted newest first</strong> (<code>published_at</code> descending). The app renders in the order you send.</li>
+  <li><strong>Only published items.</strong> Drafts and future-dated posts must not appear.</li>
+</ul>
+
+<h3><code>GET /content/news/{id}</code> — one article (news detail page)</h3>
+
+<p>Same fields as the list, <strong>plus <code>body</code></strong> (the full article text):</p>
+
+<pre><code>{
+  "data": {
+    "id": 3,
+    "title": "…",
+    "excerpt": "…",
+    "body": "Full article text…",
+    "image_url": "https://lusailsc.qa/media/news/president-award.jpg",
+    "published_at": "2026-07-11T18:35:58+00:00"
+  }
+}</code></pre>
+
+<ul>
+  <li>Unpublished or unknown <code>id</code> → <strong>404</strong>.</li>
+  <li><code>body</code> is plain text. If you intend to send HTML, <strong>tell us first</strong> — the app does not render HTML today.</li>
+</ul>
+
+<h3><code>GET /content/fixtures</code> — upcoming matches</h3>
+
+<pre><code>{
+  "data": [
+    {
+      "id": 8,
+      "opponent": "Al Rayyan",
+      "competition": "Qatar Stars League",
+      "is_home": false,
+      "venue": "Ahmad bin Ali Stadium",
+      "kickoff_at": "2026-07-18T18:35:58+00:00",
+      "our_score": null,
+      "opponent_score": null
+    }
+  ]
+}</code></pre>
+
+<ul>
+  <li><strong>Upcoming only</strong> (kickoff in the future, no score yet), <strong>soonest first</strong>.</li>
+  <li><code>is_home</code> drives the Home/Away badge in the app.</li>
+</ul>
+
+<h3><code>GET /content/results</code> — past results</h3>
+
+<p>Identical shape, with scores filled in:</p>
+
+<pre><code>{
+  "data": [
+    {
+      "id": 7,
+      "opponent": "Al Arabi",
+      "competition": "Qatar Stars League",
+      "is_home": true,
+      "venue": "Lusail Stadium",
+      "kickoff_at": "2026-07-07T18:35:58+00:00",
+      "our_score": 2,
+      "opponent_score": 2
+    }
+  ]
+}</code></pre>
+
+<ul>
+  <li><strong>Played matches only</strong> (both scores present), <strong>most recent first</strong>.</li>
+  <li><code>our_score</code> is always <strong>Lusail's</strong> score, regardless of <code>is_home</code>. Do not swap them for away matches.</li>
+  <li>In Arabic, <code>opponent</code> and <code>competition</code> come back translated — <span class="rtl">العربي</span> and <span class="rtl">دوري نجوم قطر</span>.</li>
+</ul>
+
+<h3><code>GET /content/standings</code> — league table</h3>
+
+<pre><code>{
+  "data": [
+    {
+      "position": 1,
+      "club_name": "Al Sadd",
+      "played": 22,
+      "won": 14,
+      "drawn": 3,
+      "lost": 5,
+      "goals_for": 43,
+      "goals_against": 18,
+      "goal_difference": 25,
+      "points": 45,
+      "is_own_club": false
+    }
+  ]
+}</code></pre>
+
+<ul>
+  <li><strong>You compute <code>position</code>, <code>goal_difference</code> and the sort order</strong> — the app renders the array as given. Sort by points, then goal difference, then goals scored.</li>
+  <li><strong><code>is_own_club</code></strong> must be <code>true</code> on the Lusail SC row and nowhere else. The app uses it to highlight the club's row. Do not expect the app to match on the club's name — that breaks the moment the name is spelled differently in Arabic.</li>
+</ul>
+
+<h2>4. Field rules that will break the app if ignored</h2>
+
+<div class="callout danger">
+  <p><strong>These are not style preferences.</strong> The app will throw and the screen will fail to load.</p>
+</div>
+
+<table>
+  <tr><th>Field</th><th>Rule</th></tr>
+  <tr><td><code>id</code></td><td><strong>Required, integer, never null.</strong></td></tr>
+  <tr><td><code>published_at</code> <span class="note">(news)</span></td><td><strong>Required, never null.</strong> Any published article must have one.</td></tr>
+  <tr><td><code>kickoff_at</code> <span class="note">(matches)</span></td><td><strong>Required, never null.</strong></td></tr>
+  <tr><td>All dates</td><td><strong>ISO 8601 with a timezone offset</strong>: <code>2026-07-11T18:35:58+00:00</code>. Not <code>2026-07-11 18:35:58</code>, not a Unix timestamp.</td></tr>
+  <tr><td>Scores</td><td>Integers or <code>null</code> — never the strings <code>"2"</code> or <code>""</code>.</td></tr>
+  <tr><td><code>is_home</code>, <code>is_own_club</code></td><td>Real booleans <code>true</code>/<code>false</code> — never <code>1</code>/<code>0</code>, never <code>"true"</code>.</td></tr>
+</table>
+
+<p>Everything else (<code>title</code>, <code>excerpt</code>, <code>venue</code>, <code>image_url</code>, …) may be null or absent; the app degrades gracefully.</p>
+
+<h2>5. Images</h2>
+
+<p>Return <strong>absolute URLs</strong> in <code>image_url</code>:</p>
+
+<pre><code>"image_url": "https://lusailsc.qa/media/news/president-award.jpg"</code></pre>
+
+<ul>
+  <li><code>null</code> is fine — the app renders the card without a photo.</li>
+  <li>Images must be reachable over <strong>HTTPS</strong>, publicly, with no auth or hotlink protection.</li>
+  <li>The app displays them at <strong>16:9</strong>. Anything wildly off that ratio gets cropped, so a landscape source is best.</li>
+</ul>
+
+<h2>6. Open questions for the technical call</h2>
+
+<p>We should settle these before you build, not after:</p>
+
+<ol>
+  <li><strong>Pagination.</strong> No endpoint is paginated today (the demo has a handful of news items). A real site will accumulate hundreds. Decide now whether <code>/content/news</code> takes <code>?page=</code> / <code>?limit=</code>, because retrofitting it later changes the response envelope.</li>
+  <li><strong><code>venue</code> is not translated</strong> in our current implementation — it comes back in English in both languages. Do you want to translate it? (Our recommendation: yes, since the rest of the match card is translated.)</li>
+  <li><strong><code>body</code> format</strong> — plain text or HTML? The app renders plain text today; HTML needs work on our side.</li>
+  <li><strong>Caching</strong> — are you happy for us to cache responses, and will you send <code>ETag</code> / <code>Cache-Control</code>? The app currently refetches on pull-to-refresh and on a language switch.</li>
+  <li><strong>Who owns the content editorially</strong> — i.e. which CMS the club's staff actually type into. That's the whole point of this: <strong>one place to enter, two places to display.</strong></li>
+</ol>
+
+<h2>7. Reference implementation</h2>
+
+<p>Our demo backend implements this contract exactly and the app runs against it today. If it's useful, we can:</p>
+
+<ul>
+  <li>give you real sample responses for every endpoint (they're the JSON above, taken from a live server, not hand-written), and</li>
+  <li>point the app at your staging API as soon as one endpoint is up, so you get feedback on the first one before building the rest.</li>
+</ul>
+
+<div class="callout">
+  <p><strong>Suggested first delivery: <code>/content/news</code> alone.</strong> We'll wire the app's Home page to it and confirm the shape end-to-end. Then the remaining four are copy-paste.</p>
+</div>
+
+</body>
+</html>
