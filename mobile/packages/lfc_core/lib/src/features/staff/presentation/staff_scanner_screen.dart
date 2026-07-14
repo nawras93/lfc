@@ -106,6 +106,16 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
     }
   }
 
+  String _fixtureLabel(FixtureSummary fixture) {
+    final teamName = fixture.teamName?.trim() ?? '';
+
+    if (teamName.isEmpty) {
+      return fixture.opponent;
+    }
+
+    return '$teamName vs ${fixture.opponent}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -177,8 +187,7 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                               .map(
                                 (fixture) => DropdownMenuEntry<int>(
                                   value: fixture.id,
-                                  label:
-                                      '${fixture.teamName ?? ''} vs ${fixture.opponent}',
+                                  label: _fixtureLabel(fixture),
                                 ),
                               )
                               .toList(),
@@ -293,18 +302,36 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 8),
-                          ..._result!.credited.map(
-                            (credit) => Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Text(
-                                '${credit.playerName}: ${credit.points}',
+                          if (_result!.isDiscountScan) ...[
+                            Text(
+                              '${l10n.scanDiscountAddedLabel}: +${_result!.discountAddedPercent}',
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '${l10n.scanDiscountTotalLabel}: ${_result!.discountPercent}%',
+                            ),
+                            if (_result!.discountCapPercent != null) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                l10n.scanDiscountCapNote(
+                                  _result!.discountCapPercent!,
+                                ),
+                              ),
+                            ],
+                          ] else ...[
+                            ..._result!.credited.map(
+                              (credit) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  '${credit.playerName}: ${credit.points}',
+                                ),
                               ),
                             ),
-                          ),
-                          const Divider(),
-                          Text(
-                            '${l10n.totalPointsLabel}: ${_result!.totalPoints}',
-                          ),
+                            const Divider(),
+                            Text(
+                              '${l10n.totalPointsLabel}: ${_result!.totalPoints}',
+                            ),
+                          ],
                         ],
                       ),
                     ),

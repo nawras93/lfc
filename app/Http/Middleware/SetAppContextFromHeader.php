@@ -10,9 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SetAppContextFromHeader
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ?string $default = null): Response
     {
-        $app = AppKey::tryFrom((string) $request->header('X-App-Key')) ?? AppKey::AppTwo;
+        $fallback = AppKey::tryFrom((string) $default) ?? AppKey::AppTwo;
+        $app = AppKey::tryFrom((string) $request->header('X-App-Key')) ?? $fallback;
         $context = app(AppContext::class);
         $context->setCurrent($app);
 

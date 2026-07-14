@@ -123,6 +123,16 @@
   "hideCameraButton": "إخفاء الكاميرا",
   "openCameraButton": "فتح الكاميرا",
   "scanSuccessTitle": "تم احتساب المسح",
+  "scanDiscountAddedLabel": "الخصم المضاف",
+  "scanDiscountTotalLabel": "إجمالي الخصم",
+  "scanDiscountCapNote": "الحد الأقصى: {cap}%",
+  "@scanDiscountCapNote": {
+    "placeholders": {
+      "cap": {
+        "type": "double"
+      }
+    }
+  },
   "totalPointsLabel": "إجمالي النقاط",
   "selectFixtureHint": "اختر مباراة أولًا.",
   "staffForbiddenError": "ليست لديك صلاحية الماسح.",

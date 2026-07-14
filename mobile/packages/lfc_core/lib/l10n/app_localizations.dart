@@ -698,6 +698,24 @@ abstract class AppLocalizations {
   /// **'Scan credited'**
   String get scanSuccessTitle;
 
+  /// No description provided for @scanDiscountAddedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount added'**
+  String get scanDiscountAddedLabel;
+
+  /// No description provided for @scanDiscountTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total discount'**
+  String get scanDiscountTotalLabel;
+
+  /// No description provided for @scanDiscountCapNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Cap: {cap}%'**
+  String scanDiscountCapNote(double cap);
+
   /// No description provided for @totalPointsLabel.
   ///
   /// In en, this message translates to:

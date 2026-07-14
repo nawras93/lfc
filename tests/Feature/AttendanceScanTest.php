@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\AccountType;
+use App\Enums\AppKey;
 use App\Enums\FixtureStatus;
 use App\Models\AttendanceScan;
 use App\Models\Candidate;
@@ -340,11 +342,140 @@ class AttendanceScanTest extends TestCase
             ]);
     }
 
+    public function test_staff_fixtures_endpoint_without_header_defaults_to_app_one(): void
+    {
+        $appTwoFixture = Fixture::query()->create([
+            'team_id' => null,
+            'season_id' => $this->season->id,
+            'opponent' => 'App Two Fixture',
+            'venue' => 'Training Ground',
+            'kickoff_at' => now()->addDays(2),
+            'scan_opens_at' => now()->subHour(),
+            'scan_closes_at' => now()->addHours(2),
+            'status' => FixtureStatus::OpenForScanning,
+            'app' => AppKey::AppTwo,
+        ]);
+
+        $this->withToken($this->adminToken())
+            ->getJson('/api/v1/staff/fixtures')
+            ->assertOk()
+            ->assertJsonFragment([
+                'id' => $this->openFixture->id,
+                'team_name' => $this->team->name,
+            ])
+            ->assertJsonMissing([
+                'id' => $appTwoFixture->id,
+                'opponent' => 'App Two Fixture',
+            ]);
+    }
+
+    public function test_staff_fixtures_endpoint_with_app_two_header_returns_only_app_two_open_fixtures(): void
+    {
+        $appTwoFixture = Fixture::query()->create([
+            'team_id' => null,
+            'season_id' => $this->season->id,
+            'opponent' => 'App Two Fixture',
+            'venue' => 'Training Ground',
+            'kickoff_at' => now()->addDays(2),
+            'scan_opens_at' => now()->subHour(),
+            'scan_closes_at' => now()->addHours(2),
+            'status' => FixtureStatus::OpenForScanning,
+            'app' => AppKey::AppTwo,
+        ]);
+
+        $this->withToken($this->adminToken())
+            ->withHeader('X-App-Key', AppKey::AppTwo->value)
+            ->getJson('/api/v1/staff/fixtures')
+            ->assertOk()
+            ->assertJsonFragment([
+                'id' => $appTwoFixture->id,
+                'opponent' => 'App Two Fixture',
+            ])
+            ->assertJsonMissing([
+                'id' => $this->openFixture->id,
+                'team_name' => $this->team->name,
+            ]);
+    }
+
+    public function test_staff_fixtures_endpoint_with_app_one_header_returns_only_app_one_open_fixtures(): void
+    {
+        $appTwoFixture = Fixture::query()->create([
+            'team_id' => null,
+            'season_id' => $this->season->id,
+            'opponent' => 'App Two Fixture',
+            'venue' => 'Training Ground',
+            'kickoff_at' => now()->addDays(2),
+            'scan_opens_at' => now()->subHour(),
+            'scan_closes_at' => now()->addHours(2),
+            'status' => FixtureStatus::OpenForScanning,
+            'app' => AppKey::AppTwo,
+        ]);
+
+        $this->withToken($this->adminToken())
+            ->withHeader('X-App-Key', AppKey::AppOne->value)
+            ->getJson('/api/v1/staff/fixtures')
+            ->assertOk()
+            ->assertJsonFragment([
+                'id' => $this->openFixture->id,
+                'team_name' => $this->team->name,
+            ])
+            ->assertJsonMissing([
+                'id' => $appTwoFixture->id,
+                'opponent' => 'App Two Fixture',
+            ]);
+    }
+
     public function test_parent_token_rejected_on_staff_fixtures_endpoint(): void
     {
         $this->withToken($this->parentToken())
             ->getJson('/api/v1/staff/fixtures')
             ->assertStatus(403);
+    }
+
+    public function test_scan_rejects_parent_and_fixture_from_different_apps(): void
+    {
+        $member = ParentAccount::factory()->create([
+            'account_type' => AccountType::Member,
+            'app' => AppKey::AppTwo,
+        ]);
+        $memberToken = app(ScanTokenService::class)->issue($member);
+
+        $this->withToken($this->adminToken())
+            ->postJson('/api/v1/scan', [
+                'fixture_id' => $this->openFixture->id,
+                'token' => $memberToken['token'],
+            ])->assertStatus(422)
+            ->assertJson(['message' => 'This QR is not valid for this match.']);
+
+        $appTwoFixture = Fixture::query()->create([
+            'team_id' => null,
+            'season_id' => $this->season->id,
+            'opponent' => 'App Two Fixture',
+            'venue' => 'Training Ground',
+            'kickoff_at' => now()->addDays(2),
+            'scan_opens_at' => now()->subHour(),
+            'scan_closes_at' => now()->addHours(2),
+            'status' => FixtureStatus::OpenForScanning,
+            'app' => AppKey::AppTwo,
+        ]);
+
+        $parentToken = $this->issueParentToken();
+
+        $this->withToken($this->adminToken())
+            ->postJson('/api/v1/scan', [
+                'fixture_id' => $appTwoFixture->id,
+                'token' => $parentToken['token'],
+            ])->assertStatus(422)
+            ->assertJson(['message' => 'This QR is not valid for this match.']);
+
+        $this->assertDatabaseMissing('attendance_scans', [
+            'parent_account_id' => $member->id,
+            'fixture_id' => $this->openFixture->id,
+        ]);
+        $this->assertDatabaseMissing('attendance_scans', [
+            'parent_account_id' => $this->parent->id,
+            'fixture_id' => $appTwoFixture->id,
+        ]);
     }
 
     public function test_non_scanner_role_cannot_login(): void

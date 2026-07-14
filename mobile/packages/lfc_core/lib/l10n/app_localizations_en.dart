@@ -326,6 +326,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanSuccessTitle => 'Scan credited';
 
   @override
+  String get scanDiscountAddedLabel => 'Discount added';
+
+  @override
+  String get scanDiscountTotalLabel => 'Total discount';
+
+  @override
+  String scanDiscountCapNote(double cap) {
+    return 'Cap: $cap%';
+  }
+
+  @override
   String get totalPointsLabel => 'Total points';
 
   @override

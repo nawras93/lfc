@@ -23,6 +23,9 @@ class ScanResult {
     required this.scanId,
     required this.credited,
     required this.totalPoints,
+    this.discountAddedPercent,
+    this.discountPercent,
+    this.discountCapPercent,
   });
 
   factory ScanResult.fromJson(Map<String, dynamic> json) {
@@ -35,10 +38,19 @@ class ScanResult {
           .map(ScanCredit.fromJson)
           .toList(),
       totalPoints: (json['total_points'] as num?)?.toInt() ?? 0,
+      discountAddedPercent: (json['discount_added_percent'] as num?)
+          ?.toDouble(),
+      discountPercent: (json['discount_percent'] as num?)?.toDouble(),
+      discountCapPercent: (json['discount_cap_percent'] as num?)?.toDouble(),
     );
   }
 
   final int scanId;
   final List<ScanCredit> credited;
   final int totalPoints;
+  final double? discountAddedPercent;
+  final double? discountPercent;
+  final double? discountCapPercent;
+
+  bool get isDiscountScan => discountPercent != null;
 }

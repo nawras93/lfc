@@ -41,7 +41,8 @@ Route::prefix('v1')
             Route::get('/me/transactions', [PointTransactionController::class, 'accountHistory']);
             Route::get('/scan-token', [ScanController::class, 'token']);
             Route::post('/scan', [ScanController::class, 'scan']);
-            Route::get('/staff/fixtures', [ScanController::class, 'fixtures']);
+            Route::get('/staff/fixtures', [ScanController::class, 'fixtures'])
+                ->middleware(SetAppContextFromHeader::class.':app_one');
 
             Route::get('/redemption-items', [RedemptionController::class, 'items']);
             Route::post('/redemptions', [RedemptionController::class, 'redeem']);

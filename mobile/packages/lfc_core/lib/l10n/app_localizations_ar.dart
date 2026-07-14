@@ -323,6 +323,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get scanSuccessTitle => 'تم احتساب المسح';
 
   @override
+  String get scanDiscountAddedLabel => 'الخصم المضاف';
+
+  @override
+  String get scanDiscountTotalLabel => 'إجمالي الخصم';
+
+  @override
+  String scanDiscountCapNote(double cap) {
+    return 'الحد الأقصى: $cap%';
+  }
+
+  @override
   String get totalPointsLabel => 'إجمالي النقاط';
 
   @override

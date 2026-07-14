@@ -148,7 +148,9 @@ class _MemberAuthScreenState extends ConsumerState<MemberAuthScreen> {
                             const SizedBox(height: 14),
                           ],
                           TextFormField(
-                            key: Key(isSignIn ? 'login-email' : 'register-email'),
+                            key: Key(
+                              isSignIn ? 'login-email' : 'register-email',
+                            ),
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
@@ -172,7 +174,9 @@ class _MemberAuthScreenState extends ConsumerState<MemberAuthScreen> {
                           ),
                           const SizedBox(height: 14),
                           TextFormField(
-                            key: Key(isSignIn ? 'login-password' : 'register-password'),
+                            key: Key(
+                              isSignIn ? 'login-password' : 'register-password',
+                            ),
                             controller: _passwordController,
                             obscureText: true,
                             decoration: InputDecoration(
@@ -243,6 +247,20 @@ class _MemberAuthScreenState extends ConsumerState<MemberAuthScreen> {
                                         ? l10n.signInButton
                                         : l10n.createAccountButton,
                                   ),
+                          ),
+                          const Divider(height: 28),
+                          OutlinedButton.icon(
+                            key: const Key('staff-entry'),
+                            onPressed: () {
+                              ref
+                                  .read(staffSessionControllerProvider.notifier)
+                                  .showLogin();
+                              if (Navigator.of(context).canPop()) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            icon: const Icon(Icons.qr_code_scanner),
+                            label: Text(l10n.staffScannerEntry),
                           ),
                         ],
                       ),

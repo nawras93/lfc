@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\FixtureStatus;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceScan;
 use App\Models\Fixture;
 use App\Models\ParentAccount;
-use App\Services\ScanTokenService;
 use App\Services\PointsEngine;
+use App\Services\ScanTokenService;
 use Carbon\Carbon;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
@@ -51,7 +52,7 @@ class ScanController extends Controller
 
         $fixtures = Fixture::query()
             ->with('team')
-            ->where('status', \App\Enums\FixtureStatus::OpenForScanning)
+            ->where('status', FixtureStatus::OpenForScanning)
             ->orderBy('kickoff_at')
             ->get()
             ->filter(fn (Fixture $fixture) => $fixture->isOpenForScanning())
@@ -98,6 +99,10 @@ class ScanController extends Controller
         }
 
         $parent = ParentAccount::query()->findOrFail($parentId);
+
+        if ($fixture->app !== $parent->app) {
+            return response()->json(['message' => 'This QR is not valid for this match.'], 422);
+        }
 
         if ($parent->isMember()) {
             $cap = (int) config('loyalty.app_two.discount_cap_bp');

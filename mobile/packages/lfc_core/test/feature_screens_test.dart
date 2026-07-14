@@ -405,6 +405,60 @@ void main() {
     expect(find.text('Total points: 25'), findsOneWidget);
   });
 
+  testWidgets('staff scan success shows member discount result', (
+    tester,
+  ) async {
+    final staffScanRepository = FakeScanRepository(
+      fixtures: const [
+        FixtureSummary(
+          id: 44,
+          teamName: null,
+          opponent: 'Al Sadd',
+          venue: 'Lusail',
+          kickoffAt: null,
+          scanClosesAt: null,
+        ),
+      ],
+      staffResult: const ScanResult(
+        scanId: 10,
+        credited: [],
+        totalPoints: 0,
+        discountAddedPercent: 0.5,
+        discountPercent: 3.0,
+        discountCapPercent: 10.0,
+      ),
+    );
+
+    await tester.pumpWidget(
+      _testApp(
+        session: const SessionState(status: SessionStatus.unauthenticated),
+        staffSession: const StaffSessionState(
+          status: StaffSessionStatus.authenticated,
+          user: StaffUser(id: 7, name: 'Scanner', email: 'staff@example.com'),
+          token: 'staff-token',
+        ),
+        staffScanRepository: staffScanRepository,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Al Sadd'), findsOneWidget);
+    expect(find.text(' vs Al Sadd'), findsNothing);
+
+    await tester.enterText(
+      find.byKey(const Key('manual-token-field')),
+      'scan-token',
+    );
+    await tester.tap(find.byKey(const Key('manual-scan-submit')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('staff-scan-result')), findsOneWidget);
+    expect(find.text('Discount added: +0.5'), findsOneWidget);
+    expect(find.text('Total discount: 3.0%'), findsOneWidget);
+    expect(find.text('Cap: 10.0%'), findsOneWidget);
+    expect(find.text('Total points: 0'), findsNothing);
+  });
+
   testWidgets(
     'players list refreshes after a redeem invalidates the shared provider',
     (tester) async {

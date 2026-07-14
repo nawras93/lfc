@@ -123,6 +123,16 @@
   "hideCameraButton": "Hide camera",
   "openCameraButton": "Open camera",
   "scanSuccessTitle": "Scan credited",
+  "scanDiscountAddedLabel": "Discount added",
+  "scanDiscountTotalLabel": "Total discount",
+  "scanDiscountCapNote": "Cap: {cap}%",
+  "@scanDiscountCapNote": {
+    "placeholders": {
+      "cap": {
+        "type": "double"
+      }
+    }
+  },
   "totalPointsLabel": "Total points",
   "selectFixtureHint": "Select a fixture first.",
   "staffForbiddenError": "You do not have scanner access.",

@@ -14,7 +14,10 @@ class DemoAppOne extends StatelessWidget {
       overrides: [
         brandProvider.overrideWithValue(demoOneBrand),
         appConfigProvider.overrideWith(
-          (ref) => AppConfig.fromEnvironment(defaultBaseUrl: demoOneApiBaseUrl),
+          (ref) => AppConfig.fromEnvironment(
+            defaultBaseUrl: demoOneApiBaseUrl,
+            appKey: 'app_one',
+          ),
         ),
       ],
       child: const CoreApp(),

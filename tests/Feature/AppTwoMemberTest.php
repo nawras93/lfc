@@ -209,7 +209,9 @@ class AppTwoMemberTest extends TestCase
         ]);
 
         $parent->players()->attach($player);
-        $fixture = $this->createOpenFixture();
+        $fixture = $this->createOpenFixture([
+            'app' => AppKey::AppOne,
+        ]);
 
         $response = $this->withToken($this->adminToken())
             ->postJson('/api/v1/scan', [
@@ -285,7 +287,7 @@ class AppTwoMemberTest extends TestCase
             'scan_opens_at' => now()->subHour(),
             'scan_closes_at' => now()->addHour(),
             'status' => FixtureStatus::OpenForScanning,
-            'app' => AppKey::AppOne,
+            'app' => AppKey::AppTwo,
         ], $overrides));
     }
 

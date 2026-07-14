@@ -7,6 +7,7 @@ import 'package:lfc_core/src/features/content/data/content_repository.dart';
 import 'package:lfc_core/src/features/content/models/match_summary.dart';
 import 'package:lfc_core/src/features/content/models/news_article.dart';
 import 'package:lfc_core/src/features/content/models/news_summary.dart';
+import 'package:lfc_core/src/features/staff/presentation/staff_login_screen.dart';
 import 'package:lfc_core/src/features/content/models/standing_row.dart';
 import 'package:lfc_core/src/features/session/session_controller.dart';
 import 'package:lfc_core/src/providers.dart';
@@ -137,8 +138,7 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (w) =>
-            w is SingleChildScrollView &&
-            w.scrollDirection == Axis.horizontal,
+            w is SingleChildScrollView && w.scrollDirection == Axis.horizontal,
       ),
       findsNothing,
     );
@@ -258,6 +258,30 @@ void main() {
     expect(find.text('VVIP'), findsOneWidget);
     expect(find.text('120 pts'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('member auth staff entry opens staff login screen', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await _pumpSupporterApp(tester);
+
+    await tester.tap(find.text('Membership'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('membership-sign-in-button')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('staff-entry')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('staff-entry')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(StaffLoginScreen), findsOneWidget);
   });
 }
 
