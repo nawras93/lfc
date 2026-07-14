@@ -304,11 +304,11 @@ class _StaffScannerScreenState extends ConsumerState<StaffScannerScreen> {
                           const SizedBox(height: 8),
                           if (_result!.isDiscountScan) ...[
                             Text(
-                              '${l10n.scanDiscountAddedLabel}: +${_result!.discountAddedPercent}',
+                              '${l10n.scanDiscountAddedLabel}: +${(_result!.discountAddedPercent ?? 0).toStringAsFixed(1)}%',
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '${l10n.scanDiscountTotalLabel}: ${_result!.discountPercent}%',
+                              '${l10n.scanDiscountTotalLabel}: ${(_result!.discountPercent ?? 0).toStringAsFixed(1)}%',
                             ),
                             if (_result!.discountCapPercent != null) ...[
                               const SizedBox(height: 8),
