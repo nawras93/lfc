@@ -144,6 +144,10 @@ class AttendanceScanTest extends TestCase
 
     public function test_expired_token_is_rejected(): void
     {
+        // Pin the TTL: .env.example ships SCAN_TOKEN_TTL and invites raising it for a
+        // demo, and a value above 120s would leave this token still valid.
+        config(['scan.token_ttl' => 60]);
+
         $service = app(ScanTokenService::class);
         $past = Carbon::now()->subSeconds(120);
 
@@ -313,6 +317,8 @@ class AttendanceScanTest extends TestCase
 
     public function test_scan_rejected_with_expired_token(): void
     {
+        config(['scan.token_ttl' => 60]);
+
         $service = app(ScanTokenService::class);
         $past = Carbon::now()->subSeconds(120);
         $result = $service->issue($this->parent, $past);
